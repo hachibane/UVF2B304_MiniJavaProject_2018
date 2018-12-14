@@ -15,7 +15,8 @@ let lowercase = ['a'-'z']
 let uppercase = ['A'-'Z']
 let digit     = ['0'-'9']
 let nzdigit   = ['1'-'9']
-let real      = digit * ('.' digit*)?
+let decimal   = '.' digit*
+let real      = digit * (decimal)?
 
 (* 3.4 Line Terminators *)
 
@@ -46,6 +47,9 @@ let ident = letter ( letter | digit | '_')*
 (* Rules Definitions *)
 
 (* TO COMPLETE *) 
+(* principally completed using keywords page 21, operations page 36
+   and pages 586 and 587 *)
+
 rule nexttoken = parse
 	| line_terminator    { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
@@ -53,6 +57,118 @@ rule nexttoken = parse
 	| eof                { EOF }
 	| ident as str       { IDENT str }
 	| real as nb         { FLOAT(float_of_string nb) }
+	| nzdigit as nz      { NZDIGIT(nz) }
+	| "0"                { ZERO }
 	| "null"             { NULL }
 	| "true"             { TRUE }
 	| "false"            { FALSE }
+	| "abstract"         { ABSTRACT }   
+	| "assert"           { ASSERT }
+	| "boolean"          { BOOLEAN }
+	| "break"            { BREAK }
+	| "byte"             { BYTE }
+	| "case"             { CASE }
+	| "catch"            { CATCH }
+	| "char"             { CHAR }
+	| "class"            { CLASS }
+	| "const"            { CONST }
+	| "continue"         { CONTINUE }
+	| "default"          { DEFAULT }
+	| "do"               { DO }
+	| "double"           { DOUBLE }
+	| "else"             { ELSE }
+	| "enum"             { ENUM }
+	| "extends"          { EXTENDS }
+	| "final"            { FINAL }
+	| "finally"          { FINALLY }
+	| "float"            { FLOAT }
+	| "for"              { FOR }
+	| "if"               { IF }
+	| "goto"             { GOTO }
+	| "implements"       { IMPLEMENTS }
+	| "import"           { IMPORT }
+	| "instanceof"       { INSTANCEOF }
+	| "int"              { INT }
+	| "interface"        { INTERFACE }
+	| "long"             { LONG }
+	| "native"           { NATIVE }
+	| "new"              { NEW }
+	| "package"          { PACKAGE }
+	| "private"          { PRIVATE }
+	| "protected"        { PROTECTED }
+	| "public"           { PUBLIC }
+	| "return"           { RETURN }
+	| "short"            { SHORT }
+	| "static"           { STATIC }
+	| "strictfp"         { STRICTFP }
+	| "super"            { SUPER }
+	| "switch"           { SWITCH }
+	| "synchronized"     { SYNCHRONIZED }
+	| "this"             { THIS }
+	| "throw"            { THROW }
+	| "throws"           { THROWS }
+	| "transient"        { TRANSIENT }
+	| "try"              { TRY }
+	| "void"             { VOID }
+	| "volatile"         { VOLATILE }
+	| "while"            { WHILE }
+	| "+"                { PLUS }
+	| "-"                { MINUS }
+	| "*"                { TIMES }
+	| "/"                { DIV }
+	| "&"                { AND }
+	| "|"                { OR }
+	| "^"                { XOR }
+	| "%"                { MOD }
+	| "="                { EQUAL }
+	| "<"                { INF }
+	| ">"                { SUP }
+	| "||"               { CONDOR }
+	| "&&"               { CONDAND}
+	| "++"               { INCR }
+	| "--"               { DECR }
+	| "?"                { COND }
+	| "!"                { EXCL }
+	| "~"                { TILDE }
+	| "@"                { ANNOT }
+	| "=="               { ISEQUAL}
+	| "!="               { ISNOTEQUAL }
+	| "+="               { PLUSEQUAL }
+	| "-="               { MINUSEQUAL }
+	| "*="               { TIMESEQUAL }
+	| "/="               { DIVEQUAL }
+	| "&="               { ANDEQUAL }
+	| "|="               { OREQUAL }
+	| "^="               { XOREQUAL }
+	| "%="               { MODEQUAL }
+	| "<="               { INFOREQUAL }
+	| ">="               { SUPOREQUAL }
+	| "<<"               { LSHIFT }
+	| ">>"               { RSHIFT }
+	| "<<="              { LSHIFTEQUAL }
+	| ">>="              { RSHIFTEQUAL }
+	| ">>>"              { USHIFT }
+	| ">>>="             { USHIFTEQUAL }
+  | "."                { POINT }
+  | ";"                { SEMICOLON }
+  | ","                { COMMA }
+  | ":"                { COLON }
+  | "{"                { LBRACE }
+  | "}"                { RBRACE }
+  | "("                { LPAREN }
+  | ")"                { RPAREN }
+  | "["                { LBRACK }
+  | "]"                { RBRACK }
+  | _                  { raise_error LexingError lexbuf }
+
+
+
+
+(*
+
+let print_token = function 
+	| EOF 
+	| IDENT 
+	| REAL 
+	| NZDIGIT 
+	| *)
