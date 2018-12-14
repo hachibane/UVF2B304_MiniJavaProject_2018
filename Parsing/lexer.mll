@@ -149,14 +149,14 @@ rule nexttoken = parse
 	| ">>="              { RSHIFTEQUAL }
 	| ">>>"              { USHIFT }
 	| ">>>="             { USHIFTEQUAL }
-  | "."                { POINT }
-  | ";"                { SEMICOLON }
-  | ","                { COMMA }
-  | ":"                { COLON }
-  | "{"                { LBRACE }
-  | "}"                { RBRACE }
-  | "("                { LPAREN }
-  | ")"                { RPAREN }
-  | "["                { LBRACK }
-  | "]"                { RBRACK }
-  | _                  { raise_error LexingError lexbuf }
+  	| "."                { POINT }
+ 	| ";"                { SEMICOLON }
+ 	| ","                { COMMA }
+        | ":"                { COLON }
+        | "{"                { LBRACE }
+ 	| "}"                { RBRACE }
+ 	| "("                { LPAREN }
+  	| ")"                { RPAREN }
+        | "["                { LBRACK }
+        | "]"                { RBRACK }
+        | _                  { raise_error LexingError lexbuf }
