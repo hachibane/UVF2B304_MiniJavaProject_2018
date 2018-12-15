@@ -124,14 +124,14 @@ rule nexttoken = parse
 	| "<"                { INF }
 	| ">"                { SUP }
 	| "||"               { CONDOR }
-	| "&&"               { CONDAND}
+	| "&&"               { CONDAND }
 	| "++"               { INCR }
 	| "--"               { DECR }
 	| "?"                { COND }
 	| "!"                { EXCL }
 	| "~"                { TILDE }
 	| "@"                { ANNOT }
-	| "=="               { ISEQUAL}
+	| "=="               { ISEQUAL }
 	| "!="               { ISNOTEQUAL }
 	| "+="               { PLUSEQUAL }
 	| "-="               { MINUSEQUAL }
@@ -160,3 +160,128 @@ rule nexttoken = parse
   | "["                { LBRACK }
   | "]"                { RBRACK }
   | _                  { raise_error LexingError lexbuf }
+
+
+
+{
+
+let print_token = function 
+	| EOF                -> print_string "eof"
+	| IDENT              -> print_string "ident"
+	| REAL               -> print_string "real"
+	| NZDIGIT            -> print_string "nzdigit"
+	| ZERO               -> print_string "zero"
+	| NULL               -> print_string "null"
+	| TRUE               -> print_string "true"
+	| FALSE              -> print_string "false"
+	| ABSTRACT           -> print_string "abstract"
+	| ASSERT             -> print_string "assert"
+	| BOOLEAN            -> print_string "boolean"
+	| BREAK              -> print_string "break"
+	| BYTE               -> print_string "byte"
+	| CASE               -> print_string "case"
+	| CATCH              -> print_string "catch"
+	| CHAR               -> print_string "char"
+	| CLASS              -> print_string "class"
+	| CONST              -> print_string "const"
+	| CONTINUE           -> print_string "continue"
+	| DEFAULT            -> print_string "default"
+	| DO                 -> print_string "do"
+	| DOUBLE             -> print_string "double"
+	| ELSE               -> print_string "else"
+	| ENUM               -> print_string "enum"
+	| EXTENDS            -> print_string "extends"
+	| FINAL              -> print_string "final"
+	| FINALLY            -> print_string "finally"
+	| FLOAT              -> print_string "float"
+	| FOR                -> print_string "for"
+	| IF                 -> print_string "if"
+	| GOTO               -> print_string "goto"
+	| IMPLEMENTS         -> print_string "implements"
+	| IMPORT             -> print_string "import"
+	| INSTANCEOF         -> print_string "instanceof"
+	| INT                -> print_string "int"
+	| INTERFACE          -> print_string "interface"
+	| LONG               -> print_string "long"
+	| NATIVE             -> print_string "native"
+	| NEW                -> print_string "new"
+	| PACKAGE            -> print_string "package"
+	| PRIVATE            -> print_string "private"
+	| PROTECTED          -> print_string "protected"
+	| PUBLIC             -> print_string "public"
+	| RETURN             -> print_string "return" 
+	| SHORT              -> print_string "short"
+	| STATIC             -> print_string "static"
+	| STRICTFP           -> print_string "strictfp" 
+	| SUPER              -> print_string "super"
+	| SWITCH             -> print_string "switch"
+	| SYNCHRONIZED       -> print_string "synchronized"
+	| THIS               -> print_string "this"
+	| THROW              -> print_string "throw"
+	| THROWS             -> print_string "throws"
+	| TRANSIENT          -> print_string "transient"
+	| TRY                -> print_string "try"
+	| VOID               -> print_string "void"
+	| VOLATILE           -> print_string "volatile"
+	| WHILE              -> print_string "while"
+	| PLUS               -> print_string "plus"
+	| MINUS              -> print_string "minus"
+	| TIMES              -> print_string "times"
+	| DIV                -> print_string "div"
+	| AND                -> print_string "and"
+	| OR                 -> print_string "or"
+	| XOR                -> print_string "xor"
+	| MOD                -> print_string "mod"
+	| EQUAL              -> print_string "equal"
+	| INF                -> print_string "inf"
+	| SUP                -> print_string "sup"
+	| CONDOR             -> print_string "condor"
+	| CONDAND            -> print_string "condand"
+	| INCR               -> print_string "incr"
+	| DECR               -> print_string "decr"
+	| COND               -> print_string "cond"
+	| EXCL               -> print_string "excl"
+	| TILDE              -> print_string "tilde"
+	| ANNOT              -> print_string "annot"
+	| ISEQUAL            -> print_string "isequal"
+	| ISNOTEQUAL         -> print_string "isnotequal"
+	| PLUSEQUAL          -> print_string "plusequal"
+	| MINUSEQUAL         -> print_string "minusequal"
+	| TIMESEQUAL         -> print_string "timesequal"
+	| DIVEQUAL           -> print_string "divequal"
+	| ANDEQUAL           -> print_string "andequal"
+	| OREQUAL            -> print_string "orequal"
+	| XOREQUAL           -> print_string "xorequal"
+	| MODEQUAL           -> print_string "modequal"
+	| INFOREQUAL         -> print_string "inforequal"
+	| SUPOREQUAL         -> print_string "suporequal"
+	| LSHIFT             -> print_string "lshift"
+	| RSHIFT             -> print_string "rshift"
+	| LSHIFTEQUAL        -> print_string "lshiftequal"
+	| RSHIFTEQUAL        -> print_string "rshiftequal"
+	| USHIFT             -> print_string "ushift"
+	| USHIFTEQUAL        -> print_string "ushiftequal"
+  | POINT              -> print_string "point"
+  | SEMICOLON          -> print_string "semicolon"
+  | COMMA              -> print_string "comma"
+  | COLON              -> print_string "colon"
+  | LBRACE             -> print_string "lbrace"
+  | RBRACE             -> print_string "rbrace"
+  | LPAREN             -> print_string "lparen"
+  | RPAREN             -> print_string "rparen"
+  | LBRACK             -> print_string "lbrack"
+  | RBRACK             -> print_string "rbrack"
+ 
+
+(* Function which read a buffer and print the recognized token *)
+
+let rec read buffer = 
+  let token = nexttoken buffer in
+  print_string "Read line ";
+  print_int buffer.lex_curr_p.pos_lnum;
+  print_string " : ";
+  print_token token;
+  print_string "\n";
+  token
+
+}
