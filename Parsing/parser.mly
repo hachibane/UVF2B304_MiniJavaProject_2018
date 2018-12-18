@@ -118,4 +118,83 @@ stringLiteral:
 
 nullLiteral:
 	NULL { "null" }
+	
+(* 4. Types, Values, and Variables*)
+
+(*4.1 The kind of  Types and Values*) 
+
+ttype:
+	| pt=primitiveType { pt }
+	| rt=referenceType { rt }
+
+(*4.2 Primitive Types and Values*)
+
+primitiveType:
+	| nt=numericType { nt } 
+	| BOOLEAN { "boolean" } 
+
+numericType:
+	| it=integralType { it }
+	| fpt=floatingPointType { fpt } 
+
+integralType:
+	| BYTE { " byte " }
+	| SHORT { " short " }
+	| INT { " int " }
+	| LONG { " long " }
+	| CHAR { " char " }
+
+floatingPointType:
+	| FLOAT { " float " }
+	| DOUBLE { " double " }
+
+(*4.3 Reference Types and Values*)
+
+referenceType:
+	| cit=classOrInterfaceType { cit } 
+	| tv=typeVariable { tv } 
+	| at=arrayType { at }
+
+classOrInterfaceType:
+	| ct=classType { ct }
+	| it=interfaceType {it } 
+
+classType:
+	| tds=typeDeclSpecifier ta=typeArguments? { tds^" "^ta }
+
+
+interfaceType:
+	| tds=typeDeclSpecifier ta=typeArguments? { tds^" "^ta }
+
+typeDeclSpecifier:
+	| tn=typeName { tn }
+	| cit=classOrInterfaceType POINT id=identifier { cit^" . "^id }
+
+typeName:
+	| id=identifier { id }
+	| tn=typeName POINT id=identifier { tn^" . "^id }
+
+typeVariable:
+	| id=identifier { id } 
+
+arrayType: 
+	| t=ttype LBRACE RBRACE { t^" [] "}
+
+typeArguments:
+	| atal=actualTypeArgumentList { atal }
+
+actualTypeArgumentList:
+	| ata=actualTypeArgument
+	| ata0=actualTypeArgument COMMA ata1=actualTypeArgument { ata0^" , "^ata1 }
+
+actualTypeArgument:
+	| rt=referenceType { rt }
+	| w=wildcard { w } 
+
+wildcard:
+	wb=wildcardBounds? { wb } 
+
+wildcardBounds:
+	| EXTENDS rt=referenceType { " extends "^rt } 
+	| SUPER rt=referenceType { " super "^rt } 
 
