@@ -1,18 +1,5 @@
-%{
-    (* OCaml code *)
-%}
-
- /*Symbols declaration */
- %%
- /* Rules */
- %%
- (* OCaml code *)
 (* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
-%{
-    (* code ocaml *)
-  
-%}
 
 (* boolean*)
 %token TRUE
