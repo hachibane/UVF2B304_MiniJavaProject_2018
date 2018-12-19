@@ -1,8 +1,154 @@
 (* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
 {
-	open Lexing
-	open Error
+open Lexing
+(*open Error*)
+type lexeme =
+    | EOF
+    | AND
+    | OR
+    | TRUE
+    | FALSE
+    | IDENT of string
+    | REAL of float
+    | NZDIGIT of char
+    | ZERO
+    | NULL
+    | ABSTRACT
+    | ASSERT
+    | BOOLEAN
+    | BREAK
+    | BYTE
+    | CASE
+    | CATCH
+    | CHAR
+    | CLASS
+    | CONST
+    | CONTINUE
+    | DEFAULT
+    | DO
+    | DOUBLE
+    | ELSE
+    | ENUM
+    | EXTENDS
+    | FINAL
+    | FINALLY
+    | FLOAT
+    | FOR
+    | IF
+    | GOTO
+    | IMPLEMENTS
+    | IMPORT
+    | INSTANCEOF
+    | INT
+    | INTERFACE
+    | LONG
+    | NATIVE
+    | NEW
+    | PACKAGE
+    | PRIVATE
+    | PROTECTED
+    | PUBLIC
+    | RETURN
+    | SHORT
+    | STATIC
+    | STRICTFP
+    | SUPER
+    | SWITCH
+    | SYNCHRONIZED
+    | THIS
+    | THROW
+    | THROWS
+    | TRANSIENT
+    | TRY
+    | VOID
+    | VOLATILE
+    | WHILE
+    | PLUS
+    | MINUS
+    | TIMES
+    | DIV
+    | XOR
+    | MOD
+    | EQUAL
+    | INF
+    | SUP
+    | CONDOR
+    | CONDAND
+    | INCR
+    | DECR
+    | COND
+    | EXCL
+    | TILDE
+    | ANNOT
+    | ISEQUAL
+    | ISNOTEQUAL
+    | PLUSEQUAL
+    | MINUSEQUAL
+    | TIMESEQUAL
+    | DIVEQUAL
+    | ANDEQUAL
+    | OREQUAL
+    | XOREQUAL
+    | MODEQUAL
+    | INFOREQUAL
+    | SUPOREQUAL
+    | LSHIFT
+    | RSHIFT
+    | LSHIFTEQUAL
+    | RSHIFTEQUAL
+    | USHIFT
+    | USHIFTEQUAL
+    | POINT
+    | SEMICOLON
+    | COMMA
+    | COLON
+    | LBRACE
+    | RBRACE
+    | LPAREN
+    | RPAREN
+    | LBRACK
+    | RBRACK
+
+type error =
+	| Illegal_character of char
+	| Illegal_float of string
+
+exception Error of error * position * position
+
+let raise_error err lexbuf =
+raise (Error(err, lexeme_start_p lexbuf, lexeme_end_p lexbuf))
+(* Les erreurs. *)
+let report_error = function
+	| Illegal_character c ->
+		print_string "Illegal character ’";
+		print_char c;
+		print_string "’ "
+	| Illegal_float nb ->
+		print_string "The float ";
+		print_string nb;
+		print_string " is illegal "
+let print_position debut fin =
+ if (debut.pos_lnum = fin.pos_lnum) then
+  begin
+   print_string "line ";
+   print_int debut.pos_lnum;
+   print_string " characters ";
+   print_int (debut.pos_cnum - debut.pos_bol);
+   print_string "-";
+   print_int (fin.pos_cnum - fin.pos_bol)
+  end
+ else
+  begin
+   print_string "from line ";
+   print_int debut.pos_lnum;
+   print_string " character ";
+   print_int (debut.pos_cnum - debut.pos_bol);
+   print_string " to line ";
+   print_int fin.pos_lnum;
+   print_string " character ";
+   print_int (fin.pos_cnum - fin.pos_bol)
+  end
 }
 
 (* series of let declarations which precede the rules definition to define some
@@ -56,7 +202,7 @@ rule nexttoken = parse
 	| white_space+       { nexttoken lexbuf }
 	| eof                { EOF }
 	| ident as str       { IDENT str }
-	| real as nb         { FLOAT(float_of_string nb) }
+	| real as nb         { REAL(float_of_string nb) } (*not sure*)
 	| nzdigit as nz      { NZDIGIT(nz) }
 	| "0"                { ZERO }
 	| "null"             { NULL }
@@ -159,7 +305,7 @@ rule nexttoken = parse
   | ")"                { RPAREN }
   | "["                { LBRACK }
   | "]"                { RBRACK }
-  | _                  { raise_error LexingError lexbuf }
+  | _ as c             { raise_error (Illegal_character(c)) lexbuf }
 
 
 
@@ -167,9 +313,9 @@ rule nexttoken = parse
 
 let print_token = function 
 	| EOF                -> print_string "eof"
-	| IDENT              -> print_string "ident"
-	| REAL               -> print_string "real"
-	| NZDIGIT            -> print_string "nzdigit"
+	| IDENT i            -> print_string "ident ("; print_string i; print_string ")"
+	| REAL i              -> print_string "real"
+	| NZDIGIT n          -> print_string (String.make 1 n)
 	| ZERO               -> print_string "zero"
 	| NULL               -> print_string "null"
 	| TRUE               -> print_string "true"
