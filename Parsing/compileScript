@@ -2,8 +2,10 @@ menhir parser.mly     # generates parser.ml and parser.mli
 ocamllex lexer.mll       # generates lexer.ml
 ocamlc -c parser.mli
 
-ocamlc -c expr.ml
-ocamlc -c lexer.ml
-ocamlc -c parser.ml
-ocamlc -c main.ml
-ocamlc -o main expr.cmo parser.cmo lexer.cmo  main.cmo
+ocamlc -c expr.ml                                       # compile file containing type definitions
+ocamlc -c lexer.ml                                      # compile lexer
+ocamlc -c parser.ml                                     # compile parser
+ocamlc -c main.ml                                       # compile main
+ocamlc -o main expr.cmo parser.cmo lexer.cmo  main.cmo  # generate executable 
+
+# for tests, execute :  main filename
