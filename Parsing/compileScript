@@ -1,0 +1,9 @@
+menhir parser.mly     # generates parser.ml and parser.mli
+ocamllex lexer.mll       # generates lexer.ml
+ocamlc -c parser.mli
+
+ocamlc -c expr.ml
+ocamlc -c lexer.ml
+ocamlc -c parser.ml
+ocamlc -c main.ml
+ocamlc -o main expr.cmo parser.cmo lexer.cmo  main.cmo
