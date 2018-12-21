@@ -42,9 +42,9 @@ rule read = parse
   | ident              { IDENT (Lexing.lexeme lexbuf) }
   | int     					 { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | float   					 { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
-	| "null"             { NULL }
-	| "true"             { TRUE }
-	| "false"            { FALSE }
+  | "null"             { NULL }
+  | "true"             { TRUE }
+  | "false"            { FALSE }
   | "."                { POINT }
   | ";"                { SEMICOLON }
   | ","                { COMMA }
