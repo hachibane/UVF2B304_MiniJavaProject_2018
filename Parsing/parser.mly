@@ -1,39 +1,96 @@
 (* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
+%{
+  open Java
+%}
+(* token declaration *)
 
-(* boolean*)
+(* java identifiers *)
+%token CLASS
+
+(* values *)
+
+
+%token <float> FLOAT
+%token <string> STRING
+%token <int> INT
 %token TRUE
 %token FALSE
-
-(* Infix Operators*)
-%token PLUS MINUS TIMES DIV AND OR XOR MOD INF SUP ISEQUAL ISNOTEQUAL INFOREQUAL SUPOREQUAL CONDOR CONDAND COND ANNOT LSHIFT RSHIFT USHIFT INFEQUAL SUPEQUAL 
-
-(* Prefix Operators*) 
-%token INCR DECR EXCL TILDE
-
-(* Assignment Operators*)
-%token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL DIVEQUAL ANDEQUAL OREEQUAL XOREQUAL MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL 
-
-(* Delimitors*)
-%token POINT SEMICOLON COMMA COLON LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
-
-(* Modifiers*)
-%token ABSTRACT PRIVATE PROTECTED PUBLIC STATIC STRICTFP SYNCHRONIZED VOLATILE TRANSIENT NATIVE FINAL
-
-(* Basic Types*)
-%token BYTE SHORT CHAR INT LONG FLOAT DOUBLE BOOLEAN
-
-(* Other Keywords*) 
-%token ASSERT BREAK CASE CATCH CLASS CONST CONTINUE DEFAULT DO DEFAULT ELSE ENUM EXTENDS FINALLY FOR IF GOTO IMPLEMENTS IMPORT INSTANCEOF INTERFACE NEW PACKAGE RETURN SUPER SWITCH THIS THROW THROWS TRY VOID WHILE
-
-(* Special Tokens *)
-%token EOF
-%token <string> IDENT
-%token ZERO 
 %token NULL
-%token NZDIGIT
-%token <string> COMMENT
 
-(* rules not done yet *)
-%token NOTDONE
+(* delimiters *)
 
+%token POINT
+%token SEMICOLON
+%token COMMA
+%token COLON
+%token LBRACE
+%token RBRACE
+%token LPAREN
+%token RPAREN
+%token LBRACK
+%token RBRACK
+%token EOF
+
+(* other *)
+%token <string> IDENT 
+%token CLASS_MODIFIER
+
+(* starting symbol *)
+
+%start prog
+%type < Java.lexeme > prog
+
+
+%%
+
+(* grammar definition*)
+prog:
+	| jc = javaCode  EOF { jc }
+;
+
+javaCode :
+	| cd = classDeclaration { None }
+
+(* class grammar *)
+
+classDeclaration :
+	| ncd = normalClassDeclaration { None }
+(*| ed  = enumDeclaration { ed }  *)
+ 
+normalClassDeclaration :
+	| cms = CLASS_MODIFIER* CLASS IDENT cb = classBody { None }
+
+(*classModifiers :
+	| CLASS_MODIFIER { None }
+	| cms = classModifiers CLASS_MODIFIER { None } *)
+	
+classBody:
+	| LPAREN (* cbd = option(classBodyDeclarations) *) RPAREN   { None }
+
+(*	
+classBodyDeclarations:
+	| classBodyDeclaration
+	| classBodyDeclarations classBodyDeclaration
+
+classBodyDeclaration:
+	| classMemberDeclaration
+	| instanceInitializer
+	| StaticInitializer
+	| constructorDeclaration
+
+classMemberDeclaration:	
+	| fieldDeclaration
+	| methodDeclaration
+	| classDeclaration
+(*| InterfaceDeclaration*)
+;
+*)
+value :
+  | s = STRING { String s }
+  | i = INT    { Int i }
+  | x = FLOAT  { Float x }
+  | NULL       { Null }
+  | TRUE       { Bool true }
+  | FALSE      { Bool false }
+%%
