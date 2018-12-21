@@ -37,27 +37,27 @@ let classModifier = "public" | "abstract" | "static" | "protected" | "private"
 
 
 rule read = parse
-  | white   					 { read lexbuf }
-  | newline  					 { Lexing.new_line lexbuf; read lexbuf }
-  | ident              { IDENT (Lexing.lexeme lexbuf) }
-  | int     					 { INT (int_of_string (Lexing.lexeme lexbuf)) }
-  | float   					 { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
-  | "null"             { NULL }
-  | "true"             { TRUE }
-  | "false"            { FALSE }
-  | "."                { POINT }
-  | ";"                { SEMICOLON }
-  | ","                { COMMA }
-  | ":"                { COLON }
-  | "{"                { LBRACE }
-  | "}"                { RBRACE }
-  | "("                { LPAREN }
-  | ")"                { RPAREN }
-  | "["                { LBRACK }
-  | "]"                { RBRACK }
-  | "class"            { CLASS  }
-  | classModifier      { CLASS_MODIFIER }
-  | _ as c             { raise_error (Illegal_character(c)) lexbuf }
-  | eof                { EOF }
+| white              { read lexbuf }
+| newline            { Lexing.new_line lexbuf; read lexbuf }
+| ident              { IDENT (Lexing.lexeme lexbuf) }
+| int     	     { INT (int_of_string (Lexing.lexeme lexbuf)) }
+| float   	     { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
+| "null"             { NULL }
+| "true"             { TRUE }
+| "false"            { FALSE }
+| "."                { POINT }
+| ";"                { SEMICOLON }
+| ","                { COMMA }
+| ":"                { COLON }
+| "{"                { LBRACE }
+| "}"                { RBRACE }
+| "("                { LPAREN }
+| ")"                { RPAREN }
+| "["                { LBRACK }
+| "]"                { RBRACK }
+| "class"            { CLASS  }
+| classModifier      { CLASS_MODIFIER }
+| _ as c             { raise_error (Illegal_character(c)) lexbuf }
+| eof                { EOF }
 
 
