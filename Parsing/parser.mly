@@ -6,7 +6,8 @@
 (* token declaration *)
 
 (* java identifiers *)
-%token CLASS
+%token CLASS 
+%token <string> CLASS_MODIFIER
 
 (* values *)
 
@@ -34,39 +35,35 @@
 
 (* other *)
 %token <string> IDENT 
-%token CLASS_MODIFIER
+
 
 (* starting symbol *)
 
 %start prog
-%type < Java.lexeme > prog
-
+%type < Java.javaCode > prog
 
 %%
 
 (* grammar definition*)
 prog:
-	| jc = javaCode  EOF { jc }
+	| classDeclaration EOF { $1 }
 ;
-
-javaCode :
-	| cd = classDeclaration { None }
 
 (* class grammar *)
 
 classDeclaration :
-	| ncd = normalClassDeclaration { None }
-(*| ed  = enumDeclaration { ed }  *)
+	| normalClassDeclaration { $1 }
+
  
 normalClassDeclaration :
-	| cms = CLASS_MODIFIER* CLASS IDENT cb = classBody { None }
+	| classModifiers CLASS IDENT classBody { ClassDeclaration($1, $3, $4) }
 
-(*classModifiers :
-	| CLASS_MODIFIER { None }
-	| cms = classModifiers CLASS_MODIFIER { None } *)
+classModifiers :
+	| CLASS_MODIFIER { ClassModifier $1  }
+	| CLASS_MODIFIER classModifiers  { ClassModifiers( $1, $2 ) } 
 	
 classBody:
-	| LPAREN (* cbd = option(classBodyDeclarations) *) RPAREN   { None }
+	| LBRACE (* cbd = option(classBodyDeclarations) *) RBRACE { ClassBody "to finish" }
 
 (*	
 classBodyDeclarations:
