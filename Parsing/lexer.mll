@@ -4,6 +4,23 @@
 open Lexing
 open Parser
 open Java
+
+
+let keyword_table = Hashtbl.create 9
+let _ =
+List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
+[ 
+("null",	  NULL);
+("true", 	  TRUE);
+("false", 	  FALSE);
+("public",    CLASS_MODIFIER "public");
+("abstract",  CLASS_MODIFIER "abstract");
+("static",    CLASS_MODIFIER "static");
+("protected", CLASS_MODIFIER "protected" );
+("private",   CLASS_MODIFIER "private");
+("class",     CLASS);
+]
+
 }
 
 (* series of let declarations which precede the rules definition to define some
@@ -17,7 +34,6 @@ let uppercase = ['A'-'Z']
 let letter    = (lowercase | uppercase)
 let nzdigit   = ['1'-'9']
 let digit     = ( '0' | nzdigit)
-
 let exp       = ['e' 'E'] ['-' '+']? digit+
 let frac      = '.' digit*
 let int       = '-'? digit+
@@ -26,7 +42,6 @@ let ident     = (letter | '_') ( letter | digit | '_')*
 let white = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"
 
-let classModifier = "public" | "abstract" | "static" | "protected" | "private" 
 
 (* Rules Definitions *)
 
@@ -39,12 +54,9 @@ let classModifier = "public" | "abstract" | "static" | "protected" | "private"
 rule read = parse
 | white              { read lexbuf }
 | newline            { Lexing.new_line lexbuf; read lexbuf }
-| ident              { IDENT (Lexing.lexeme lexbuf) }
 | int     	     { INT (int_of_string (Lexing.lexeme lexbuf)) }
 | float   	     { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
-| "null"             { NULL }
-| "true"             { TRUE }
-| "false"            { FALSE }
+| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 | "."                { POINT }
 | ";"                { SEMICOLON }
 | ","                { COMMA }
@@ -55,9 +67,10 @@ rule read = parse
 | ")"                { RPAREN }
 | "["                { LBRACK }
 | "]"                { RBRACK }
-| "class"            { CLASS  }
-| classModifier      { CLASS_MODIFIER }
 | _ as c             { raise_error (Illegal_character(c)) lexbuf }
 | eof                { EOF }
+
+
+
 
 
