@@ -199,7 +199,7 @@ let ident = letter ( letter | digit | '_')*
 rule nexttoken = parse
 	| line_terminator    { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
-	| white_space+       { nexttoken lexbuf }
+	| white_space        { nexttoken lexbuf }
 	| eof                { EOF }
 	| ident as str       { IDENT str }
 	| real as nb         { REAL(float_of_string nb) } (*not sure*)
@@ -314,7 +314,7 @@ rule nexttoken = parse
 let print_token = function 
 	| EOF                -> print_string "eof"
 	| IDENT i            -> print_string "ident ("; print_string i; print_string ")"
-	| REAL i              -> print_string "real"
+	| REAL i             -> print_string "real"
 	| NZDIGIT n          -> print_string (String.make 1 n)
 	| ZERO               -> print_string "zero"
 	| NULL               -> print_string "null"
@@ -430,4 +430,23 @@ let rec read buffer =
   print_string "\n";
   token
 
+let rec examine_all lexbuf =
+	let res = nexttoken lexbuf in
+	print_token res;
+	print_string " ";
+	match res with
+	| EOF -> ()
+	| _  -> examine_all lexbuf
+
+
+let compile file =
+	print_string ("File "^file^" is being treated!\n");
+	try
+		let input_file = open_in file in
+		let lexbuf = Lexing.from_channel input_file in
+		examine_all lexbuf;
+		print_newline ();
+		close_in (input_file)
+	with Sys_error s ->
+		print_endline ("Can’t find file ’" ^ file ^ "’")
 }
