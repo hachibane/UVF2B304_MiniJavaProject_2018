@@ -1,39 +1,135 @@
 (* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
+%{
+  open Java
+%}
+(* token declaration *)
+(* operators *)
+%token EQUAL MINUS PLUS MUL DIV 
 
-(* boolean*)
-%token TRUE
-%token FALSE
+(* keywords *)
+%token TRUE FALSE NULL
+%token CLASS STRUCT
 
-(* Infix Operators*)
-%token PLUS MINUS TIMES DIV AND OR XOR MOD INF SUP ISEQUAL ISNOTEQUAL INFOREQUAL SUPOREQUAL CONDOR CONDAND COND ANNOT LSHIFT RSHIFT USHIFT INFEQUAL SUPEQUAL 
+(* Modifiers *)
+%token PUBLIC ABSTRACT STATIC PROTECTED 
+%token PRIVATE VOLATILE STRICTFP FINAL
+%token TRANSIENT
+(* var types *)
+%token FLOAT INT BOOL DOUBLE
 
-(* Prefix Operators*) 
-%token INCR DECR EXCL TILDE
+(* values *)
+%token <float> REAL
+%token <string> STRING
+%token <int> INTEGER
 
-(* Assignment Operators*)
-%token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL DIVEQUAL ANDEQUAL OREEQUAL XOREQUAL MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL 
+(* delimiters *)
+%token POINT SEMICOLON COMMA COLON
+%token LBRACE RBRACE LPAREN RPAREN
+%token LBRACK RBRACK EOF
 
-(* Delimitors*)
-%token POINT SEMICOLON COMMA COLON LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
+(* other *)
+%token <string> IDENT 
 
-(* Modifiers*)
-%token ABSTRACT PRIVATE PROTECTED PUBLIC STATIC STRICTFP SYNCHRONIZED VOLATILE TRANSIENT NATIVE FINAL
 
-(* Basic Types*)
-%token BYTE SHORT CHAR INT LONG FLOAT DOUBLE BOOLEAN
+(* starting symbol *)
 
-(* Other Keywords*) 
-%token ASSERT BREAK CASE CATCH CLASS CONST CONTINUE DEFAULT DO DEFAULT ELSE ENUM EXTENDS FINALLY FOR IF GOTO IMPLEMENTS IMPORT INSTANCEOF INTERFACE NEW PACKAGE RETURN SUPER SWITCH THIS THROW THROWS TRY VOID WHILE
+%start prog
+%type < Java.classDec > prog
 
-(* Special Tokens *)
-%token EOF
-%token <string> IDENT
-%token ZERO 
-%token NULL
-%token NZDIGIT
-%token <string> COMMENT
+%%
 
-(* rules not done yet *)
-%token NOTDONE
+prog:
+	| classDeclaration EOF { $1 }
 
+(* class grammar *)
+classDeclaration :
+	| normalClassDeclaration { $1 }
+
+normalClassDeclaration :
+	| classModifiers CLASS IDENT classBody 
+	{{  
+		class_modifiers = $1;
+		class_name      = $3;
+		class_body      = $4 
+	}}
+
+classModifiers:
+	| { [] }
+	| classModifier                { [ $1 ] }
+	| classModifiers classModifier { $2::$1 }
+
+classModifier :
+	| PUBLIC		{  Public    }
+	| ABSTRACT		{  Abstract  }
+	| STATIC		{  Static    }
+	| PROTECTED		{  Protected } 
+	| PRIVATE		{  Private   }
+	| FINAL			{  Final     } 
+	| STRICTFP		{  Strictfp  }
+
+classBody :
+	| LBRACE classBodyDeclarations RBRACE { $2 }
+	
+classBodyDeclarations:
+	| SEMICOLON { [] }
+	| classBodyDeclaration { [ $1 ] }
+	| classBodyDeclarations classBodyDeclaration { $2::$1 }
+
+classBodyDeclaration:
+	| classMemberDeclaration { ClassMemberDec $1 }
+
+classMemberDeclaration:	
+	| fieldDeclaration { FieldDec $1 }
+
+fieldDeclaration:
+	| fieldModifiers varType variableDeclarators SEMICOLON 
+	{{ 
+		var_modifiers = $1;
+		var_type = $2;
+		var_declarators = $3
+	}}
+
+varType :
+	| FLOAT		{ Float }
+	| INT		{ Int }
+	| DOUBLE	{ Double }
+	| BOOL	 	{ Bool }
+	| STRING	{ String }
+  
+fieldModifiers:
+	| { [] }
+	| fieldModifier { [ $1 ] }
+	| fieldModifiers fieldModifier { $2::$1 }
+
+fieldModifier :
+	| PUBLIC		{ Public }
+	| STATIC		{  Static    }
+	| PROTECTED		{  Protected } 
+	| PRIVATE		{  Private   }
+	| FINAL			{  Final     } 
+	| STRICTFP		{  Strictfp  }
+	| TRANSIENT		{  Transient }
+	| VOLATILE      {  Volatile  }
+
+variableDeclarators:
+	| variableDeclarator { [ $1 ] }
+	| variableDeclarators COMMA variableDeclarator { $3::$1 }
+
+variableDeclarator:
+	| IDENT { { variable_name = $1 } }
+(*	| IDENT EQUAL (*variableInitializer*) {  } 
+
+
+variableInitializer:
+	| expression   { $1 }
+	| arrayInitializer { $1 } 
+*)
+value :
+  | s = STRING { String s }
+  | i = INT    { Int i }
+  | x = FLOAT  { Float x }
+  | NULL       { Null }
+  | TRUE       { Bool true }
+  | FALSE      { Bool false } 
+%%
