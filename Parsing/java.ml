@@ -1,94 +1,95 @@
-type lexeme = 
-	| Bool of bool
-	| Float of float
-	| Int of int
+(* basic types *)
+
+ 
+type identifier = string
+
+type value = 
+	| True
 	| Null
-	| String of string
-	| Id     of string
-	| Delimiter of string
-	| Keyword of string
+	| False
+	| Integer of int
+	| Real of float 
 
-type classModifiers = 
-	| ClassModifier of string
-	| ClassModifiers of string * classModifiers  
+type varType =
+	| Int  
+	| Float 
+	| Double
+	| String
+	| Bool
 
-type classBody = 
-	| ClassBody of string
+type modifier =
+	| Public    
+	| Abstract  
+	| Static    
+	| Protected  
+	| Private   
+	| Volatile
+	| Transient
+	| Final      
+	| Strictfp
+	| None
+ 
 
-type javaCode = 
-	| ClassDeclaration of classModifiers * string * classBody
+(* ----------------- 8.1 class typing  -------------------------*)
+
+type classDec =
+{ 
+	class_modifiers : modifier list;
+	class_name      : identifier;
+	class_body      : classBodyDec list
+}
+
+and classBodyDec =
+	| ClassMemberDec of classMemberDec 
 
 
-let print_lexeme = function
-	| String s    -> print_string s
-	| Keyword s   -> print_string "keyword : "; print_string s
-	| Id id       -> print_string "identifier : "; print_string id
-	| Delimiter d -> print_string "delimiter : "; print_string d
-	| Int i       -> print_string "int : "; print_int i
-	| Float x     -> print_string "float : "; print_float x
-	| Bool true   -> print_string "true"
-	| Bool false  -> print_string "false"
-	| Null        -> print_string "null"
+and classMemberDec =  
+	| FieldDec of fieldDec
+	| ClassDec of classDec
 
-let print_class_body = function
-	| ClassBody body -> print_string (" {\n"^body^"\n};")
+and fieldDec =
+{ 
+	var_modifiers		: modifier list;
+	var_type			: varType;
+	var_declarators		: variableDec list
+}
 
-let rec print_modifiers modifier = 
-	match modifier with
-	| ClassModifier kw -> print_string kw
-	| ClassModifiers(kw, modifiers) -> print_string kw; print_modifiers modifiers
+and variableDec = 
+{
+	variable_name : identifier;
+}
+
+let print_varType vt = print_string "type : ";
+	 match vt with
+	| Float         -> print_string "float"
+	| Int           -> print_string "int"
+	| Double        -> print_string "double"
+	| Bool          -> print_string "bool"
+
+let print_value v = print_string "value : ";
+	match v with 
+	| True          -> print_string "true"
+	| False         -> print_string "false"
+	| Null          -> print_string "null"
+
+let print_modifier m = print_string "modifier : ";
+	match m with 
+	| Public        -> print_string "public"
+	| Abstract      -> print_string "abstract"
+	| Static        -> print_string "static" 
+	| Protected     -> print_string "protected"
+	| Private       -> print_string "private"
+	| Final         -> print_string "final"
+	| Strictfp      -> print_string "strictfp"	
+
+let print_id id = print_string "identifier : "; print_string id
 
 let rec print_javaCode jc = 
 	match jc with 
-		| ClassDeclaration(modifiers, name, body) -> print_modifiers modifiers;
-							print_string ( " class " ^ name );
-							print_newline ();
-							print_class_body body
+	| classDec as c ->  print_modifiers c.class_modifiers;
+						print_string " class "; print_id c.class_name;
+						print_string ("{\n \t---class body declarations ---\n}")
 
-(* errors handling *)
+and print_modifiers modifiers = List.iter (fun m -> print_modifier m; print_string ", ")
 
-open Lexing
 
-exception Eof
-
-type error =
-	| Illegal_character of char
-	| Illegal_float of string
-
-exception Errord of (error * position * position)
-
-let raise_error err lexbuf =
-		raise ( Errord(err, lexeme_start_p lexbuf, lexeme_end_p lexbuf) )
-
-(* Les erreurs. *)
-let report_error = function
-	| Illegal_character c ->
-		print_string "Illegal character ’";
-		print_char c;
-		print_string "’ "
-	| Illegal_float nb ->
-		print_string "The float ";
-		print_string nb;
-		print_string " is illegal "
-
-let print_position debut fin =
-	if (debut.pos_lnum = fin.pos_lnum) then
-		begin
-			print_string "line ";
-			print_int debut.pos_lnum;
-			print_string " characters ";
-			print_int (debut.pos_cnum - debut.pos_bol);
-			print_string "-";
-			print_int (fin.pos_cnum - fin.pos_bol)
-		end
-	else
-		begin
-			print_string "from line ";
-			print_int debut.pos_lnum;
-			print_string " character ";
-			print_int (debut.pos_cnum - debut.pos_bol);
-			print_string " to line ";
-			print_int fin.pos_lnum;
-			print_string " character ";
-			print_int (fin.pos_cnum - fin.pos_bol)
-		end
