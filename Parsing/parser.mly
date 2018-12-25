@@ -88,12 +88,12 @@ classModifier :
 
 (* 8.1.4 Superclasses and Subclasses *)
 super:
-	| extends classType { { super_extends = $1, super_classType = $2 }
+	| extends classType { { super_extends = $1, super_classType = $2 } }
 
 (* 8.1.5 Superinterfaces *)
 interfaces_opt :
 	| { [] }
-	| interfaces_opt { $1 }
+	| interfaces { $1 }
 
 interfaces:
 	| implements interfaceTypeList { { interfaces_implements = List.rev $1,  interfaceTypeList = List.rev $2} }
