@@ -2,316 +2,164 @@
 
 {
 open Lexing
-(*open Error*)
-type lexeme =
-    | EOF
-    | AND
-    | OR
-    | TRUE
-    | FALSE
-    | IDENT of string
-    | REAL of float
-    | NZDIGIT of char
-    | ZERO
-    | NULL
-    | ABSTRACT
-    | ASSERT
-    | BOOLEAN
-    | BREAK
-    | BYTE
-    | CASE
-    | CATCH
-    | CHAR
-    | CLASS
-    | CONST
-    | CONTINUE
-    | DEFAULT
-    | DO
-    | DOUBLE
-    | ELSE
-    | ENUM
-    | EXTENDS
-    | FINAL
-    | FINALLY
-    | FLOAT
-    | FOR
-    | IF
-    | GOTO
-    | IMPLEMENTS
-    | IMPORT
-    | INSTANCEOF
-    | INT
-    | INTERFACE
-    | LONG
-    | NATIVE
-    | NEW
-    | PACKAGE
-    | PRIVATE
-    | PROTECTED
-    | PUBLIC
-    | RETURN
-    | SHORT
-    | STATIC
-    | STRICTFP
-    | SUPER
-    | SWITCH
-    | SYNCHRONIZED
-    | THIS
-    | THROW
-    | THROWS
-    | TRANSIENT
-    | TRY
-    | VOID
-    | VOLATILE
-    | WHILE
-    | PLUS
-    | MINUS
-    | TIMES
-    | DIV
-    | XOR
-    | MOD
-    | EQUAL
-    | INF
-    | SUP
-    | CONDOR
-    | CONDAND
-    | INCR
-    | DECR
-    | COND
-    | EXCL
-    | TILDE
-    | ANNOT
-    | ISEQUAL
-    | ISNOTEQUAL
-    | PLUSEQUAL
-    | MINUSEQUAL
-    | TIMESEQUAL
-    | DIVEQUAL
-    | ANDEQUAL
-    | OREQUAL
-    | XOREQUAL
-    | MODEQUAL
-    | INFOREQUAL
-    | SUPOREQUAL
-    | LSHIFT
-    | RSHIFT
-    | LSHIFTEQUAL
-    | RSHIFTEQUAL
-    | USHIFT
-    | USHIFTEQUAL
-    | POINT
-    | SEMICOLON
-    | COMMA
-    | COLON
-    | LBRACE
-    | RBRACE
-    | LPAREN
-    | RPAREN
-    | LBRACK
-    | RBRACK
+open Parser
+open Java
+open ErrorHandler
 
-type error =
-	| Illegal_character of char
-	| Illegal_float of string
+let keyword_table = Hashtbl.create 15
+let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
+[
+	(* macro *)
+	"import",		IMPORT;
+	"throw",		THROW;
+	"throws",		THROWS;
+	"extends",		EXTENDS;
+	"implements",	IMMPLEMENTS;
+	"break",		BREAK;
+	"catch",		CATCH;
+	"continue",		CONTINUE;
+	"return",		RETURN;
+	"for",			FOR;
+	"while",		WHILE;
+	"assert",		ASSERT;
+	"do",			DO;
+	"goto",			GOTO;
+	"switch",		SWITCH;
+	"case",			CASE;
+	"if",			IF;
+	"else ",		ELSE;
+	"super",		SUPER;
+	"new",			NEW;
+	(* eval *)
+	"instanceof",	INSTANCEOF;
+	(* special values *)
+	"null",			NULL;
+	"true",			TRUE;
+	"false",		FALSE;
+	"this",			THIS,
+	(* other names *)
+	"package",		PACKAGE;
+	"enum",			ENUM;
+	"class",		CLASS;
+	"struct",		STRUCT;
+	"interface",	INTERFACE;
+	(* Modifiers *)
+	"default",		DEFAULT;
+	"const",		CONST;
+	"public",		PUBLIC;
+	"abstract",		ABSTRACT;
+	"static",		STATIC;
+	"protected",	PROTECTED;
+	"private",		PRIVATE;
+	"volatile",		VOLATILE;
+	"strictfp",		STRICTFP;
+	"transient",	TRANSIENT;
+	"final",		FINAL;
+	"synchronized",	SYNCHRONIZED;
+	(* types *)
+	"byte",			BYTE;
+	"void",			VOID
+	"long",			LONG;
+	"float",		FLOAT;
+	"int",			INT;
+	"boolean",		BOOL;
+	"short",		SHORT;
+	"char",			CHAR;
+	"double",		DOUBLE
+]
 
-exception Error of error * position * position
-
-let raise_error err lexbuf =
-raise (Error(err, lexeme_start_p lexbuf, lexeme_end_p lexbuf))
-(* Les erreurs. *)
-let report_error = function
-	| Illegal_character c ->
-		print_string "Illegal character ’";
-		print_char c;
-		print_string "’ "
-	| Illegal_float nb ->
-		print_string "The float ";
-		print_string nb;
-		print_string " is illegal "
-let print_position debut fin =
- if (debut.pos_lnum = fin.pos_lnum) then
-  begin
-   print_string "line ";
-   print_int debut.pos_lnum;
-   print_string " characters ";
-   print_int (debut.pos_cnum - debut.pos_bol);
-   print_string "-";
-   print_int (fin.pos_cnum - fin.pos_bol)
-  end
- else
-  begin
-   print_string "from line ";
-   print_int debut.pos_lnum;
-   print_string " character ";
-   print_int (debut.pos_cnum - debut.pos_bol);
-   print_string " to line ";
-   print_int fin.pos_lnum;
-   print_string " character ";
-   print_int (fin.pos_cnum - fin.pos_bol)
-  end
 }
-
 (* series of let declarations which precede the rules definition to define some
 	 regular expressions. They will be used during the rules definition *)
 
 (* General regular expressions *)
 
-let letter    = ['a'-'z' 'A'-'Z']
+
 let lowercase = ['a'-'z']
 let uppercase = ['A'-'Z']
-let digit     = ['0'-'9']
+let letter    = (lowercase | uppercase)
 let nzdigit   = ['1'-'9']
-let decimal   = '.' digit*
-let real      = digit * (decimal)?
-
-(* 3.4 Line Terminators *)
-
-let line_feed       = '\010'
-let carriage_return = '\013'
-let line_terminator = (line_feed | carriage_return | carriage_return line_feed)
-
-(* 3.5 Input and Tokens *)
-
-let sub_character = '\026' 
-
-(* 3.6 White Space *)
-
-let horizontal_tab = '\010'
-let space          = ' '
-let white_space    = (space | horizontal_tab)
-
-(* 3.7 Comments *)
-
-let traditional_comment = "/*" (_)* "*/" line_terminator
-let end_of_line_comment = "//" ([^'\010' '\013'])* line_terminator
-let comment             = (traditional_comment | end_of_line_comment)
-
-(* 3.8 Identifiers *)  
-
-let ident = letter ( letter | digit | '_')*
+let digit     = '0' | nzdigit
+let exp       = ['e' 'E'] ['-' '+']? digit+
+let frac      = '.' digit*
+let integer   = '-'? digit+
+let real      = digit* frac? exp?
+let ident     = (letter | '_') ( letter | digit | '_')*
+let white     = [' ' '\t']+
+let newline   = '\r' | '\n' | "\r\n"
 
 (* Rules Definitions *)
 
-(* TO COMPLETE *) 
+(* TO COMPLETE *)
 (* principally completed using keywords page 21, operations page 36
    and pages 586 and 587 *)
 
-rule nexttoken = parse
-	| line_terminator    { Lexing.new_line lexbuf; nexttoken lexbuf }
-	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
-	| white_space+       { nexttoken lexbuf }
-	| eof                { EOF }
-	| ident as str       { IDENT str }
-	| real as nb         { REAL(float_of_string nb) } (*not sure*)
-	| nzdigit as nz      { NZDIGIT(nz) }
-	| "0"                { ZERO }
-	| "null"             { NULL }
-	| "true"             { TRUE }
-	| "false"            { FALSE }
-	| "abstract"         { ABSTRACT }   
-	| "assert"           { ASSERT }
-	| "boolean"          { BOOLEAN }
-	| "break"            { BREAK }
-	| "byte"             { BYTE }
-	| "case"             { CASE }
-	| "catch"            { CATCH }
-	| "char"             { CHAR }
-	| "class"            { CLASS }
-	| "const"            { CONST }
-	| "continue"         { CONTINUE }
-	| "default"          { DEFAULT }
-	| "do"               { DO }
-	| "double"           { DOUBLE }
-	| "else"             { ELSE }
-	| "enum"             { ENUM }
-	| "extends"          { EXTENDS }
-	| "final"            { FINAL }
-	| "finally"          { FINALLY }
-	| "float"            { FLOAT }
-	| "for"              { FOR }
-	| "if"               { IF }
-	| "goto"             { GOTO }
-	| "implements"       { IMPLEMENTS }
-	| "import"           { IMPORT }
-	| "instanceof"       { INSTANCEOF }
-	| "int"              { INT }
-	| "interface"        { INTERFACE }
-	| "long"             { LONG }
-	| "native"           { NATIVE }
-	| "new"              { NEW }
-	| "package"          { PACKAGE }
-	| "private"          { PRIVATE }
-	| "protected"        { PROTECTED }
-	| "public"           { PUBLIC }
-	| "return"           { RETURN }
-	| "short"            { SHORT }
-	| "static"           { STATIC }
-	| "strictfp"         { STRICTFP }
-	| "super"            { SUPER }
-	| "switch"           { SWITCH }
-	| "synchronized"     { SYNCHRONIZED }
-	| "this"             { THIS }
-	| "throw"            { THROW }
-	| "throws"           { THROWS }
-	| "transient"        { TRANSIENT }
-	| "try"              { TRY }
-	| "void"             { VOID }
-	| "volatile"         { VOLATILE }
-	| "while"            { WHILE }
-	| "+"                { PLUS }
-	| "-"                { MINUS }
-	| "*"                { TIMES }
-	| "/"                { DIV }
-	| "&"                { AND }
-	| "|"                { OR }
-	| "^"                { XOR }
-	| "%"                { MOD }
-	| "="                { EQUAL }
-	| "<"                { INF }
-	| ">"                { SUP }
-	| "||"               { CONDOR }
-	| "&&"               { CONDAND }
-	| "++"               { INCR }
-	| "--"               { DECR }
-	| "?"                { COND }
-	| "!"                { EXCL }
-	| "~"                { TILDE }
-	| "@"                { ANNOT }
-	| "=="               { ISEQUAL }
-	| "!="               { ISNOTEQUAL }
-	| "+="               { PLUSEQUAL }
-	| "-="               { MINUSEQUAL }
-	| "*="               { TIMESEQUAL }
-	| "/="               { DIVEQUAL }
-	| "&="               { ANDEQUAL }
-	| "|="               { OREQUAL }
-	| "^="               { XOREQUAL }
-	| "%="               { MODEQUAL }
-	| "<="               { INFOREQUAL }
-	| ">="               { SUPOREQUAL }
-	| "<<"               { LSHIFT }
-	| ">>"               { RSHIFT }
-	| "<<="              { LSHIFTEQUAL }
-	| ">>="              { RSHIFTEQUAL }
-	| ">>>"              { USHIFT }
-	| ">>>="             { USHIFTEQUAL }
-  | "."                { POINT }
-  | ";"                { SEMICOLON }
-  | ","                { COMMA }
-  | ":"                { COLON }
-  | "{"                { LBRACE }
-  | "}"                { RBRACE }
-  | "("                { LPAREN }
-  | ")"                { RPAREN }
-  | "["                { LBRACK }
-  | "]"                { RBRACK }
-  | _ as c             { raise_error (Illegal_character(c)) lexbuf }
-
+rule read = parse
+| white              { read lexbuf }
+| newline            { Lexing.new_line lexbuf; read lexbuf }
+| integer     	     { INTEGER (int_of_string (Lexing.lexeme lexbuf)) }
+| real   	         { REAL (float_of_string (Lexing.lexeme lexbuf)) }
+| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+(*   separator *)
+| "."                { POINT }
+| ";"                { SEMICOLON }
+| ","                { COMMA }
+| ":"                { COLON }
+| "{"                { LBRACE }
+| "}"                { RBRACE }
+| "("                { LPAREN }
+| ")"                { RPAREN }
+| "["                { LBRACK }
+| "]"                { RBRACK }
+(* operators *)
+| "="                { EQUAL }
+| "++"               { INCR }
+| "--"               { DECR }
+| "?"                { COND }
+| "!"                { EXCL }
+| "~"                { TILDE }
+| "@"                { ANNOT }
+| "<<"               { LSHIFT }
+| ">>"               { RSHIFT }
+(* infix operator *)
+| "||"               { CONDOR }
+| "&&"               { CONDAND }
+| "|"                { OR }
+| "^"                { XOR }
+| "&"                { AND }
+| "=="               { ISEQUAL }
+| "!="               { ISNOTEQUAL }
+| "<"                { INF }
+| ">"                { SUP }
+| "<="               { INFOREQUAL }
+| ">="               { SUPOREQUAL }
+| "<<"               { LSHIFT }
+| ">>"               { RSHIFT }
+| ">>>"              { USHIFT }
+| "+"                { PLUS }
+| "-"                { MINUS }
+| "*"                { TIMES }
+| "/"                { DIV }
+| "%"                { MOD }
+(* assignment Operator *)
+| "+="               { PLUSEQUAL }
+| "-="               { MINUSEQUAL }
+| "*="               { TIMESEQUAL }
+| "/="               { DIVEQUAL }
+| "&="               { ANDEQUAL }
+| "|="               { OREQUAL }
+| "^="               { XOREQUAL }
+| "%="               { MODEQUAL }
+| "<<="              { LSHIFTEQUAL }
+| ">>="              { RSHIFTEQUAL }
+| ">>>="             { USHIFTEQUAL }
+| _ as c             { raise_error (Illegal_character(c)) lexbuf }
+| eof                { EOF }
 
 
 {
 
-let print_token = function 
+let print_token = function
 	| EOF                -> print_string "eof"
 	| IDENT i            -> print_string "ident ("; print_string i; print_string ")"
 	| REAL i              -> print_string "real"
@@ -355,10 +203,10 @@ let print_token = function
 	| PRIVATE            -> print_string "private"
 	| PROTECTED          -> print_string "protected"
 	| PUBLIC             -> print_string "public"
-	| RETURN             -> print_string "return" 
+	| RETURN             -> print_string "return"
 	| SHORT              -> print_string "short"
 	| STATIC             -> print_string "static"
-	| STRICTFP           -> print_string "strictfp" 
+	| STRICTFP           -> print_string "strictfp"
 	| SUPER              -> print_string "super"
 	| SWITCH             -> print_string "switch"
 	| SYNCHRONIZED       -> print_string "synchronized"
@@ -417,18 +265,3 @@ let print_token = function
   | RPAREN             -> print_string "rparen"
   | LBRACK             -> print_string "lbrack"
   | RBRACK             -> print_string "rbrack"
- 
-
-(* Function which read a buffer and print the recognized token *)
-
-let rec read buffer = 
-  let token = nexttoken buffer in
-  print_string "Read line ";
-  print_int buffer.lex_curr_p.pos_lnum;
-  print_string " : ";
-  print_token token;
-  print_string "\n";
-  token
-
-}
->>>>>>> 640d5c3fba38716bc42823bf536e736a30b0ab04
