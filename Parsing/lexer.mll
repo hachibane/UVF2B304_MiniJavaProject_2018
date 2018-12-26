@@ -2,7 +2,69 @@
 
 {
 open Lexing
-(*open Error*)
+(*
+let keyword_table = Hashtbl.create 15
+let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
+[
+	(* macro *)
+	"import",		     IMPORT;
+	"throw",		     THROW;
+	"throws",		     THROWS;
+	"extends",		   EXTENDS;
+	"implements",	   IMPLEMENTS;
+	"break",		     BREAK;
+	"catch",		     CATCH;
+	"continue",		   CONTINUE;
+	"return",		     RETURN;
+	"for",			     FOR;
+	"while",		     WHILE;
+	"assert",		     ASSERT;
+	"do",			       DO;
+	"goto",			     GOTO;
+	"switch",		     SWITCH;
+	"case",			     CASE;
+	"if",			       IF;
+	"else ",		     ELSE;
+	"super",		     SUPER;
+	"new",			     NEW;
+	(* eval *)
+	"instanceof",	   INSTANCEOF;
+	(* special values *)
+	"null",			     NULL;
+	"true",			     TRUE;
+	"false",		     FALSE;
+	"this",			     THIS,
+	(* other names *)
+	"package",		   PACKAGE;
+	"enum",			     ENUM;
+	"class",		     CLASS;
+	"struct",		     STRUCT;
+	"interface",	   INTERFACE;
+	(* Modifiers *)
+	"default",		   DEFAULT;
+	"const",		     CONST;
+	"public",		     PUBLIC;
+	"abstract",		   ABSTRACT;
+	"static",		     STATIC;
+	"protected",	   PROTECTED;
+	"private",		   PRIVATE;
+	"volatile",		   VOLATILE;
+	"strictfp",		   STRICTFP;
+	"transient",	   TRANSIENT;
+	"final",		     FINAL;
+	"synchronized",	 SYNCHRONIZED;
+	(* types *)
+	"byte",			     BYTE;
+	"void",			     VOID;
+	"long",			     LONG;
+	"float",		     FLOAT;
+	"int",			     INT;
+	"boolean",		   BOOL;
+	"short",		     SHORT;
+	"char",			     CHAR;
+	"double",		     DOUBLE
+]
+*)
 type lexeme =
     | EOF
     | AND
@@ -162,12 +224,13 @@ let uppercase = ['A'-'Z']
 let digit     = ['0'-'9']
 let nzdigit   = ['1'-'9']
 let decimal   = '.' digit*
-let real      = digit * (decimal)?
+let exp       = ['e' 'E'] ['-' '+']? digit+
+let real      = digit * (decimal)? exp?
 
 (* 3.4 Line Terminators *)
 
-let line_feed       = '\010'
-let carriage_return = '\013'
+let line_feed       = '\n'
+let carriage_return = '\r'
 let line_terminator = (line_feed | carriage_return | carriage_return line_feed)
 
 (* 3.5 Input and Tokens *)
@@ -176,14 +239,14 @@ let sub_character = '\026'
 
 (* 3.6 White Space *)
 
-let horizontal_tab = '\010'
+let horizontal_tab = '\t'
 let space          = ' '
-let white_space    = (space | horizontal_tab)
+let white_space    = (space | horizontal_tab)+
 
 (* 3.7 Comments *)
 
 let traditional_comment = "/*" (_)* "*/" line_terminator
-let end_of_line_comment = "//" ([^'\010' '\013'])* line_terminator
+let end_of_line_comment = "//" ([^'\n' '\r'])* line_terminator
 let comment             = (traditional_comment | end_of_line_comment)
 
 (* 3.8 Identifiers *)  
@@ -200,7 +263,6 @@ rule nexttoken = parse
 	| line_terminator    { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| white_space        { nexttoken lexbuf }
-	| eof                { EOF }
 	| real as nb         { REAL(float_of_string nb) } (*not sure*)
 	| nzdigit as nz      { NZDIGIT(nz) }
 	| "0"                { ZERO }
@@ -304,7 +366,8 @@ rule nexttoken = parse
   | ")"                { RPAREN }
   | "["                { LBRACK }
   | "]"                { RBRACK }
- 	| ident as str       { IDENT str }
+ 	| ident as id        { (*try Hashtbl.find keyword_table id with Not_found -> *)IDENT id }
+	| eof                { EOF }
   | _ as c             { raise_error (Illegal_character(c)) lexbuf }
 
 
