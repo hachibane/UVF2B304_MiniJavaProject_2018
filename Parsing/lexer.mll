@@ -201,7 +201,6 @@ rule nexttoken = parse
 	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| white_space        { nexttoken lexbuf }
 	| eof                { EOF }
-	| ident as str       { IDENT str }
 	| real as nb         { REAL(float_of_string nb) } (*not sure*)
 	| nzdigit as nz      { NZDIGIT(nz) }
 	| "0"                { ZERO }
@@ -305,6 +304,7 @@ rule nexttoken = parse
   | ")"                { RPAREN }
   | "["                { LBRACK }
   | "]"                { RBRACK }
+ 	| ident as str       { IDENT str }
   | _ as c             { raise_error (Illegal_character(c)) lexbuf }
 
 
