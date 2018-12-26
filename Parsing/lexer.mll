@@ -6,7 +6,7 @@ open Parser
 open Java
 open ErrorHandler
 
-let keyword_table = Hashtbl.create 15
+let keyword_table = Hashtbl.create 52
 let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 [
 	(* macro *)
@@ -95,74 +95,72 @@ let newline   = '\r' | '\n' | "\r\n"
    and pages 586 and 587 *)
 
 rule read = parse
-| white              { read lexbuf }
-| newline            { Lexing.new_line lexbuf; read lexbuf }
-| integer     	     { INTEGER (int_of_string (Lexing.lexeme lexbuf)) }
-| real   	         { REAL (float_of_string (Lexing.lexeme lexbuf)) }
-| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
-(*   separator *)
-| "."                { POINT }
-| ";"                { SEMICOLON }
-| ","                { COMMA }
-| ":"                { COLON }
-| "{"                { LBRACE }
-| "}"                { RBRACE }
-| "("                { LPAREN }
-| ")"                { RPAREN }
-| "["                { LBRACK }
-| "]"                { RBRACK }
-(* operators *)
-| "="                { EQUAL }
-| "++"               { INCR }
-| "--"               { DECR }
-| "?"                { COND }
-| "!"                { EXCL }
-| "~"                { TILDE }
-| "@"                { ANNOT }
-| "<<"               { LSHIFT }
-| ">>"               { RSHIFT }
-(* infix operator *)
-| "||"               { CONDOR }
-| "&&"               { CONDAND }
-| "|"                { OR }
-| "^"                { XOR }
-| "&"                { AND }
-| "=="               { ISEQUAL }
-| "!="               { ISNOTEQUAL }
-| "<"                { INF }
-| ">"                { SUP }
-| "<="               { INFOREQUAL }
-| ">="               { SUPOREQUAL }
-| "<<"               { LSHIFT }
-| ">>"               { RSHIFT }
-| ">>>"              { USHIFT }
-| "+"                { PLUS }
-| "-"                { MINUS }
-| "*"                { TIMES }
-| "/"                { DIV }
-| "%"                { MOD }
-(* assignment Operator *)
-| "+="               { PLUSEQUAL }
-| "-="               { MINUSEQUAL }
-| "*="               { TIMESEQUAL }
-| "/="               { DIVEQUAL }
-| "&="               { ANDEQUAL }
-| "|="               { OREQUAL }
-| "^="               { XOREQUAL }
-| "%="               { MODEQUAL }
-| "<<="              { LSHIFTEQUAL }
-| ">>="              { RSHIFTEQUAL }
-| ">>>="             { USHIFTEQUAL }
-| _ as c             { raise_error (Illegal_character(c)) lexbuf }
-| eof                { EOF }
+	| white              { read lexbuf }
+	| newline            { Lexing.new_line lexbuf; read lexbuf }
+	| integer     	     { INTEGER (int_of_string (Lexing.lexeme lexbuf)) }
+	| real   	           { REAL (float_of_string (Lexing.lexeme lexbuf)) }
+	| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+	(*   separator *)
+	| "."                { POINT }
+	| ";"                { SEMICOLON }
+	| ","                { COMMA }
+	| ":"                { COLON }
+	| "{"                { LBRACE }
+	| "}"                { RBRACE }
+	| "("                { LPAREN }
+	| ")"                { RPAREN }
+	| "["                { LBRACK }
+	| "]"                { RBRACK }
+	(* operators *)
+	| "="                { EQUAL }
+	| "++"               { INCR }
+	| "--"               { DECR }
+	| "?"                { COND }
+	| "!"                { EXCL }
+	| "~"                { TILDE }
+	| "@"                { ANNOT }
+	| "<<"               { LSHIFT }
+	| ">>"               { RSHIFT }
+	(* infix operator *)
+	| "||"               { CONDOR }
+	| "&&"               { CONDAND }
+	| "|"                { OR }
+	| "^"                { XOR }
+	| "&"                { AND }
+	| "=="               { ISEQUAL }
+	| "!="               { ISNOTEQUAL }
+	| "<"                { INF }
+	| ">"                { SUP }
+	| "<="               { INFOREQUAL }
+	| ">="               { SUPOREQUAL }
+	| "<<"               { LSHIFT }
+	| ">>"               { RSHIFT }
+	| ">>>"              { USHIFT }
+	| "+"                { PLUS }
+	| "-"                { MINUS }
+	| "*"                { TIMES }
+	| "/"                { DIV }
+	| "%"                { MOD }
+	(* assignment Operator *)
+	| "+="               { PLUSEQUAL }
+	| "-="               { MINUSEQUAL }
+	| "*="               { TIMESEQUAL }
+	| "/="               { DIVEQUAL }
+	| "&="               { ANDEQUAL }
+	| "|="               { OREQUAL }
+	| "^="               { XOREQUAL }
+	| "%="               { MODEQUAL }
+	| "<<="              { LSHIFTEQUAL }
+	| ">>="              { RSHIFTEQUAL }
+	| ">>>="             { USHIFTEQUAL }
+	| _ as c             { raise_error (Illegal_character(c)) lexbuf }
+	| eof                { EOF }
 
-
-{
 
 let print_token = function
 	| EOF                -> print_string "eof"
 	| IDENT i            -> print_string "ident ("; print_string i; print_string ")"
-	| REAL i              -> print_string "real"
+	| REAL i             -> print_string "real"
 	| NZDIGIT n          -> print_string (String.make 1 n)
 	| ZERO               -> print_string "zero"
 	| NULL               -> print_string "null"

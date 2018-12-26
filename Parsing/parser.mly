@@ -79,12 +79,12 @@ classModifiers :
 
 classModifier :
 	| PUBLIC		{  Public    }
-	| ABSTRACT		{  Abstract  }
+	| ABSTRACT	{  Abstract  }
 	| STATIC		{  Static    }
-	| PROTECTED		{  Protected }
+	| PROTECTED	{  Protected }
 	| PRIVATE		{  Private   }
 	| FINAL			{  Final     }
-	| STRICTFP		{  Strictfp  }
+	| STRICTFP	{  Strictfp  }
 
 (* 8.1.4 Superclasses and Subclasses *)
 super:
@@ -136,20 +136,24 @@ fieldDeclaration:
 		field_var_declarators = List.rev $3
 	}}
 
+
+fieldModifiers_opt:
+  | {[]}
+  | fieldModifiers { $1 }
+
 fieldModifiers:
-	| { [] }
 	| fieldModifier { [ $1 ] }
 	| fieldModifiers fieldModifier { $2::$1 }
 
 fieldModifier :
 	| PUBLIC		{ Public }
 	| STATIC		{  Static    }
-	| PROTECTED		{  Protected }
+	| PROTECTED	{  Protected }
 	| PRIVATE		{  Private   }
 	| FINAL			{  Final     }
-	| STRICTFP		{  Strictfp  }
-	| TRANSIENT		{  Transient }
-	| VOLATILE      {  Volatile  }
+	| STRICTFP	{  Strictfp  }
+	| TRANSIENT	{  Transient }
+	| VOLATILE  {  Volatile  }
 
 variableDeclarators:
 	| variableDeclarator { [ $1 ] }
@@ -211,7 +215,7 @@ formalParameter:
 	}}
 
 variableModifiers:
-	| variableModifier { [ $1 ] )
+	| variableModifier { [ $1 ] }
 	| variableModifiers variableModifier{ $2::$1 }
 
 variableModifier:
