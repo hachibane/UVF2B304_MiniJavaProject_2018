@@ -40,12 +40,13 @@
 
 (* Chapter 14 *)
 
-(* token that are needeed from the previous sections *)
+(* token that are needeed from the previous or post sections *)
 
 %token CLASSDECLARATION
 %token TYPE
 %token VARIABLEMODIFIERS
 %token VARIABLEDECLARATORS
+%token IDENTIFIER
 
 %%
 
@@ -109,5 +110,93 @@ emptyStatement:
 		SEMICOLON { ";" }
 
 (* 14.7 *)
+
+labeledStatement:
+		id = IDENTIFIER COLON st = statement { id^" : "^st }
+
+labeledStatementNoShortIf:
+		id = IDENTIFIER COLON stnsi = statementNoShortIf { id^" : "^stnsi }
+
+(* 14.8 *)
+
+expressionStatement:
+		ste = statementExpression SEMICOLON { ste^" ;" }
+
+statementExpression:
+		a    = assignment                      { a }
+	| prie = preIncrementExpression          { prie } 
+	| prde = preDecrementExpression          { prde }
+	| poie = postIncrementExpression         { poie }
+	| pode = postDecrementExpression         { pode }
+	| mi   = methodInvocation                { mi }
+	| cice = classInstanceCreationExpression { cce }
+
+(* 14.9 *)
+
+ifThenStatement:
+		IF LPAREN expr = expression RPAREN st = statement { "if ("^expr^")\n"^s }
+
+ifThenElseStatement:
+		IF LPAREN expr = expression RPAREN stnsi = statementNoShortIf ELSE st = statement { "if ("^expr^")\n"^stnsi^"\nelse\n"^st } 
+
+ifThenElseStatementNoShortIf:
+		IF LPAREN expr = expression RPAREN stnsi1 = statementNoShortIf ELSE stnsi2 = statementNoShortIf { "if ("^expr^")\n"^stnsi1^"\nelse\n"^stnsi2 }
+
+(* 14.10 *)
+
+assertStatement:
+		ASSERT expr = expression SEMICOLON                           { "assert "^expr^" ;" }
+	| ASSERT expr1 = expression COLON expr2 = expression SEMICOLON { "assert "^expr1^" : "^expr2^" ;" }
+
+(* 14.11 *)
+
+switchStatement:
+		SWITCH LPAREN expr = expression RPAREN sb = switchBlock { "switch ("^expr^") "^sb }
+
+switchBlock:
+		LBRACE RBRACE                                    { "{}" }
+	| LBRACE sbstgs = switchBlockStatementGroups RBRACE { "{ "^sbstgs^"}" }
+	| LBRACE sls    = switchLabels RBRACE { "{"^sls^"}" }
+	| LBRACE sbstgs = switchBlockStatementGroups sls = switchLabels RBRACE { "{"^sbstgs^" "^sls^"}" }
+
+switchBlockStatementGroups:
+		sbstg  = switchBlockStatementGroup                                    { sbstg }
+	| sbstgs = switchBlockStatementGroups sbstg = switchBlockStatementGroup { sbstgs^"\n"^sbstg }
+
+switchBlockStatementGroup:
+		sls = switchLabels bss = blockStatements { sls^"\n"^bss }
+
+switchLabels:
+		sl  = switchLabel                   { sl }
+	| sls = switchLabels sl = switchLabel { sls^"\n"^sl }
+
+switchLabel:
+		CASE cexpr = constantExpression COLON { "case "^cexpr^" :" }
+	| CASE ecn   = enumConstantName COLON   { "case "^ecn^" :" }
+	| DEFAULT COLON { "default :" }
+
+enumConstantName:
+		id = IDENTIFIER { id }
+
+(* 14.12 *)
+
+whileStatement:
+		WHILE LPAREN expr = expression RPAREN st = statement { "while ("^expr^")\n"^st }
+
+whileStatementNoShortIf:
+		WHILE LPAREN expr = expression RPAREN stnsi = statementNoShortIf { "while ("^expr^")\n"^stnsi }
+
+(* 14.13 *)
+
+doStatement:
+		DO st = statement WHILE LPAREN expr = expression RPAREN { "do\n"^st^"\nwhile ("^expr^")" }
+
+(* 14.14 *)
+
+forStatement:
+		bfst = basicForStatement    { bfst }
+	| efst = enhancedForStatement { efst }
+
+
 
 %%
