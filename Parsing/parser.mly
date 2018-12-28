@@ -197,6 +197,94 @@ forStatement:
 		bfst = basicForStatement    { bfst }
 	| efst = enhancedForStatement { efst }
 
+basicForStatement:
+		bfst1 = basicForStatement1 { bfst1 }
+	|	bfst2 = basicForStatement2 { bfst2 }
+	| bfst3 = basicForStatement3 { bfst3 }
+	| bfst4 = basicForStatement4 { bfst4 }
+	| bfst5 = basicForStatement5 { bfst5 }
+	| bfst6 = basicForStatement6 { bfst6 }
+	| bfst7 = basicForStatement7 { bfst7 }
+	| bfst8 = basicForStatement8 { bfst8 }
+
+basicForStatement1:
+		FOR LPAREN SEMICOLON SEMICOLON RPAREN st = statement                                               { "for (;;)\n"^st }
+
+basicForStatement2:
+		FOR LPAREN fi = forInit SEMICOLON SEMICOLON RPAREN st = statement                                  { "for ("^fi^";;)\n"^st }
+
+basicForStatement3:
+		 FOR LPAREN SEMICOLON expr = expression SEMICOLON RPAREN s = statement                             { "for (;"^expr^";)\n"^st }
+
+basicForStatement4:
+		FOR LPAREN SEMICOLON SEMICOLON fu = forUpdate RPAREN st = statement                                { "for (;;"^fu^")\n"^st }
+
+basicForStatement5:
+		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON RPAREN st = statement                { "for ("^fi^";"^expr^";)\n"^st }
+
+basicForStatement6:
+		FOR LPAREN fi = forInit SEMICOLON SEMICOLON fu = forUpdate RPAREN st = statement                   { "for ("^fi^";;"^fu^")\n"^st }
+
+basicForStatement7:
+		FOR LPAREN SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN st = statement              { "for (;"^expr^";"^fu^")\n"^st }
+
+basicForStatement8:
+		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN st = statement { "for ("^fi^";"^expr^";"^fu^")\n"^st }
+
+forStatementNoShortIf:
+		fstnsi1 = forStatementNoShortIf1 { fstnsi1 }
+	| fstnsi2 = forStatementNoShortIf2 { fstnsi2 }
+	| fstnsi3 = forStatementNoShortIf3 { fstnsi3 } 
+	| fstnsi4 = forStatementNoShortIf4 { fstnsi4 } 
+	| fstnsi5 = forStatementNoShortIf5 { fstnsi5 }
+	| fstnsi6 = forStatementNoShortIf6 { fstnsi6 }
+	| fstnsi7 = forStatementNoShortIf7 { fstnsi7 }
+	| fstnsi8 = forStatementNoShortIf8 { fstnsi8 }
+
+forStatementNoShortIf1:
+		FOR LPAREN SEMICOLON SEMICOLON RPAREN stnsi = statementNoShortIf                                               { "for (;;)\n"^snsi }
+
+forStatementNoShortIf2:
+		FOR LPAREN fi = forInit SEMICOLON SEMICOLON RPAREN stnsi = statementNoShortIf                                  { "for ("^fi^";;)\n"^stnsi }
+
+forStatementNoShortIf3:
+		FOR LPAREN SEMICOLON expr = expression SEMICOLON RPAREN stnsi = statementNoShortIf                             { "for (;"^expr^";)\n"^stnsi }
+
+forStatementNoShortIf4:
+		FOR LPAREN SEMICOLON SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf                                { "for (;;"^fu^")\n"^stnsi }
+
+forStatementNoShortIf5:
+		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON RPAREN snsi = statementNoShortIf                 { "for ("^fi^";"^expr^";)\n"^stnsi }
+
+forStatementNoShortIf6:
+		FOR LPAREN fi = forInit SEMICOLON SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf                   { "for ("^fi^";;"^fu^")\n"^stnsi }
+
+forStatementNoShortIf7:
+		FOR LPAREN SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf              { "for (;"^expr^";"^fu^")\n"^stnsi }		
+
+forStatementNoShortIf8:
+		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf { "for ("^fi^";"^expr^";"^fu^")\n"^stnsi }
+
+
+forInit:
+		stexprl = statementExpressionList  { stexprl }
+	| lvd     = localVariableDeclaration { lvd }
+
+forUpdate:
+		stexprl = statementExpressionList { stexprl }
+
+statementExpressionList:
+		stexpr = statementExpression                                         { stexpr }
+	| stexprl = statementExpressionList COMMA stexpr = statementExpression { stexprl^" , "^stexpr }
+
+enhancedForStatement:
+		FOR LPAREN t = TYPE id = IDENTIFIER COLON expr = expression RPAREN st = statement                        { "for ("^t^" "^id^" : "^expr^")\n"^st }
+	| FOR LPAREN vm = VARIABLEMODIFIERS t = TYPE id = IDENTIFIER COLON expr = expression RPAREN st = statement { "for ("^vm^" "^t^" "^id^" : "^expr^")\n"^st }
+
+
+
+
+
 
 
 %%
