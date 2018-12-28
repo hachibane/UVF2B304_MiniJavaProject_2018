@@ -148,13 +148,30 @@ extendsInterfaces:
 
 tnterfaceType:
 	| typeDeclSpecifier typeArguments_opt {}
+
+(* 9.1.4 Interface Body and Member Declarations *)
+interfaceBody:
+	| LBRACE interfaceMemberDeclarations_opt RBEACE {}
+
+interfaceMemberDeclarations:
+	| interfaceMemberDeclaration {}
+	| interfaceMemberDeclarations interfaceMemberDeclaration {}
+
+interfaceMemberDeclaration:
+	| constantDeclaration {}
+	| abstractMethodDeclaration {}
+	| classDeclaration {}
+	| interfaceDeclaration {}
+	| COMMA {}
+
+
 (* 9.1.1 Interface Modifiers *)
 interfaceModifiers:
 	| interfaceModifier {}
 	| interfaceModifiers interfaceModifier {}
 
 interfaceModifier:
-	| INNOTATION {}
+	| ANNOTATION {}
 	| PUBLIC {}
 	| PROTECTED {}
 	| PRIVATE {}
@@ -306,6 +323,10 @@ constructorBody:
 	| LBRACE explicitConstructorInvocation_opt blockStatements_opt RBRACE {}
 
 (* 8.8.7.1 Explicit Constructor Invocations *)
+explicitConstructorInvocation_opt:
+	| {}
+	| explicitConstructorInvocation {}
+
 explicitConstructorInvocation:
 	| nonWildTypeArguments_opt THIS LPAREN argumentList_opt RPAREN SEMICOLON {}
 	| nonWildTypeArguments_opt SUPER LPAREN argumentList_opt RPAREN SEMICOLON {}
@@ -343,6 +364,10 @@ enumConstant:
 
 arguments:
 	| LPAREN argumentList_opt RPAREN {}
+
+enumBodyDeclarations_opt:
+	| {}
+	| enumBodyDeclarations {}
 
 enumBodyDeclarations:
 	| SEMICOLON classBodyDeclarations_opt {}
@@ -547,10 +572,6 @@ interfaceType:
 typeDeclSpecifier:
 	| typeName {}
 	| classOrInterfaceType POINT  identifier {}
-
-typeName:
-	|  identifier {}
-	| typeName POINT  identifier {}
 
 typeVariable:
 	|  identifier {}
@@ -856,9 +877,33 @@ finally:
   | FINALLY  block {}
 
 (* 18.1 The Grammar of the Java Programming Language *)
-
 annotationTypeDeclaration:
-	| AROBAS interface identifier annotationTypeBody
+	| AROBAS interface identifier annotationTypeBody {}
 
 annotationTypeBody:
-	| LBRACE LBRACK annotationTypeElementDeclarations RBRACK RBRACE
+	| LBRACE LBRACK annotationTypeElementDeclarations RBRACK RBRACE {}
+
+(* 6.5 Determining the Meaning of a Name *)
+packageName:
+  | identifier {}
+  | packageName POINT identifier {}
+
+typeName:
+  | identifier {}
+  | packageOrTypeName POINT identifier {}
+
+expressionName:
+  | identifier {}
+  | ambiguousName POINT identifier {}
+
+methodName:
+	| identifier {}
+	| ambiguousName POINT identifier {}
+
+packageOrTypeName:
+	| identifier {}
+	| packageOrTypeName POINT identifier {}
+
+ambiguousName:
+	| identifier {}
+	| ambiguousName POINT identifier {}
