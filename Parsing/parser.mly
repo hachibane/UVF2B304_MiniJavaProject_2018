@@ -289,7 +289,7 @@ constructorDeclaration:
 	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
-	| typeParameters_opt simpleTypename LPARENT formalParameterList_opt RPARENT {}
+	| typeParameters_opt simpleTypename LPAREN formalParameterList_opt RPARENT {}
 
 (* 8.8.3 Constructor Modifiers *)
 constructormodifiers:
@@ -362,6 +362,10 @@ normalAnnotation:
 	| elementValuePairs COLON {}
 	| elementValuePair {}
 	| elementValuePairs COMMA elementValuePair {}
+
+elementValuePairs:
+  | elementValuePair {}
+  | elementValuePairs COMMA elementValuePair {}
 
 elementValuePair:
 	|  identifier EQUAL elementValue {}
@@ -768,28 +772,28 @@ forStatementNoShortIf:
 	| forStatementNoShortIf8 {}
 
 forStatementNoShortIf1:
-		FOR LPAREN SEMICOLON SEMICOLON RPAREN  statementNoShortIf {}
+  | FOR LPAREN SEMICOLON SEMICOLON RPAREN  statementNoShortIf {}
 
 forStatementNoShortIf2:
-		FOR LPAREN forInit SEMICOLON SEMICOLON RPAREN statementNoShortIf {}
+  | FOR LPAREN forInit SEMICOLON SEMICOLON RPAREN statementNoShortIf {}
 
 forStatementNoShortIf3:
-		FOR LPAREN SEMICOLON expression SEMICOLON RPAREN statementNoShortIf {}
+  | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN statementNoShortIf {}
 
 forStatementNoShortIf4:
-		FOR LPAREN SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
+  | FOR LPAREN SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 forStatementNoShortIf5:
-		FOR LPAREN forInit SEMICOLON  expression SEMICOLON RPAREN snsi statementNoShortIf {}
+  | FOR LPAREN forInit SEMICOLON  expression SEMICOLON RPAREN snsi statementNoShortIf {}
 
 forStatementNoShortIf6:
-		FOR LPAREN forInit SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
+  | FOR LPAREN forInit SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 forStatementNoShortIf7:
-		FOR LPAREN SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
+  | FOR LPAREN SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 forStatementNoShortIf8:
-		FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
+  | FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 
 forInit:
@@ -817,7 +821,7 @@ breakStatement:
 
 continueStatement:
   | CONTINUE SEMICOLON {}
-	| CONTINUE   identifier SEMICOLON {}
+	| CONTINUE identifier SEMICOLON {}
 
 
 (* 14.17 *)
@@ -850,3 +854,11 @@ catchClause:
 
 finally:
   | FINALLY  block {}
+
+(* 18.1 The Grammar of the Java Programming Language *)
+
+annotationTypeDeclaration:
+	| AROBAS interface identifier annotationTypeBody
+
+annotationTypeBody:
+	| LBRACE LBRACK annotationTypeElementDeclarations RBRACK RBRACE
