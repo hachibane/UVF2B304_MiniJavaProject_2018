@@ -42,11 +42,26 @@
 
 (* token that are needeed from the previous or post sections *)
 
+
+(* pre *)
+
 %token CLASSDECLARATION
 %token TYPE
 %token VARIABLEMODIFIERS
 %token VARIABLEDECLARATORS
 %token IDENTIFIER
+%token FORMALPARAMETER
+
+(* post *)
+%token ASSIGNMENT
+%token METHODINVOCATION
+%token EXPRESSION
+%token PREINCREMENTEXPRESSION 
+%token POSTINCREMENTEXPRESSION 
+%token PREDECREMENTEXPRESSION 
+%token POSTDECREMENTEXPRESSION 
+%token CLASSINSTANCECREATIONEXPRESSION
+%token CONSTANTEXPRESSION
 
 %%
 
@@ -123,35 +138,35 @@ expressionStatement:
 		ste = statementExpression SEMICOLON { ste^" ;" }
 
 statementExpression:
-		a    = assignment                      { a }
-	| prie = preIncrementExpression          { prie } 
-	| prde = preDecrementExpression          { prde }
-	| poie = postIncrementExpression         { poie }
-	| pode = postDecrementExpression         { pode }
-	| mi   = methodInvocation                { mi }
-	| cice = classInstanceCreationExpression { cce }
+		a    = ASSIGNMENT                      { a }
+	| prie = PREINCREMENTEXPRESSION          { prie } 
+	| prde = PREDECREMENTEXPRESSION          { prde }
+	| poie = POSTINCREMENTEXPRESSION         { poie }
+	| pode = POSTDECREMENTEXPRESSION         { pode }
+	| mi   = METHODINVOCATION                { mi }
+	| cice = CLASSINSTANCECREATIONEXPRESSION { cce }
 
 (* 14.9 *)
 
 ifThenStatement:
-		IF LPAREN expr = expression RPAREN st = statement { "if ("^expr^")\n"^s }
+		IF LPAREN expr = EXPRESSION RPAREN st = statement { "if ("^expr^")\n"^s }
 
 ifThenElseStatement:
-		IF LPAREN expr = expression RPAREN stnsi = statementNoShortIf ELSE st = statement { "if ("^expr^")\n"^stnsi^"\nelse\n"^st } 
+		IF LPAREN expr = EXPRESSION RPAREN stnsi = statementNoShortIf ELSE st = statement { "if ("^expr^")\n"^stnsi^"\nelse\n"^st } 
 
 ifThenElseStatementNoShortIf:
-		IF LPAREN expr = expression RPAREN stnsi1 = statementNoShortIf ELSE stnsi2 = statementNoShortIf { "if ("^expr^")\n"^stnsi1^"\nelse\n"^stnsi2 }
+		IF LPAREN expr = EXPRESSION RPAREN stnsi1 = statementNoShortIf ELSE stnsi2 = statementNoShortIf { "if ("^expr^")\n"^stnsi1^"\nelse\n"^stnsi2 }
 
 (* 14.10 *)
 
 assertStatement:
-		ASSERT expr = expression SEMICOLON                           { "assert "^expr^" ;" }
-	| ASSERT expr1 = expression COLON expr2 = expression SEMICOLON { "assert "^expr1^" : "^expr2^" ;" }
+		ASSERT expr = EXPRESSION SEMICOLON                           { "assert "^expr^" ;" }
+	| ASSERT expr1 = EXPRESSION COLON expr2 = EXPRESSION SEMICOLON { "assert "^expr1^" : "^expr2^" ;" }
 
 (* 14.11 *)
 
 switchStatement:
-		SWITCH LPAREN expr = expression RPAREN sb = switchBlock { "switch ("^expr^") "^sb }
+		SWITCH LPAREN expr = EXPRESSION RPAREN sb = switchBlock { "switch ("^expr^") "^sb }
 
 switchBlock:
 		LBRACE RBRACE                                    { "{}" }
@@ -171,7 +186,7 @@ switchLabels:
 	| sls = switchLabels sl = switchLabel { sls^"\n"^sl }
 
 switchLabel:
-		CASE cexpr = constantExpression COLON { "case "^cexpr^" :" }
+		CASE cexpr = CONSTANTEXPRESSION COLON { "case "^cexpr^" :" }
 	| CASE ecn   = enumConstantName COLON   { "case "^ecn^" :" }
 	| DEFAULT COLON { "default :" }
 
@@ -181,15 +196,15 @@ enumConstantName:
 (* 14.12 *)
 
 whileStatement:
-		WHILE LPAREN expr = expression RPAREN st = statement { "while ("^expr^")\n"^st }
+		WHILE LPAREN expr = EXPRESSION RPAREN st = statement { "while ("^expr^")\n"^st }
 
 whileStatementNoShortIf:
-		WHILE LPAREN expr = expression RPAREN stnsi = statementNoShortIf { "while ("^expr^")\n"^stnsi }
+		WHILE LPAREN expr = EXPRESSION RPAREN stnsi = statementNoShortIf { "while ("^expr^")\n"^stnsi }
 
 (* 14.13 *)
 
 doStatement:
-		DO st = statement WHILE LPAREN expr = expression RPAREN { "do\n"^st^"\nwhile ("^expr^")" }
+		DO st = statement WHILE LPAREN expr = EXPRESSION RPAREN { "do\n"^st^"\nwhile ("^expr^")" }
 
 (* 14.14 *)
 
@@ -214,22 +229,22 @@ basicForStatement2:
 		FOR LPAREN fi = forInit SEMICOLON SEMICOLON RPAREN st = statement                                  { "for ("^fi^";;)\n"^st }
 
 basicForStatement3:
-		 FOR LPAREN SEMICOLON expr = expression SEMICOLON RPAREN s = statement                             { "for (;"^expr^";)\n"^st }
+		 FOR LPAREN SEMICOLON expr = EXPRESSION SEMICOLON RPAREN s = statement                             { "for (;"^expr^";)\n"^st }
 
 basicForStatement4:
 		FOR LPAREN SEMICOLON SEMICOLON fu = forUpdate RPAREN st = statement                                { "for (;;"^fu^")\n"^st }
 
 basicForStatement5:
-		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON RPAREN st = statement                { "for ("^fi^";"^expr^";)\n"^st }
+		FOR LPAREN fi = forInit SEMICOLON expr = EXPRESSION SEMICOLON RPAREN st = statement                { "for ("^fi^";"^expr^";)\n"^st }
 
 basicForStatement6:
 		FOR LPAREN fi = forInit SEMICOLON SEMICOLON fu = forUpdate RPAREN st = statement                   { "for ("^fi^";;"^fu^")\n"^st }
 
 basicForStatement7:
-		FOR LPAREN SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN st = statement              { "for (;"^expr^";"^fu^")\n"^st }
+		FOR LPAREN SEMICOLON expr = EXPRESSION SEMICOLON fu = forUpdate RPAREN st = statement              { "for (;"^expr^";"^fu^")\n"^st }
 
 basicForStatement8:
-		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN st = statement { "for ("^fi^";"^expr^";"^fu^")\n"^st }
+		FOR LPAREN fi = forInit SEMICOLON expr = EXPRESSION SEMICOLON fu = forUpdate RPAREN st = statement { "for ("^fi^";"^expr^";"^fu^")\n"^st }
 
 forStatementNoShortIf:
 		fstnsi1 = forStatementNoShortIf1 { fstnsi1 }
@@ -248,22 +263,22 @@ forStatementNoShortIf2:
 		FOR LPAREN fi = forInit SEMICOLON SEMICOLON RPAREN stnsi = statementNoShortIf                                  { "for ("^fi^";;)\n"^stnsi }
 
 forStatementNoShortIf3:
-		FOR LPAREN SEMICOLON expr = expression SEMICOLON RPAREN stnsi = statementNoShortIf                             { "for (;"^expr^";)\n"^stnsi }
+		FOR LPAREN SEMICOLON expr = EXPRESSION SEMICOLON RPAREN stnsi = statementNoShortIf                             { "for (;"^expr^";)\n"^stnsi }
 
 forStatementNoShortIf4:
 		FOR LPAREN SEMICOLON SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf                                { "for (;;"^fu^")\n"^stnsi }
 
 forStatementNoShortIf5:
-		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON RPAREN snsi = statementNoShortIf                 { "for ("^fi^";"^expr^";)\n"^stnsi }
+		FOR LPAREN fi = forInit SEMICOLON expr = EXPRESSION SEMICOLON RPAREN snsi = statementNoShortIf                 { "for ("^fi^";"^expr^";)\n"^stnsi }
 
 forStatementNoShortIf6:
 		FOR LPAREN fi = forInit SEMICOLON SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf                   { "for ("^fi^";;"^fu^")\n"^stnsi }
 
 forStatementNoShortIf7:
-		FOR LPAREN SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf              { "for (;"^expr^";"^fu^")\n"^stnsi }		
+		FOR LPAREN SEMICOLON expr = EXPRESSION SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf              { "for (;"^expr^";"^fu^")\n"^stnsi }		
 
 forStatementNoShortIf8:
-		FOR LPAREN fi = forInit SEMICOLON expr = expression SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf { "for ("^fi^";"^expr^";"^fu^")\n"^stnsi }
+		FOR LPAREN fi = forInit SEMICOLON expr = EXPRESSION SEMICOLON fu = forUpdate RPAREN stnsi = statementNoShortIf { "for ("^fi^";"^expr^";"^fu^")\n"^stnsi }
 
 
 forInit:
@@ -278,12 +293,52 @@ statementExpressionList:
 	| stexprl = statementExpressionList COMMA stexpr = statementExpression { stexprl^" , "^stexpr }
 
 enhancedForStatement:
-		FOR LPAREN t = TYPE id = IDENTIFIER COLON expr = expression RPAREN st = statement                        { "for ("^t^" "^id^" : "^expr^")\n"^st }
-	| FOR LPAREN vm = VARIABLEMODIFIERS t = TYPE id = IDENTIFIER COLON expr = expression RPAREN st = statement { "for ("^vm^" "^t^" "^id^" : "^expr^")\n"^st }
+		FOR LPAREN t = TYPE id = IDENTIFIER COLON expr = EXPRESSION RPAREN st = statement                        { "for ("^t^" "^id^" : "^expr^")\n"^st }
+	| FOR LPAREN vm = VARIABLEMODIFIERS t = TYPE id = IDENTIFIER COLON expr = EXPRESSION RPAREN st = statement { "for ("^vm^" "^t^" "^id^" : "^expr^")\n"^st }
+
+(* 14.15 *)
+
+breakStatement:
+		BREAK SEMICOLON                    { "break ;" }
+	| BREAK id = IDENTIFIER SEMICOLON    { "break "^id^" ;" }
+
+(* 14.16 *)
+
+continueStatement:
+		CONTINUE SEMICOLON                 { "continue ;" }
+	| CONTINUE id = IDENTIFIER SEMICOLON { "continue "^id^" ;" }
 
 
+(* 14.17 *)
 
+returnStatement:
+		RETURN SEMICOLON                   { "return ;" }
+	| RETURN expr = EXPRESSION SEMICOLON { "return "^expr^" ;" }
 
+(* 14.18 *)
+throwStatement:
+		THROW expr = EXPRESSION SEMICOLON  { "throw "^expr^" ;" }
+
+(* 14.19 *)
+synchronizedStatement:
+		SYNCHRONIZED LPAREN expr = EXPRESSION RPAREN b = block { "synchronized ("^e^")"\n^b }
+
+(* 14.20 *)
+
+tryStatement:
+		TRY b = block cs = catches              { "try \n"^b^"\n"^cs }
+	| TRY b = block fn = finally              { "try \n"^b^"\n"^fn }
+	| TRY b = block cs = catches fn = finally { "try \n"^b^"\n"^cs^"\n"fn }
+
+catches:
+		cc = catchClause              { cc }
+	| cs = catches cc = catchClause { cs^"\n"^cc }
+
+catchClause:
+		CATCH LPAREN fparam = FORMALPARAMETER RPAREN b = block { "catch ("^fparam^")\n"^b }
+
+finally:
+		FINALLY b = block { "finally\n"^b }
 
 
 
