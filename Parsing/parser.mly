@@ -63,6 +63,9 @@ prog:
 	| classDeclaration EOF {}
 
 (* 8.1 Class Declaration *)
+className :
+  | identifier {}
+
 classDeclaration :
 	| normalClassDeclaration {}
 	| enumDeclaration {}
@@ -194,6 +197,24 @@ interfaceModifier:
 	| ABSTRACT {}
 	| STATIC {}
 	| STRICTFP {}
+
+(* 9.4 Abstract Method Declarations *)
+abstractMethodDeclaration:
+  | abstractMethodModifiers_opt typeParameters_opt resultType {}
+  | methodDeclarator throws_opt SEMICOLON {}
+
+abstractMethodModifiers_opt:
+  | {}
+  | abstractMethodModifiers {}
+
+abstractMethodModifiers:
+  | abstractMethodModifier {}
+  | abstractMethodModifiers abstractMethodModifier {}
+
+abstractMethodModifier:
+  | annotation  {}
+  | PUBLIC      {}
+  | ABSTRACT    {}
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
@@ -416,7 +437,7 @@ elementValuePair:
 	|  identifier EQUAL elementValue {}
 
 elementValue:
-	| conditionalexpression {}
+	| conditionalExpression {}
 	| annotation {}
 	| elementValueArrayInitializer {}
 
@@ -438,18 +459,21 @@ markerAnnotation:
 singleElementAnnotation:
 	| AROBAS typeName LPAREN elementValue RPAREN {}
 
+
+
+
 (* 15.25 conditional operator ?: *)
-conditionalexpression:
-	| conditionalOrexpression {}
-	| conditionalOrexpression COND expression COLON conditionalexpression {}
+conditionalExpression:
+	| conditionalOrExpression {}
+	| conditionalOrExpression COND expression COLON conditionalExpression {}
 
 (* 15.26 Assignment Operators *)
-assignmentexpression:
-	| conditionalexpression {}
+assignmentExpression:
+	| conditionalExpression {}
 	| assignment {}
 
 assignment:
-	| leftHandSide assignmentOperator assignmentexpression {}
+	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
 	| expressionName {}
@@ -470,7 +494,6 @@ assignmentOperator:
 	| USHIFTEQUAL {}
 
 (* 15.13 Array Access expressions *)
-
 arrayAccess:
 	| expressionName LBRACK expression BRACK {}
 	| primaryNoNewArray LBRACK expression RBRACK {}
@@ -481,6 +504,10 @@ postfixExpression:
 	| expressionName {}
 	| postIncrementExpression {}
 	| postDecrementExpression {}
+
+(* 15.14.3 Postfix Decrement Operator -- *)
+postDecrementExpression:
+  | postfixExpression MINUS MINUS {}
 
 (* 15.14.2 Postfix Increment Operator ++ *)
 postIncrementExpression:
@@ -646,7 +673,7 @@ localVariableDeclarationStatement:
 	| localVariableDeclaration SEMICOLON {}
 
 localVariableDeclaration:
-	| variableModifiers TYPE VARIABLEDECLARATORS {}
+	| variableModifiers TYPE variableDeclarators {}
 
 (* 14.5 *)
 
@@ -695,20 +722,23 @@ labeledStatementNoShortIf:
 (* 14.8 *)
 
 expressionStatement:
-	| statementexpression SEMICOLON {}
+	| statementExpression SEMICOLON {}
 
-statementexpression:
+statementExpression:
 	| assignment {}
-	| preincrementexpression {}
-	| predecrementexpression {}
-	| postincrementexpression {}
-	| postdecrementexpression {}
+	| preincrementExpression {}
+	| predecrementExpression {}
+	| postincrementExpression {}
+	| postdecrementExpression {}
 	| methodInvocation {}
-	| classInstanceCreationexpression {}
+	| classInstanceCreationExpression {}
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
+  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
+   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
+    LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 
 (* 14.9 *)
@@ -750,7 +780,7 @@ switchLabels:
 	| switchLabels switchLabel	 {}
 
 switchLabel:
-	| CASE constantexpression COLON {}
+	| CASE constantExpression COLON {}
 	| CASE enumConstantName COLON {}
 	| DEFAULT COLON {}
 
@@ -850,11 +880,11 @@ forInit:
 	| localVariableDeclaration {}
 
 forUpdate:
-  | statementexpressionList {}
+  | statementExpressionList {}
 
-statementexpressionList:
-  | statementexpression {}
-	| statementexpressionList COMMA statementexpression {}
+statementExpressionList:
+  | statementExpression {}
+	| statementExpressionList COMMA statementExpression {}
 
 enhancedForStatement:
   | FOR LPAREN TYPE  identifier COLON expression RPAREN statement {}
