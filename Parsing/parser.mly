@@ -123,6 +123,39 @@ classMemberDeclaration:
 	| interfaceDeclaration { }
 	| SEMICOLON 		   { }
 
+(* 9.1 Interface Declarations *)
+interfaceDeclaration:
+	| normalInterfaceDeclaration {}
+	| annotationTypeDeclaration {}
+
+normalInterfaceDeclaration:
+	| interfaceModifiers_opt interface identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
+
+(* 9.1.3 Superinterfaces and Subinterfaces *)
+extendsInterfaces_opt:
+	| {}
+	| extendsInterfaces {}
+
+extendsInterfaces:
+	| EXTENDS interfaceType { }
+	| extendsInterfaces COMMA interfaceType { }
+
+tnterfaceType:
+	| typeDeclSpecifier typeArguments_opt { }
+(* 9.1.1 Interface Modifiers *)
+interfaceModifiers:
+	| interfaceModifier { }
+	| interfaceModifiers interfaceModifier { }
+
+interfaceModifier:
+	| INNOTATION { }
+	| PUBLIC { }
+	| PROTECTED { }
+	| PRIVATE { }
+	| ABSTRACT { }
+	| STATIC { }
+	| STRICTFP { }
+
 (* 8.3 Field Declarations *)
 fieldDeclaration:
 	| fieldModifiers_opt jtype variableDeclarators SEMICOLON {}
@@ -495,7 +528,7 @@ classOrInterfaceType:
 	| interfaceType { }
 
 classType:
-	| typeDeclSpecifier ta=typeArguments? { }
+	| typeDeclSpecifier typeArguments? { }
 
 
 interfaceType:
@@ -514,6 +547,10 @@ typeVariable:
 
 arrayType:
 	| ttype LBRACE RBRACE { }
+
+typeArguments_opt:
+	| {}
+	| typeArguments {}
 
 typeArguments:
 	| actualTypeArgumentList { }
