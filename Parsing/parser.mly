@@ -306,14 +306,14 @@ constructorDeclaration:
 	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
-	| typeParameters_opt simpleTypename LPAREN formalParameterList_opt RPARENT {}
+	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPARENT {}
 
 (* 8.8.3 Constructor Modifiers *)
-constructormodifiers:
-	| constructormodifier {}
-	| constructormodifiers constructormodifier {}
+constructorModifiers:
+	| constructorModifier {}
+	| constructorModifiers constructorModifier {}
 
-constructormodifier:
+constructorModifier:
 	| PUBLIC 	 {}
 	| PROTECTED {}
 	| PRIVATE	 {}
@@ -682,8 +682,14 @@ statementexpression:
 	| methodInvocation {}
 	| classInstanceCreationexpression {}
 
-(* 14.9 *)
+(* 15.12 Method Invocation Expressions *)
+methodInvocation:
+	| methodNameLPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt identifierLPAREN argumentList_opt RPAREN
+super POINT nonWildTypeArguments_opt identifierLPAREN argumentList_opt RPAREN
+className POINT super POINT nonWildTypeArguments_opt identifierLPAREN argumentList opt RPAREN
+typeName POINT nonWildTypeArguments identifierLPAREN argumentList optRPAREN
 
+(* 14.9 *)
 ifThenStatement:
 	| IF LPAREN expression RPAREN statement {}
 
