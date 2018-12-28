@@ -70,9 +70,22 @@ classDeclaration :
 normalClassDeclaration :
 	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {}
 
+typeParameters_opt:
+	| {}
+	| typeParameters {}
+
+typeParameters:
+	| INF typeParameter LBRACE COMME typeParameter RBRACE SUP {}
+
+typeParameter:
+	| identifier LBRACK EXTENDS bound RBRACK {}
+
+bound:
+	| ttype LBRACE AND ttype RBRACE {}
+
 (* 8.1.1 Class Modifiers *)
 classModifiers_opt:
-	| 				 {}
+	| {}
 	| classModifiers {}
 
 classModifiers :
@@ -80,13 +93,13 @@ classModifiers :
 	| classModifiers classModifier {}
 
 classModifier :
-	| PUBLIC	 {}
-	| ABSTRACT	 {}
-	| STATIC	 {}
-	| PROTECTED	 {}
-	| PRIVATE	 {}
-	| FINAL		 {}
-	| STRICTFP	 {}
+	| PUBLIC			{}
+	| ABSTRACT		{}
+	| STATIC			{}
+	| PROTECTED		{}
+	| PRIVATE			{}
+	| FINAL				{}
+	| STRICTFP		{}
 
 (* 8.1.4 Superclasses and Subclasses *)
 super:
@@ -105,6 +118,9 @@ interfaceTypeList:
 	| interfaceTypeList COMMA interfaceType {}
 
 (* 8.1.6 Class Body and Member Declarations *)
+classBody_opt:
+	| {}
+	| classBody {}
 classBody :
 	| LBRACE classBodyDeclarations_opt RBRACE {}
 
@@ -181,7 +197,7 @@ interfaceModifier:
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
-	| fieldModifiers_opt jtype variableDeclarators SEMICOLON {}
+	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
 
 
 fieldModifiers_opt:
@@ -226,7 +242,7 @@ methodHeader:
 	| methodModifiers_opt typeParameters_opt resultType methodDeclarator throws_opt {}
 
 resultType:
-	| jtype {}
+	| ttype {}
 	| VOID	 {}
 
 methodDeclarator:
@@ -247,7 +263,7 @@ formalParameters:
 	| formalParameters COMME formalParameter {}
 
 formalParameter:
-	| variableModifiers jtype variableDeclaratorId {}
+	| variableModifiers ttype variableDeclaratorId {}
 
 variableModifiers:
 	| variableModifier {}
@@ -257,7 +273,7 @@ variableModifier:
 	| FINAL {}
 
 lastFormalParameter:
-	| variableModifiers jtype variableDeclaratorId {}
+	| variableModifiers ttype variableDeclaratorId {}
 	| formalParameter {}
 
 (* 8.4.3 Method Modifiers *)
@@ -362,6 +378,10 @@ enumConstants:
 enumConstant:
 	| annotations IDENT arguments_opt classBody_opt {}
 
+arguments_opt :
+	| {}
+	| arguments {}
+
 arguments:
 	| LPAREN argumentList_opt RPAREN {}
 
@@ -456,11 +476,15 @@ arrayAccess:
 	| primaryNoNewArray LBRACK expression RBRACK {}
 
 (* 15.14 Postfix expressions *)
-postfixexpression:
+postfixExpression:
 	| primary {}
 	| expressionName {}
-	| postIncrementexpression {}
-	| postDecrementexpression {}
+	| postIncrementExpression {}
+	| postDecrementExpression {}
+
+(* 15.14.2 Postfix Increment Operator ++ *)
+postIncrementExpression:
+	| postfixExpression PLUS PLUS {}
 
 (* 3.8  identifiers*)
  identifier:
@@ -684,10 +708,8 @@ statementexpression:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodNameLPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt identifierLPAREN argumentList_opt RPAREN
-super POINT nonWildTypeArguments_opt identifierLPAREN argumentList_opt RPAREN
-className POINT super POINT nonWildTypeArguments_opt identifierLPAREN argumentList opt RPAREN
-typeName POINT nonWildTypeArguments identifierLPAREN argumentList optRPAREN
+	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+
 
 (* 14.9 *)
 ifThenStatement:
