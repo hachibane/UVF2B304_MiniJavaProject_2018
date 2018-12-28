@@ -11,7 +11,8 @@
 %token PLUS MINUS TIMES
 %token DIV AND OR XOR
 %token MOD INF SUP
-%token ISEQUAL ISNOTEQUAL INFOREQUAL SUPOREQUAL SUPEQUAL INFEQUAL
+%token ISEQUAL ISNOTEQUAL INFOREQUAL
+%token SUPOREQUAL SUPEQUAL INFEQUAL
 %token CONDOR CONDAND COND ANNOT
 %token LSHIFT RSHIFT USHIFT
 
@@ -19,13 +20,18 @@
 %token INCR DECR EXCL TILDE
 
 (* Assignment Operators*)
-%token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL DIVEQUAL ANDEQUAL OREEQUAL XOREQUAL MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL
+%token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL
+%token DIVEQUAL ANDEQUAL OREEQUAL XOREQUAL
+%token MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL
 
 (* Delimitors*)
-%token POINT SEMICOLON COMMA COLON LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
+%token POINT SEMICOLON COMMA COLON LBRACE
+%token RBRACE LPAREN RPAREN LBRACK RBRACK
 
 (* Modifiers*)
-%token ABSTRACT PRIVATE PROTECTED PUBLIC STATIC STRICTFP SYNCHRONIZED VOLATILE TRANSIENT NATIVE FINAL
+%token ABSTRACT PRIVATE PROTECTED PUBLIC
+%token STATIC STRICTFP SYNCHRONIZED
+%token VOLATILE TRANSIENT NATIVE FINAL
 
 (* Basic Types*)
 %token BYTE SHORT CHAR INT LONG FLOAT DOUBLE BOOLEAN
@@ -54,74 +60,74 @@
 %%
 
 prog:
-	| classDeclaration EOF { }
+	| classDeclaration EOF {}
 
 (* 8.1 Class Declaration *)
 classDeclaration :
-	| normalClassDeclaration { }
-	| enumDeclaration { }
+	| normalClassDeclaration {}
+	| enumDeclaration {}
 
 normalClassDeclaration :
 	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {}
 
 (* 8.1.1 Class Modifiers *)
 classModifiers_opt:
-	| 				 { }
-	| classModifiers { }
+	| 				 {}
+	| classModifiers {}
 
 classModifiers :
-	| classModifier { }
-	| classModifiers classModifier { }
+	| classModifier {}
+	| classModifiers classModifier {}
 
 classModifier :
-	| PUBLIC	{ }
-	| ABSTRACT	{ }
-	| STATIC	{ }
-	| PROTECTED	{ }
-	| PRIVATE	{ }
-	| FINAL		{ }
-	| STRICTFP	{ }
+	| PUBLIC	 {}
+	| ABSTRACT	 {}
+	| STATIC	 {}
+	| PROTECTED	 {}
+	| PRIVATE	 {}
+	| FINAL		 {}
+	| STRICTFP	 {}
 
 (* 8.1.4 Superclasses and Subclasses *)
 super:
-	| EXTENDS classType { }
+	| EXTENDS classType {}
 
 (* 8.1.5 Superinterfaces *)
 interfaces_opt :
-	| { }
-	| interfaces { }
+	| {}
+	| interfaces {}
 
 interfaces:
-	| implements interfaceTypeList { }
+	| implements interfaceTypeList {}
 
 interfaceTypeList:
-	| interfaceType { }
-	| interfaceTypeList COMMA interfaceType { }
+	| interfaceType {}
+	| interfaceTypeList COMMA interfaceType {}
 
 (* 8.1.6 Class Body and Member Declarations *)
 classBody :
-	| LBRACE classBodyDeclarations_opt RBRACE { }
+	| LBRACE classBodyDeclarations_opt RBRACE {}
 
 classBodyDeclarations_opt:
-	| SEMICOLON { }
-	| classBodyDeclarations { }
+	| SEMICOLON {}
+	| classBodyDeclarations {}
 
 classBodyDeclarations:
-	| classBodyDeclaration { }
-	| classBodyDeclarations classBodyDeclaration { }
+	| classBodyDeclaration {}
+	| classBodyDeclarations classBodyDeclaration {}
 
 classBodyDeclaration:
-	| classMemberDeclaration { }
-	| instanceInitializer    { }
-	| staticInitializer      { }
-	| constructorDeclaration { }
+	| classMemberDeclaration {}
+	| instanceInitializer {}
+	| staticInitializer {}
+	| constructorDeclaration {}
 
 classMemberDeclaration:
-	| fieldDeclaration     { }
-	| methodDeclaration    { }
-	| classDeclaration     { }
-	| interfaceDeclaration { }
-	| SEMICOLON 		   { }
+	| fieldDeclaration {}
+	| methodDeclaration {}
+	| classDeclaration {}
+	| interfaceDeclaration {}
+	| SEMICOLON {}
 
 (* 9.1 Interface Declarations *)
 interfaceDeclaration:
@@ -129,7 +135,7 @@ interfaceDeclaration:
 	| annotationTypeDeclaration {}
 
 normalInterfaceDeclaration:
-	| interfaceModifiers_opt interface identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
+	| interfaceModifiers_opt interface  identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
 
 (* 9.1.3 Superinterfaces and Subinterfaces *)
 extendsInterfaces_opt:
@@ -137,24 +143,24 @@ extendsInterfaces_opt:
 	| extendsInterfaces {}
 
 extendsInterfaces:
-	| EXTENDS interfaceType { }
-	| extendsInterfaces COMMA interfaceType { }
+	| EXTENDS interfaceType {}
+	| extendsInterfaces COMMA interfaceType {}
 
 tnterfaceType:
-	| typeDeclSpecifier typeArguments_opt { }
+	| typeDeclSpecifier typeArguments_opt {}
 (* 9.1.1 Interface Modifiers *)
 interfaceModifiers:
-	| interfaceModifier { }
-	| interfaceModifiers interfaceModifier { }
+	| interfaceModifier {}
+	| interfaceModifiers interfaceModifier {}
 
 interfaceModifier:
-	| INNOTATION { }
-	| PUBLIC { }
-	| PROTECTED { }
-	| PRIVATE { }
-	| ABSTRACT { }
-	| STATIC { }
-	| STRICTFP { }
+	| INNOTATION {}
+	| PUBLIC {}
+	| PROTECTED {}
+	| PRIVATE {}
+	| ABSTRACT {}
+	| STATIC {}
+	| STRICTFP {}
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
@@ -163,37 +169,37 @@ fieldDeclaration:
 
 fieldModifiers_opt:
   | {}
-  | fieldModifiers { }
+  | fieldModifiers {}
 
 fieldModifiers:
-	| fieldModifier {  }
-	| fieldModifiers fieldModifier { }
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
 
 fieldModifier :
-	| PUBLIC		{  }
-	| STATIC		{ }
-	| PROTECTED	{ }
-	| PRIVATE		{ }
-	| FINAL			{ }
-	| STRICTFP	{ }
-	| TRANSIENT	{ }
-	| VOLATILE  { }
+	| PUBLIC		 { }
+	| STATIC		 {}
+	| PROTECTED	 {}
+	| PRIVATE		 {}
+	| FINAL			 {}
+	| STRICTFP	 {}
+	| TRANSIENT	 {}
+	| VOLATILE {}
 
 variableDeclarators:
-	| variableDeclarator { }
-	| variableDeclarators COMMA variableDeclarator { }
+	| variableDeclarator {}
+	| variableDeclarators COMMA variableDeclarator {}
 
 variableDeclarator:
-	| variableDeclaratorId {  }
-	| variableDeclaratorId EQUAL variableInitializer { }
+	| variableDeclaratorId {}
+	| variableDeclaratorId EQUAL variableInitializer {}
 
 variableDeclaratorId:
 	| IDENT {}
-	| variableDeclaratorId LBRACK RBRACK { }
+	| variableDeclaratorId LBRACK RBRACK {}
 
 variableInitializer:
-	| expression   { }
-	| arrayInitializer { }
+	| expression {}
+	| arrayInitializer {}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -203,76 +209,76 @@ methodHeader:
 	| methodModifiers_opt typeParameters_opt resultType methodDeclarator throws_opt {}
 
 resultType:
-	| jtype { }
-	| VOID	{ }
+	| jtype {}
+	| VOID	 {}
 
 methodDeclarator:
-	| methodDeclarator LBRACK RBRACK { }
-	| IDENT LPAREN formalParameterList_opt RPAREN { }
+	| methodDeclarator LBRACK RBRACK {}
+	| IDENT LPAREN formalParameterList_opt RPAREN {}
 
 formalParameterList_opt:
-	| { }
-	| formalParameterList { }
+	| {}
+	| formalParameterList {}
 
 (* 8.4.1 Formal Parameters *)
 formalParameterList:
-	| lastFormalParameter { }
-	| formalParameters COMMA lastFormalParameter { }
+	| lastFormalParameter {}
+	| formalParameters COMMA lastFormalParameter {}
 
 formalParameters:
-	| formalParameter { }
-	| formalParameters COMME formalParameter { }
+	| formalParameter {}
+	| formalParameters COMME formalParameter {}
 
 formalParameter:
 	| variableModifiers jtype variableDeclaratorId {}
 
 variableModifiers:
-	| variableModifier { }
-	| variableModifiers variableModifier{ }
+	| variableModifier {}
+	| variableModifiers variableModifier {}
 
 variableModifier:
-	| FINAL { }
+	| FINAL {}
 
 lastFormalParameter:
-	| variableModifiers jtype variableDeclaratorId { }
-	| formalParameter { }
+	| variableModifiers jtype variableDeclaratorId {}
+	| formalParameter {}
 
 (* 8.4.3 Method Modifiers *)
 methodModifiers:
-	| methodModifier { }
-	| methodModifiers methodModifier { }
+	| methodModifier {}
+	| methodModifiers methodModifier {}
 
 methodModifier:
-	| PUBLIC		{ }
-	| PROTECTED		{ }
-	| PRIVATE 		{ }
-	| ABSTRACT 		{ }
-	| STATIC 		{ }
-	| FINAL 		{ }
-	| SYNCHRONIZED 	{ }
-	| NATIVE 		{ }
-	| STRICTFP 		{ }
+	| PUBLIC		 {}
+	| PROTECTED		 {}
+	| PRIVATE 		 {}
+	| ABSTRACT 		 {}
+	| STATIC 		 {}
+	| FINAL 		 {}
+	| SYNCHRONIZED 	 {}
+	| NATIVE 		 {}
+	| STRICTFP 		 {}
 
 (* 8.4.6 Method Throws *)
 throws:
-	| THROWS exceptionTypeList { }
+	| THROWS exceptionTypeList {}
 
 exceptionTypeList:
-	| exceptionType { }
-	| exceptionTypeList COMMA exceptionType { }
+	| exceptionType {}
+	| exceptionTypeList COMMA exceptionType {}
 
 exceptionType:
-	| classType { }
-	| typeVariable {  }
+	| classType {}
+	| typeVariable {}
 
 (* 8.4.7 Method Body *)
 methodBody:
-	| block { }
-	| SEMICOLON {  }
+	| block {}
+	| SEMICOLON {}
 
 (* 8.6 Instance Initializers *)
 instanceInitializer:
-	| block {  }
+	| block {}
 
 (* 8.7 Static Initializers *)
 staticInitializer:
@@ -287,13 +293,13 @@ constructorDeclarator:
 
 (* 8.8.3 Constructor Modifiers *)
 constructormodifiers:
-	| constructormodifier { }
-	| constructormodifiers constructormodifier { }
+	| constructormodifier {}
+	| constructormodifiers constructormodifier {}
 
 constructormodifier:
-	| PUBLIC 	{ }
-	| PROTECTED { }
-	| PRIVATE	{ }
+	| PUBLIC 	 {}
+	| PROTECTED {}
+	| PRIVATE	 {}
 
 (* 8.8.7 Constructor Body *)
 constructorBody:
@@ -310,7 +316,7 @@ nonWildTypeArguments_opt:
 	| nonWildTypeArguments {}
 
 nonWildTypeArguments:
-	| INF referenceTypeList SUP { }
+	| INF referenceTypeList SUP {}
 
 referenceTypeList:
 	| referenceType {}
@@ -318,7 +324,7 @@ referenceTypeList:
 
 (* 8.9 Enums *)
 enumDeclaration:
-	| classModifiers_opt ENUM IDENT interfaces_opt enumBody{}
+	| classModifiers_opt ENUM IDENT interfaces_opt enumBody {}
 
 enumBody:
 	| LBRACE enumConstants_opt COMMA enumBodyDeclarations_opt {}
@@ -358,12 +364,12 @@ normalAnnotation:
 	| elementValuePairs COMMA elementValuePair {}
 
 elementValuePair:
-	| identifier EQUAL elementValue {}
+	|  identifier EQUAL elementValue {}
 
 elementValue:
-	| conditionalExpression {}
+	| conditionalexpression {}
 	| annotation {}
-	| elementValueArrayInitializer{}
+	| elementValueArrayInitializer {}
 
 elementValueArrayInitializer:
 	| LBRACE elementValues_opt COMMA RBRACE {}
@@ -384,17 +390,17 @@ singleElementAnnotation:
 	| AROBAS typeName LPAREN elementValue RPAREN {}
 
 (* 15.25 conditional operator ?: *)
-conditionalExpression:
-	| conditionalOrExpression {}
-	| conditionalOrExpression COND expression COLON conditionalExpression {}
+conditionalexpression:
+	| conditionalOrexpression {}
+	| conditionalOrexpression COND expression COLON conditionalexpression {}
 
 (* 15.26 Assignment Operators *)
-assignmentExpression:
-	| conditionalExpression {}
+assignmentexpression:
+	| conditionalexpression {}
 	| assignment {}
 
 assignment:
-	| leftHandSide assignmentOperator assignmentExpression {}
+	| leftHandSide assignmentOperator assignmentexpression {}
 
 leftHandSide:
 	| expressionName {}
@@ -414,158 +420,433 @@ assignmentOperator:
 	| RSHIFTEQUAL {}
 	| USHIFTEQUAL {}
 
-(* 15.13 Array Access Expressions *)
+(* 15.13 Array Access expressions *)
 
 arrayAccess:
 	| expressionName LBRACK expression BRACK {}
 	| primaryNoNewArray LBRACK expression RBRACK {}
 
-(* 15.14 Postfix Expressions *)
-postfixExpression:
+(* 15.14 Postfix expressions *)
+postfixexpression:
 	| primary {}
 	| expressionName {}
-	| postIncrementExpression {}
-	| postDecrementExpression {}
+	| postIncrementexpression {}
+	| postDecrementexpression {}
 
-(* 3.8 identifiers*)
-identifier:
-	| IDENT { }
+(* 3.8  identifiers*)
+ identifier:
+	| IDENT {}
 
 (* 3.9 Literals*)
 literal:
 	| integerLiteral {}
 	| floatingPointLiteral {}
-	| booleanLiteral { }
-	| characterLiteral { }
-	| stringLiteral { }
-	| nullLiteral { }
+	| booleanLiteral {}
+	| characterLiteral {}
+	| stringLiteral {}
+	| nullLiteral {}
 
 integerLIteral:
-	| decimalIntegerLiteral { }
-	(*| hil=hexIntegerLiteral { hil }
-	| oil=octalIntegerLiteral { oil }*)
+	| decimalIntegerLiteral {}
+	(*| hil=hexIntegerLiteral {}
+	| oil=octalIntegerLiteral {}*)
 
 decimalIntegerLiteral:
-	 | decimalNumeral { }
+	 | decimalNumeral {}
 
 (*hexIntegerLiteral:
-	 hexn=hexNumeral { hexn }
+	 hexn=hexNumeral {}
 
 octalIntegerLiteral:
-	 octn=octalNumeral { octn }*)
+	 octn=octalNumeral {}*)
 
 decimalNumeral:
-	| ZERO { }
-	| NZDIGIT dgs=digits? { }
+	| ZERO {}
+	| NZDIGIT dgs=digits? {}
 
 digits:
-	| digit { }
-	| digits digit { }
+	| digit {}
+	| digits digit {}
 
 digit:
-	| ZERO { }
-	| NZDIGIT { }
+	| ZERO {}
+	| NZDIGIT {}
 
 floatingPointLiteral:
-	 | decimalFloatingPointLiteral { }
+	 | decimalFloatingPointLiteral {}
 
 (* to complete with Exponent part e E*)
 decimalFloatingPointLiteral:
-	| digits POINT digits COND { }
-	| POINT digits { }
+	| digits POINT digits COND {}
+	| POINT digits {}
 
 booleanLiteral:
-	| TRUE { }
-	| FALSE { }
+	| TRUE {}
+	| FALSE {}
 
 characterLiteral:
 	| NOTDONE {}
 
 stringLiteral:
-	| IDENT { }
+	| IDENT {}
 
 nullLiteral:
-	NULL { }
+	NULL {}
 
 (* 4. Types, Values, and Variables*)
 
 (*4.1 The kind of  Types and Values*)
 
 ttype:
-	| primitiveType { }
-	| referenceType { }
+	| primitiveType {}
+	| referenceType {}
 
 (*4.2 Primitive Types and Values*)
 
 primitiveType:
-	| numericType { }
-	| BOOLEAN { }
+	| numericType {}
+	| BOOLEAN {}
 
 numericType:
 	| integralType {}
 	| floatingPointType {}
 
 integralType:
-	| BYTE { }
-	| SHORT { }
-	| INT { }
-	| LONG { }
-	| CHAR { }
+	| BYTE {}
+	| SHORT {}
+	| INT {}
+	| LONG {}
+	| CHAR {}
 
 floatingPointType:
-	| FLOAT { }
-	| DOUBLE { }
+	| FLOAT {}
+	| DOUBLE {}
 
 (*4.3 Reference Types and Values*)
 
 referenceType:
-	| classOrInterfaceType { }
-	| typeVariable { }
-	| arrayType { }
+	| classOrInterfaceType {}
+	| typeVariable {}
+	| arrayType {}
 
 classOrInterfaceType:
-	| classType { }
-	| interfaceType { }
+	| classType {}
+	| interfaceType {}
 
 classType:
-	| typeDeclSpecifier typeArguments? { }
+	| typeDeclSpecifier typeArguments? {}
 
 
 interfaceType:
-	| typeDeclSpecifier typeArguments COND { }
+	| typeDeclSpecifier typeArguments COND {}
 
 typeDeclSpecifier:
-	| typeName { }
-	| classOrInterfaceType POINT identifier { }
+	| typeName {}
+	| classOrInterfaceType POINT  identifier {}
 
 typeName:
-	| identifier { }
-	| typeName POINT identifier { }
+	|  identifier {}
+	| typeName POINT  identifier {}
 
 typeVariable:
-	| identifier { }
+	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE { }
+	| ttype LBRACE RBRACE {}
 
 typeArguments_opt:
 	| {}
 	| typeArguments {}
 
 typeArguments:
-	| actualTypeArgumentList { }
+	| actualTypeArgumentList {}
 
 actualTypeArgumentList:
 	| actualTypeArgument
-	| actualTypeArgument COMMA actualTypeArgument {  }
+	| actualTypeArgument COMMA actualTypeArgument {}
 
 actualTypeArgument:
-	| referenceType { }
-	| wildcard { }
+	| referenceType {}
+	| wildcard {}
 
 wildcard:
-	| wildcardBounds COND { }
+	| wildcardBounds COND {}
 
 wildcardBounds:
-	| EXTENDS referenceType { }
-	| SUPER referenceType { }
+	| EXTENDS referenceType {}
+	| SUPER referenceType {}
+
+(* 14.2 *)
+
+block:
+	| LBRACE  blockStatements RBRACE {}
+	| LBRACE RBRACE {}
+
+blockStatements:
+	| blockStatement {}
+	| blockStatements blockStatement {}
+
+blockStatement:
+	| localVariableDeclarationStatement {}
+	| CLASSDECLARATION {}
+	| statement {}
+
+(* 14.4 *)
+
+localVariableDeclarationStatement:
+	| localVariableDeclaration SEMICOLON {}
+
+localVariableDeclaration:
+	| variableModifiers TYPE VARIABLEDECLARATORS {}
+
+(* 14.5 *)
+
+statement:
+	| statementWithoutTrailingSubstatement {}
+	| labeledStatement {}
+	| ifThenStatement {}
+	| ifThenElseStatement {}
+	| whileStatement {}
+	| forStatement {}
+
+statementWithoutTrailingSubstatement:
+	| block {}
+	| emptyStatement {}
+	| expressionStatement {}
+	| assertStatement {}
+	| switchStatement {}
+	| doStatement {}
+	| breakStatement {}
+	| continueStatement {}
+	| returnStatement {}
+	| synchronizedStatement {}
+	| throwStatement {}
+	| tryStatement {}
+
+statementNoShortIf:
+	| statementWithoutTrailingSubstatement {}
+	| labeledStatementNoShortIf {}
+	| ifThenElseStatementNoShortIf {}
+	| whileStatementNoShortIf {}
+	| forStatementNoShortIf {}
+
+(* 14.6 *)
+
+emptyStatement:
+	| SEMICOLON {}
+
+(* 14.7 *)
+
+labeledStatement:
+	|  identifier COLON statement {}
+
+labeledStatementNoShortIf:
+	|  identifier COLON statementNoShortIf {}
+
+(* 14.8 *)
+
+expressionStatement:
+	| statementexpression SEMICOLON {}
+
+statementexpression:
+	| assignment {}
+	| preincrementexpression {}
+	| predecrementexpression {}
+	| postincrementexpression {}
+	| postdecrementexpression {}
+	| methodInvocation {}
+	| classInstanceCreationexpression {}
+
+(* 14.9 *)
+
+ifThenStatement:
+	| IF LPAREN expression RPAREN statement {}
+
+ifThenElseStatement:
+	| IF LPAREN expression RPAREN statementNoShortIf ELSE statement {}
+
+ifThenElseStatementNoShortIf:
+	| IF LPAREN expression RPAREN statementNoShortIf ELSE statementNoShortIf {}
+
+(* 14.10 *)
+
+assertStatement:
+	| ASSERT expression SEMICOLON {}
+	| ASSERT expression COLON expression SEMICOLON {}
+
+(* 14.11 *)
+
+switchStatement:
+	| SWITCH LPAREN expression RPAREN switchBlock {}
+
+switchBlock:
+| LBRACE RBRACE												 {}
+	| LBRACE switchBlockStatementGroups RBRACE				 {}
+	| LBRACE sls switchLabels RBRACE						 {}
+	| LBRACE switchBlockStatementGroups switchLabels RBRACE {}
+
+switchBlockStatementGroups:
+	| switchBlockStatementGroup	 {}
+	| switchBlockStatementGroups switchBlockStatementGroup {}
+
+switchBlockStatementGroup:
+	| switchLabels blockStatements {}
+
+switchLabels:
+	| switchLabel				 {}
+	| switchLabels switchLabel	 {}
+
+switchLabel:
+	| CASE constantexpression COLON {}
+	| CASE enumConstantName COLON {}
+	| DEFAULT COLON {}
+
+enumConstantName:
+	|  identifier {}
+
+(* 14.12 *)
+
+whileStatement:
+	| WHILE LPAREN expression RPAREN statement {}
+
+whileStatementNoShortIf:
+	| WHILE LPAREN expression RPAREN statementNoShortIf {}
+
+(* 14.13 *)
+
+doStatement:
+	| DO statement WHILE LPAREN expression RPAREN {}
+
+(* 14.14 *)
+
+forStatement:
+	| basicForStatement {}
+	| enhancedForStatement {}
+
+basicForStatement:
+	| basicForStatement1 {}
+	| basicForStatement2 {}
+	| basicForStatement3 {}
+	| basicForStatement4 {}
+	| basicForStatement5 {}
+	| basicForStatement6 {}
+	| basicForStatement7 {}
+	| basicForStatement8 {}
+
+basicForStatement1:
+	| FOR LPAREN SEMICOLON SEMICOLON RPAREN statement {}
+
+basicForStatement2:
+	| FOR LPAREN forInit SEMICOLON SEMICOLON RPAREN statement {}
+
+basicForStatement3:
+  | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN statement {}
+
+basicForStatement4:
+  | FOR LPAREN SEMICOLON SEMICOLON forUpdate RPAREN statement {}
+
+basicForStatement5:
+  | FOR LPAREN forInit SEMICOLON expression SEMICOLON RPAREN statement {}
+
+basicForStatement6:
+  | FOR LPAREN forInit SEMICOLON SEMICOLON forUpdate RPAREN statement {}
+
+basicForStatement7:
+  | FOR LPAREN SEMICOLON expression SEMICOLON forUpdate RPAREN statement {}
+
+basicForStatement8:
+  | FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statement {}
+
+forStatementNoShortIf:
+  | forStatementNoShortIf1 {}
+	| forStatementNoShortIf2 {}
+	| forStatementNoShortIf3 {}
+	| forStatementNoShortIf4 {}
+	| forStatementNoShortIf5 {}
+	| forStatementNoShortIf6 {}
+	| forStatementNoShortIf7 {}
+	| forStatementNoShortIf8 {}
+
+forStatementNoShortIf1:
+		FOR LPAREN SEMICOLON SEMICOLON RPAREN  statementNoShortIf {}
+
+forStatementNoShortIf2:
+		FOR LPAREN forInit SEMICOLON SEMICOLON RPAREN statementNoShortIf {}
+
+forStatementNoShortIf3:
+		FOR LPAREN SEMICOLON expression SEMICOLON RPAREN statementNoShortIf {}
+
+forStatementNoShortIf4:
+		FOR LPAREN SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
+
+forStatementNoShortIf5:
+		FOR LPAREN forInit SEMICOLON  expression SEMICOLON RPAREN snsi statementNoShortIf {}
+
+forStatementNoShortIf6:
+		FOR LPAREN forInit SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
+
+forStatementNoShortIf7:
+		FOR LPAREN SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
+
+forStatementNoShortIf8:
+		FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
+
+
+forInit:
+  | statementexpressionList {}
+	| localVariableDeclaration {}
+
+forUpdate:
+  | statementexpressionList {}
+
+statementexpressionList:
+  | statementexpression {}
+	| statementexpressionList COMMA statementexpression {}
+
+enhancedForStatement:
+  | FOR LPAREN TYPE  identifier COLON expression RPAREN statement {}
+	| FOR LPAREN variableModifiers  TYPE identifier COLON  expression RPAREN  statement {}
+
+(* 14.15 *)
+
+breakStatement:
+  | BREAK SEMICOLON {}
+	| BREAK   identifier SEMICOLON {}
+
+(* 14.16 *)
+
+continueStatement:
+  | CONTINUE SEMICOLON {}
+	| CONTINUE   identifier SEMICOLON {}
+
+
+(* 14.17 *)
+
+returnStatement:
+  | RETURN SEMICOLON {}
+	| RETURN  expression SEMICOLON {}
+
+(* 14.18 *)
+throwStatement:
+  | THROW  expression SEMICOLON {}
+
+(* 14.19 *)
+synchronizedStatement:
+  | SYNCHRONIZED LPAREN  expression RPAREN  block {}
+
+(* 14.20 *)
+
+tryStatement:
+  | TRY  block  catches {}
+	| TRY  block  finally {}
+	| TRY  block  catches  finally {}
+
+catches:
+  | catchClause {}
+  | catches  catchClause {}
+
+catchClause:
+  | CATCH LPAREN   formalParameter RPAREN  block {}
+
+finally:
+  | FINALLY  block {}
