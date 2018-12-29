@@ -34,15 +34,16 @@
 %token VOLATILE TRANSIENT NATIVE FINAL
 
 (* Basic Types*)
-%token BYTE SHORT CHAR INT LONG FLOAT DOUBLE BOOLEAN
+%token BYTE SHORT CHAR INT
+%token LONG FLOAT DOUBLE BOOLEAN
 
 (* Other Keywords*)
 %token ASSERT BREAK CASE CATCH CLASS CONST
-%token CONTINUE DO DEFAULT ELSE ENUM EXTENDS
-%token FINALLY FOR IF GOTO IMPLEMENTS IMPORT
-%token INSTANCEOF INTERFACE NEW PACKAGE RETURN
-%token SUPER SWITCH THIS THROW THROWS TRY VOID WHILE
-%token AROBAS
+%token CONTINUE DO DEFAULT ELSE ENUM
+%token FINALLY FOR IF GOTO IMPLEMENTS
+%token INSTANCEOF INTERFACE NEW PACKAGE
+%token SUPER SWITCH THIS THROW RETURN EXTENDS
+%token AROBAS THROWS TRY VOID WHILE IMPORT
 (* Special Tokens *)
 %token EOF
 %token <string> IDENT
@@ -96,13 +97,13 @@ classModifiers :
 	| classModifiers classModifier {}
 
 classModifier :
-	| PUBLIC			{}
-	| ABSTRACT			{}
-	| STATIC			{}
-	| PROTECTED			{}
-	| PRIVATE			{}
-	| FINAL				{}
-	| STRICTFP			{}
+	| PUBLIC {}
+	| ABSTRACT {}
+	| STATIC {}
+	| PROTECTED {}
+	| PRIVATE {}
+	| FINAL {}
+	| STRICTFP {}
 
 (* 8.1.4 Superclasses and Subclasses *)
 super_opt:
@@ -118,7 +119,7 @@ interfaces_opt :
 	| interfaces {}
 
 interfaces:
-	| implements interfaceTypeList {}
+	| IMPLEMENTS interfaceTypeList {}
 
 interfaceTypeList:
 	| interfaceType {}
@@ -146,88 +147,15 @@ classBodyDeclaration:
 	| constructorDeclaration	{}
 
 classMemberDeclaration:
-	| fieldDeclaration			{}
-	| methodDeclaration			{}
-	| classDeclaration			{}
-	| interfaceDeclaration		{}
-	| SEMICOLON					{}
-
-(* 9.1 Interface Declarations *)
-interfaceDeclaration:
-	| normalInterfaceDeclaration {}
-	| annotationTypeDeclaration {}
-
-normalInterfaceDeclaration:
-	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
-
-(* 9.1.3 Superinterfaces and Subinterfaces *)
-extendsInterfaces_opt:
-	| {}
-	| extendsInterfaces {}
-
-extendsInterfaces:
-	| EXTENDS interfaceType {}
-	| extendsInterfaces COMMA interfaceType {}
-
-tnterfaceType:
-	| typeDeclSpecifier typeArguments_opt {}
-
-(* 9.1.4 Interface Body and Member Declarations *)
-interfaceBody:
-	| LBRACE interfaceMemberDeclarations_opt RBEACE {}
-
-interfaceMemberDeclarations_opt:
-  | {}
-  | interfaceMemberDeclarations {}
-
-interfaceMemberDeclarations:
-	| interfaceMemberDeclaration {}
-	| interfaceMemberDeclarations interfaceMemberDeclaration {}
-
-interfaceMemberDeclaration:
-	| constantDeclaration {}
-	| abstractMethodDeclaration {}
+	| fieldDeclaration {}
+	| methodDeclaration {}
 	| classDeclaration {}
 	| interfaceDeclaration {}
-	| COMMA {}
-
-
-(* 9.1.1 Interface Modifiers *)
-interfaceModifiers:
-	| interfaceModifier {}
-	| interfaceModifiers interfaceModifier {}
-
-interfaceModifier:
-	| annotation {}
-	| PUBLIC {}
-	| PROTECTED {}
-	| PRIVATE {}
-	| ABSTRACT {}
-	| STATIC {}
-	| STRICTFP {}
-
-(* 9.4 Abstract Method Declarations *)
-abstractMethodDeclaration:
-  | abstractMethodModifiers_opt typeParameters_opt resultType {}
-  | methodDeclarator throws_opt SEMICOLON {}
-
-abstractMethodModifiers_opt:
-  | {}
-  | abstractMethodModifiers {}
-
-abstractMethodModifiers:
-  | abstractMethodModifier {}
-  | abstractMethodModifiers abstractMethodModifier {}
-
-abstractMethodModifier:
-  | annotation  {}
-  | PUBLIC      {}
-  | ABSTRACT    {}
+	| SEMICOLON  {}
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
 	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
-
 
 fieldModifiers_opt:
   | {}
@@ -238,14 +166,14 @@ fieldModifiers:
 	| fieldModifiers fieldModifier {}
 
 fieldModifier :
-	| PUBLIC		 { }
+	| PUBLIC     {}
 	| STATIC		 {}
 	| PROTECTED	 {}
 	| PRIVATE		 {}
 	| FINAL			 {}
 	| STRICTFP	 {}
 	| TRANSIENT	 {}
-	| VOLATILE {}
+	| VOLATILE   {}
 
 variableDeclarators:
 	| variableDeclarator {}
@@ -272,7 +200,7 @@ methodHeader:
 
 resultType:
 	| ttype {}
-	| VOID	 {}
+	| VOID {}
 
 methodDeclarator:
 	| methodDeclarator LBRACK RBRACK {}
@@ -288,7 +216,7 @@ formalParameterList:
 	| formalParameters COMMA lastFormalParameter {}
 
 formalParameters:
-	| formalParameter {}
+	| formalParameter  {}
 	| formalParameters COMME formalParameter {}
 
 formalParameter:
@@ -311,15 +239,15 @@ methodModifiers:
 	| methodModifiers methodModifier {}
 
 methodModifier:
-	| PUBLIC		 {}
-	| PROTECTED		 {}
-	| PRIVATE 		 {}
-	| ABSTRACT 		 {}
-	| STATIC 		 {}
-	| FINAL 		 {}
-	| SYNCHRONIZED 	 {}
-	| NATIVE 		 {}
-	| STRICTFP 		 {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
 
 (* 8.4.6 Method Throws *)
 throws:
@@ -353,7 +281,14 @@ constructorDeclaration:
 constructorDeclarator:
 	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPAREN {}
 
+simpleTypeName:
+  | identifier {}
+
 (* 8.8.3 Constructor Modifiers *)
+constructorModifiers_opt:
+  | {}
+  | constructorModifiers {}
+
 constructorModifiers:
 	| constructorModifier {}
 	| constructorModifiers constructorModifier {}
@@ -421,6 +356,93 @@ enumBodyDeclarations_opt:
 enumBodyDeclarations:
 	| SEMICOLON classBodyDeclarations_opt {}
 
+(* 9.1 Interface Declarations *)
+interfaceDeclaration:
+	| normalInterfaceDeclaration {}
+	| annotationTypeDeclaration {}
+
+normalInterfaceDeclaration:
+	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
+
+(* 9.1.3 Superinterfaces and Subinterfaces *)
+extendsInterfaces_opt:
+	| {}
+	| extendsInterfaces {}
+
+extendsInterfaces:
+	| EXTENDS interfaceType {}
+	| extendsInterfaces COMMA interfaceType {}
+
+tnterfaceType:
+	| typeDeclSpecifier typeArguments_opt {}
+
+(* 9.1.4 Interface Body and Member Declarations *)
+interfaceBody:
+	| LBRACE interfaceMemberDeclarations_opt RBRACE {}
+
+interfaceMemberDeclarations_opt:
+  | {}
+  | interfaceMemberDeclarations {}
+
+interfaceMemberDeclarations:
+	| interfaceMemberDeclaration {}
+	| interfaceMemberDeclarations interfaceMemberDeclaration {}
+
+interfaceMemberDeclaration:
+	| constantDeclaration {}
+	| abstractMethodDeclaration {}
+	| classDeclaration {}
+	| interfaceDeclaration {}
+	| COMMA {}
+
+(* 9.1.1 Interface Modifiers *)
+interfaceModifiers:
+	| interfaceModifier {}
+	| interfaceModifiers interfaceModifier {}
+
+interfaceModifier:
+	| annotation {}
+	| PUBLIC {}
+	| PROTECTED {}
+	| PRIVATE {}
+	| ABSTRACT {}
+	| STATIC {}
+	| STRICTFP {}
+
+(* 9.4 Abstract Method Declarations *)
+abstractMethodDeclaration:
+  | abstractMethodModifiers_opt typeParameters_opt resultType {}
+  | methodDeclarator throws_opt SEMICOLON {}
+
+abstractMethodModifiers_opt:
+  | {}
+  | abstractMethodModifiers {}
+
+abstractMethodModifiers:
+  | abstractMethodModifier {}
+  | abstractMethodModifiers abstractMethodModifier {}
+
+abstractMethodModifier:
+  | annotation  {}
+  | PUBLIC      {}
+  | ABSTRACT    {}
+
+(* 10.6 Array Initializers *)
+arrayInitializer:
+  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+variableInitializers:
+  | variableInitializer {}
+  | variableInitializers COMMA variableInitializer {}
+
+variableInitializer:
+  | expression {}
+  | arrayInitializer {}
+
+
+
+
+
+
 (* 9.7 annotations *)
 annotations:
 	| annotation {}
@@ -436,6 +458,10 @@ normalAnnotation:
 	| elementValuePairs COLON {}
 	| elementValuePair {}
 	| elementValuePairs COMMA elementValuePair {}
+
+elementValuePairs_opt:
+  | {}
+  | elementValuePairs {}
 
 elementValuePairs:
   | elementValuePair {}
@@ -480,7 +506,7 @@ literal:
 	| stringLiteral {}
 	| nullLiteral {}
 
-integerLIteral:
+integerLiteral:
 	| decimalIntegerLiteral {}
 	(*| hil=hexIntegerLiteral {}
 	| oil=octalIntegerLiteral {}*)
@@ -609,8 +635,12 @@ wildcardBounds:
 (* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
 block:
-	| LBRACE  blockStatements RBRACE {}
+	| LBRACE blockStatements RBRACE {}
 	| LBRACE RBRACE {}
+
+blockStatements_opt :
+  | {}
+  | blockStatements {}
 
 blockStatements:
 	| blockStatement {}
@@ -618,7 +648,7 @@ blockStatements:
 
 blockStatement:
 	| localVariableDeclarationStatement {}
-	| CLASSDECLARATION {}
+	| classDeclaration {}
 	| statement {}
 
 (* 14.4 *)
@@ -626,7 +656,7 @@ localVariableDeclarationStatement:
 	| localVariableDeclaration SEMICOLON {}
 
 localVariableDeclaration:
-	| variableModifiers TYPE variableDeclarators {}
+	| variableModifiers ttype variableDeclarators {}
 
 (* 14.5 *)
 statement:
@@ -799,7 +829,7 @@ forStatementNoShortIf4:
   | FOR LPAREN SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 forStatementNoShortIf5:
-  | FOR LPAREN forInit SEMICOLON  expression SEMICOLON RPAREN snsi statementNoShortIf {}
+  | FOR LPAREN forInit SEMICOLON  expression SEMICOLON RPAREN statementNoShortIf {}
 
 forStatementNoShortIf6:
   | FOR LPAREN forInit SEMICOLON SEMICOLON forUpdate RPAREN statementNoShortIf {}
@@ -822,8 +852,8 @@ statementExpressionList:
 	| statementExpressionList COMMA statementExpression {}
 
 enhancedForStatement:
-  | FOR LPAREN TYPE  identifier COLON expression RPAREN statement {}
-	| FOR LPAREN variableModifiers  TYPE identifier COLON  expression RPAREN  statement {}
+  | FOR LPAREN ttype  identifier COLON expression RPAREN statement {}
+	| FOR LPAREN variableModifiers  ttype identifier COLON  expression RPAREN  statement {}
 
 (* 14.15 *)
 breakStatement:
@@ -859,16 +889,12 @@ catches:
   | catches  catchClause {}
 
 catchClause:
-  | CATCH LPAREN   formalParameter RPAREN  block {}
+  | CATCH LPAREN formalParameter RPAREN block {}
 
 finally:
-  | FINALLY  block {}
+  | FINALLY block {}
 
-(* 15.9 Class Instance Creation Expressions
-And now a new object took possession of my soul.
-A Tale of the Ragged Mountains
-A class instance creation expression is used to create new objects that are
-instances of classes. *)
+(* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
   | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN {}
   | classBody_opt {}
@@ -906,8 +932,8 @@ dims:
 
 (* 15.11 Field Access Expressions *)
 fieldAccess:
-  | primary POINT identifier  {}
-  | SUPER POINT identifier  {}
+  | primary POINT identifier {}
+  | SUPER POINT identifier {}
   | className POINT SUPER POINT identifier {}
 
 (* 15.12 Method Invocation Expressions *)
@@ -919,7 +945,7 @@ methodInvocation:
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
-	| expressionName LBRACK expression BRACK {}
+	| expressionName LBRACK expression RBRACK {}
 	| primaryNoNewArray LBRACK expression RBRACK {}
 
 (* 15.14 Postfix expressions *)
@@ -989,7 +1015,7 @@ relationalExpression:
   | relationalExpression SUP shiftExpression {}
   | relationalExpression INFOREQUAL shiftExpression {}
   | relationalExpression SUPOREQUAL shiftExpression {}
-  | relationalExpression instanceof referenceType {}
+  | relationalExpression INSTANCEOF referenceType {}
 
 (* 15.21 Equality Operators *)
 equalityExpression:
@@ -1025,14 +1051,14 @@ conditionalExpression:
 	| conditionalOrExpression {}
 	| conditionalOrExpression COND expression COLON conditionalExpression {}
 
-conditionalOrExpression:
-  | conditionalAndExpression {}
-  | conditionalOrExpression CONDOR conditionalAndExpression {}
-
 (* 15.26 Assignment Operators *)
 assignmentExpression:
 	| conditionalExpression {}
 	| assignment {}
+
+(* 15.27 Expression *)
+expression:
+  | assignmentExpression {}
 
 (* 15.28 Constant Expression *)
 constantExpression:
