@@ -2,153 +2,71 @@
 
 {
 open Lexing
-(*open Error*)
-type lexeme =
-    | EOF
-    | AND
-    | OR
-    | TRUE
-    | FALSE
-    | IDENT of string
-    | REAL of float
-    | NZDIGIT of char
-    | ZERO
-    | NULL
-    | ABSTRACT
-    | ASSERT
-    | BOOLEAN
-    | BREAK
-    | BYTE
-    | CASE
-    | CATCH
-    | CHAR
-    | CLASS
-    | CONST
-    | CONTINUE
-    | DEFAULT
-    | DO
-    | DOUBLE
-    | ELSE
-    | ENUM
-    | EXTENDS
-    | FINAL
-    | FINALLY
-    | FLOAT
-    | FOR
-    | IF
-    | GOTO
-    | IMPLEMENTS
-    | IMPORT
-    | INSTANCEOF
-    | INT
-    | INTERFACE
-    | LONG
-    | NATIVE
-    | NEW
-    | PACKAGE
-    | PRIVATE
-    | PROTECTED
-    | PUBLIC
-    | RETURN
-    | SHORT
-    | STATIC
-    | STRICTFP
-    | SUPER
-    | SWITCH
-    | SYNCHRONIZED
-    | THIS
-    | THROW
-    | THROWS
-    | TRANSIENT
-    | TRY
-    | VOID
-    | VOLATILE
-    | WHILE
-    | PLUS
-    | MINUS
-    | TIMES
-    | DIV
-    | XOR
-    | MOD
-    | EQUAL
-    | INF
-    | SUP
-    | CONDOR
-    | CONDAND
-    | INCR
-    | DECR
-    | COND
-    | EXCL
-    | TILDE
-    | ANNOT
-    | ISEQUAL
-    | ISNOTEQUAL
-    | PLUSEQUAL
-    | MINUSEQUAL
-    | TIMESEQUAL
-    | DIVEQUAL
-    | ANDEQUAL
-    | OREQUAL
-    | XOREQUAL
-    | MODEQUAL
-    | INFOREQUAL
-    | SUPOREQUAL
-    | LSHIFT
-    | RSHIFT
-    | LSHIFTEQUAL
-    | RSHIFTEQUAL
-    | USHIFT
-    | USHIFTEQUAL
-    | POINT
-    | SEMICOLON
-    | COMMA
-    | COLON
-    | LBRACE
-    | RBRACE
-    | LPAREN
-    | RPAREN
-    | LBRACK
-    | RBRACK
+open Parser
+open ErrorHandler
 
-type error =
-	| Illegal_character of char
-	| Illegal_float of string
+let keyword_table = Hashtbl.create 52
+let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
+[
+	(* macro *)
+	"import",		IMPORT;
+	"throw",		THROW;
+	"throws",		THROWS;
+	"extends",		EXTENDS;
+	"implements",		IMPLEMENTS;
+	"break",		BREAK;
+	"catch",		CATCH;
+	"continue",		CONTINUE;
+	"return",		RETURN;
+	"for",			FOR;
+	"while",		WHILE;
+	"assert",		ASSERT;
+	"do",			DO;
+	"goto",			GOTO;
+	"switch",		SWITCH;
+	"case",			CASE;
+	"if",			IF;
+	"else ",		ELSE;
+	"super",		SUPER;
+	"new",			NEW;
+	(* eval *)
+	"instanceof",		INSTANCEOF;
+	(* special values *)
+	"null",			NULL;
+	"true",			TRUE;
+	"false",		FALSE;
+	"this",			THIS;
+	(* other names *)
+	"package",		PACKAGE;
+	"enum",			ENUM;
+	"class",		CLASS;
+	"struct",		STRUCT;
+	"interface",		INTERFACE;
+	(* Modifiers *)
+	"default",		DEFAULT;
+	"const",		CONST;
+	"public",		PUBLIC;
+	"abstract",		ABSTRACT;
+	"static",		STATIC;
+	"protected",		PROTECTED;
+	"private",		PRIVATE;
+	"volatile",		VOLATILE;
+	"strictfp",		STRICTFP;
+	"transient",		TRANSIENT;
+	"final",		FINAL;
+	"synchronized",		SYNCHRONIZED;
+	(* types *)
+	"byte",			BYTE;
+	"void",			VOID;
+	"long",			LONG;
+	"float",		FLOAT;
+	"int",			INT;
+	"boolean",		BOOLEAN;
+	"short",		SHORT;
+	"char",			CHAR;
+	"double",		DOUBLE;
+]
 
-exception Error of error * position * position
-
-let raise_error err lexbuf =
-raise (Error(err, lexeme_start_p lexbuf, lexeme_end_p lexbuf))
-(* Les erreurs. *)
-let report_error = function
-	| Illegal_character c ->
-		print_string "Illegal character ’";
-		print_char c;
-		print_string "’ "
-	| Illegal_float nb ->
-		print_string "The float ";
-		print_string nb;
-		print_string " is illegal "
-let print_position debut fin =
- if (debut.pos_lnum = fin.pos_lnum) then
-  begin
-   print_string "line ";
-   print_int debut.pos_lnum;
-   print_string " characters ";
-   print_int (debut.pos_cnum - debut.pos_bol);
-   print_string "-";
-   print_int (fin.pos_cnum - fin.pos_bol)
-  end
- else
-  begin
-   print_string "from line ";
-   print_int debut.pos_lnum;
-   print_string " character ";
-   print_int (debut.pos_cnum - debut.pos_bol);
-   print_string " to line ";
-   print_int fin.pos_lnum;
-   print_string " character ";
-   print_int (fin.pos_cnum - fin.pos_bol)
-  end
 }
 
 (* series of let declarations which precede the rules definition to define some
@@ -176,7 +94,7 @@ let sub_character = '\026'
 
 (* 3.6 White Space *)
 
-let horizontal_tab = '\010'
+let horizontal_tab = '\009'
 let space          = ' '
 let white_space    = (space | horizontal_tab)
 
@@ -201,8 +119,8 @@ rule nexttoken = parse
 	| comment            { Lexing.new_line lexbuf; nexttoken lexbuf }
 	| white_space+       { nexttoken lexbuf }
 	| eof                { EOF }
-	| ident as str       { IDENT str }
-	| real as nb         { REAL(float_of_string nb) } (*not sure*)
+	| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+	| real   	     { REAL (float_of_string (Lexing.lexeme lexbuf)) }
 	| nzdigit as nz      { NZDIGIT(nz) }
 	| "0"                { ZERO }
 	| "null"             { NULL }
@@ -430,5 +348,12 @@ let rec read buffer =
   print_string "\n";
   token
 
+let rec examine_all lexbuf =
+	let res = nexttoken lexbuf in
+	print_token res;
+	print_string " ";
+	match res with
+	| EOF -> ()
+	| _  -> examine_all lexbuf
+
 }
->>>>>>> 640d5c3fba38716bc42823bf536e736a30b0ab04
