@@ -97,12 +97,12 @@ classModifiers :
 
 classModifier :
 	| PUBLIC			{}
-	| ABSTRACT		{}
+	| ABSTRACT			{}
 	| STATIC			{}
-	| PROTECTED		{}
+	| PROTECTED			{}
 	| PRIVATE			{}
 	| FINAL				{}
-	| STRICTFP		{}
+	| STRICTFP			{}
 
 (* 8.1.4 Superclasses and Subclasses *)
 super_opt:
@@ -140,17 +140,17 @@ classBodyDeclarations:
 	| classBodyDeclarations classBodyDeclaration {}
 
 classBodyDeclaration:
-	| classMemberDeclaration {}
-	| instanceInitializer {}
-	| staticInitializer {}
-	| constructorDeclaration {}
+	| classMemberDeclaration	{}
+	| instanceInitializer		{}
+	| staticInitializer			{}
+	| constructorDeclaration	{}
 
 classMemberDeclaration:
-	| fieldDeclaration {}
-	| methodDeclaration {}
-	| classDeclaration {}
-	| interfaceDeclaration {}
-	| SEMICOLON {}
+	| fieldDeclaration			{}
+	| methodDeclaration			{}
+	| classDeclaration			{}
+	| interfaceDeclaration		{}
+	| SEMICOLON					{}
 
 (* 9.1 Interface Declarations *)
 interfaceDeclaration:
@@ -525,6 +525,7 @@ postDecrementExpression:
 postIncrementExpression:
 	| postfixExpression PLUS PLUS {}
 
+<<<<<<< HEAD
 (* 15.9 Class Instance Creation Expressions
 And now a new object took possession of my soul.
 A Tale of the Ragged Mountains
@@ -548,6 +549,11 @@ fieldAccess:
   | primary POINT identifier  {}
   | SUPER POINT identifier  {}
   | className POINT SUPER POINT identifier {}
+=======
+(* 15.14.3 Postfix Decrement Operator -- *)
+postDecrementExpression:
+  | postfixExpression MINUS MINUS {}
+>>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
 
 (* 3.8  identifiers*)
  identifier:
@@ -845,10 +851,17 @@ switchStatement:
 	| SWITCH LPAREN expression RPAREN switchBlock {}
 
 switchBlock:
+<<<<<<< HEAD
   | LBRACE RBRACE                                         {}
   | LBRACE switchBlockStatementGroups RBRACE              {}
   | LBRACE sls switchLabels RBRACE                        {}
   | LBRACE switchBlockStatementGroups switchLabels RBRACE {}
+=======
+	| LBRACE RBRACE	{}
+	| LBRACE switchBlockStatementGroups RBRACE {}
+	| LBRACE switchLabels RBRACE {}
+	| LBRACE switchBlockStatementGroups switchLabels RBRACE {}
+>>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
 
 switchBlockStatementGroups:
 	| switchBlockStatementGroup  {}
@@ -858,7 +871,11 @@ switchBlockStatementGroup:
 	| switchLabels blockStatements {}
 
 switchLabels:
+<<<<<<< HEAD
 	| switchLabel  {}
+=======
+	| switchLabel {}
+>>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
 	| switchLabels switchLabel {}
 
 switchLabel:
