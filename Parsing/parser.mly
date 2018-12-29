@@ -606,7 +606,7 @@ wildcardBounds:
 	| SUPER referenceType {}
 
 
-(* +++++++++++ 14 chapter ++++++++++++++++ * )
+(* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
 block:
 	| LBRACE  blockStatements RBRACE {}
