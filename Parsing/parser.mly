@@ -21,7 +21,7 @@
 
 (* Assignment Operators*)
 %token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL
-%token DIVEQUAL ANDEQUAL OREEQUAL XOREQUAL
+%token DIVEQUAL ANDEQUAL OREQUAL XOREQUAL
 %token MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL
 
 (* Delimitors*)
@@ -105,6 +105,10 @@ classModifier :
 	| STRICTFP		{}
 
 (* 8.1.4 Superclasses and Subclasses *)
+super_opt:
+  | {}
+  | super {}
+
 super:
 	| EXTENDS classType {}
 
@@ -154,7 +158,7 @@ interfaceDeclaration:
 	| annotationTypeDeclaration {}
 
 normalInterfaceDeclaration:
-	| interfaceModifiers_opt interface  identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
+	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
 
 (* 9.1.3 Superinterfaces and Subinterfaces *)
 extendsInterfaces_opt:
@@ -171,6 +175,10 @@ tnterfaceType:
 (* 9.1.4 Interface Body and Member Declarations *)
 interfaceBody:
 	| LBRACE interfaceMemberDeclarations_opt RBEACE {}
+
+interfaceMemberDeclarations_opt:
+  | {}
+  | interfaceMemberDeclarations {}
 
 interfaceMemberDeclarations:
 	| interfaceMemberDeclaration {}
@@ -190,7 +198,7 @@ interfaceModifiers:
 	| interfaceModifiers interfaceModifier {}
 
 interfaceModifier:
-	| ANNOTATION {}
+	| annotation {}
 	| PUBLIC {}
 	| PROTECTED {}
 	| PRIVATE {}
@@ -343,7 +351,7 @@ constructorDeclaration:
 	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
-	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPARENT {}
+	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPAREN {}
 
 (* 8.8.3 Constructor Modifiers *)
 constructorModifiers:
@@ -472,6 +480,10 @@ assignmentExpression:
 	| conditionalExpression {}
 	| assignment {}
 
+(* 15.28 Constant Expression *)
+constantExpression:
+  | expression {}
+
 assignment:
 	| leftHandSide assignmentOperator assignmentExpression {}
 
@@ -513,9 +525,29 @@ postDecrementExpression:
 postIncrementExpression:
 	| postfixExpression PLUS PLUS {}
 
-(* 15.14.3 Postfix Decrement Operator -- *)
-postDecrementExpression:
-  | PostfixExpression MINUS MINUS {}
+(* 15.9 Class Instance Creation Expressions
+And now a new object took possession of my soul.
+A Tale of the Ragged Mountains
+A class instance creation expression is used to create new objects that are
+instances of classes. *)
+classInstanceCreationExpression:
+  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN {}
+  | classBody_opt {}
+  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
+
+argumentList:
+  | expression {}
+  | argumentList COMMA expression RPAREN {}
+
+(* 15.11 Field Access Expressions
+    A field access expression may access a field of an object or array, a reference to
+    which is the value of either an expression or the special keyword super. (It is also
+    possible to refer to a field of the current instance or current class by using a simple
+    name; see §6.5.6. *)
+fieldAccess:
+  | primary POINT identifier  {}
+  | SUPER POINT identifier  {}
+  | className POINT SUPER POINT identifier {}
 
 (* 3.8  identifiers*)
  identifier:
@@ -718,10 +750,10 @@ emptyStatement:
 (* 14.7 *)
 
 labeledStatement:
-	|  identifier COLON statement {}
+	| identifier COLON statement {}
 
 labeledStatementNoShortIf:
-	|  identifier COLON statementNoShortIf {}
+	| identifier COLON statementNoShortIf {}
 
 (* 14.8 *)
 
@@ -730,12 +762,56 @@ expressionStatement:
 
 statementExpression:
 	| assignment {}
-	| preincrementExpression {}
-	| predecrementExpression {}
-	| postincrementExpression {}
-	| postdecrementExpression {}
+	| preIncrementExpression {}
+	| postDecrementExpression {}
+	| postIncrementExpression {}
+	| postDecrementExpression {}
 	| methodInvocation {}
 	| classInstanceCreationExpression {}
+
+(* 15.15 Unary Operators
+    The unary operators include +, -, ++, --, ~, !, and cast operators. Expressions
+    with unary operators group right-to-left, so that -~x means the same as -(~x). *)
+unaryExpression:
+  | preIncrementExpression {}
+  | preDecrementExpression {}
+  | PLUS unaryExpression {}
+  | MINUS unaryExpression {}
+  | unaryExpressionNotPlusMinus {}
+
+preIncrementExpression:
+  | PLUS PLUS unaryExpression {}
+
+preDecrementExpression:
+  | MINUS MINUS unaryExpression {}
+
+unaryExpressionNotPlusMinus:
+  | postfixExpression {}
+  | TILDE unaryExpression {}
+  | EXCL unaryExpression {}
+  | castExpression {}
+
+(* 15.10 Array Creation Expressions *)
+arrayCreationExpression:
+  | NEW primitiveType dimExprs dims_opt {}
+  | NEW classOrInterfaceType dimExprs dims_opt {}
+  | NEW primitiveType dims arrayInitializer {}
+  | NEW classOrInterfaceType dims arrayInitializer  {}
+
+dimExprs:
+  | dimExpr {}
+  | dimExprs dimExpr {}
+
+dimExpr:
+  | LBRACK expression RBRACK {}
+
+dims_opt:
+  | {}
+  | dims {}
+
+dims:
+  | LBRACK RBRACK {}
+  | dims LBRACK RBRACK {}
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
@@ -744,6 +820,10 @@ methodInvocation:
    LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
     LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
+(* 15.16 Cast Expressions *)
+castExpression:
+  | LPAREN primitiveType dims_opt RPAREN unaryExpression {}
+  | LPAREN referenceType RPAREN unaryExpressionNotPlusMinus {}
 
 (* 14.9 *)
 ifThenStatement:
@@ -756,32 +836,30 @@ ifThenElseStatementNoShortIf:
 	| IF LPAREN expression RPAREN statementNoShortIf ELSE statementNoShortIf {}
 
 (* 14.10 *)
-
 assertStatement:
 	| ASSERT expression SEMICOLON {}
 	| ASSERT expression COLON expression SEMICOLON {}
 
 (* 14.11 *)
-
 switchStatement:
 	| SWITCH LPAREN expression RPAREN switchBlock {}
 
 switchBlock:
-| LBRACE RBRACE												 {}
-	| LBRACE switchBlockStatementGroups RBRACE				 {}
-	| LBRACE sls switchLabels RBRACE						 {}
-	| LBRACE switchBlockStatementGroups switchLabels RBRACE {}
+  | LBRACE RBRACE                                         {}
+  | LBRACE switchBlockStatementGroups RBRACE              {}
+  | LBRACE sls switchLabels RBRACE                        {}
+  | LBRACE switchBlockStatementGroups switchLabels RBRACE {}
 
 switchBlockStatementGroups:
-	| switchBlockStatementGroup	 {}
+	| switchBlockStatementGroup  {}
 	| switchBlockStatementGroups switchBlockStatementGroup {}
 
 switchBlockStatementGroup:
 	| switchLabels blockStatements {}
 
 switchLabels:
-	| switchLabel				 {}
-	| switchLabels switchLabel	 {}
+	| switchLabel  {}
+	| switchLabels switchLabel {}
 
 switchLabel:
 	| CASE constantExpression COLON {}
@@ -792,7 +870,6 @@ enumConstantName:
 	|  identifier {}
 
 (* 14.12 *)
-
 whileStatement:
 	| WHILE LPAREN expression RPAREN statement {}
 
@@ -805,7 +882,6 @@ doStatement:
 	| DO statement WHILE LPAREN expression RPAREN {}
 
 (* 14.14 *)
-
 forStatement:
 	| basicForStatement {}
 	| enhancedForStatement {}
@@ -878,7 +954,6 @@ forStatementNoShortIf7:
 forStatementNoShortIf8:
   | FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
-
 forInit:
   | statementexpressionList {}
 	| localVariableDeclaration {}
@@ -940,7 +1015,7 @@ finally:
 
 (* 18.1 The Grammar of the Java Programming Language *)
 annotationTypeDeclaration:
-	| AROBAS interface identifier annotationTypeBody {}
+	| AROBAS INTERFACE identifier annotationTypeBody {}
 
 annotationTypeBody:
 	| LBRACE LBRACK annotationTypeElementDeclarations RBRACK RBRACE {}
