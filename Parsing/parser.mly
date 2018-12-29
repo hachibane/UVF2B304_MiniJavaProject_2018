@@ -97,12 +97,12 @@ classModifiers :
 
 classModifier :
 	| PUBLIC			{}
-	| ABSTRACT		{}
+	| ABSTRACT			{}
 	| STATIC			{}
-	| PROTECTED		{}
+	| PROTECTED			{}
 	| PRIVATE			{}
 	| FINAL				{}
-	| STRICTFP		{}
+	| STRICTFP			{}
 
 (* 8.1.4 Superclasses and Subclasses *)
 super:
@@ -136,17 +136,17 @@ classBodyDeclarations:
 	| classBodyDeclarations classBodyDeclaration {}
 
 classBodyDeclaration:
-	| classMemberDeclaration {}
-	| instanceInitializer {}
-	| staticInitializer {}
-	| constructorDeclaration {}
+	| classMemberDeclaration	{}
+	| instanceInitializer		{}
+	| staticInitializer			{}
+	| constructorDeclaration	{}
 
 classMemberDeclaration:
-	| fieldDeclaration {}
-	| methodDeclaration {}
-	| classDeclaration {}
-	| interfaceDeclaration {}
-	| SEMICOLON {}
+	| fieldDeclaration			{}
+	| methodDeclaration			{}
+	| classDeclaration			{}
+	| interfaceDeclaration		{}
+	| SEMICOLON					{}
 
 (* 9.1 Interface Declarations *)
 interfaceDeclaration:
@@ -515,7 +515,7 @@ postIncrementExpression:
 
 (* 15.14.3 Postfix Decrement Operator -- *)
 postDecrementExpression:
-  | PostfixExpression MINUS MINUS {}
+  | postfixExpression MINUS MINUS {}
 
 (* 3.8  identifiers*)
  identifier:
