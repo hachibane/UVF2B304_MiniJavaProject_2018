@@ -767,9 +767,9 @@ switchStatement:
 	| SWITCH LPAREN expression RPAREN switchBlock {}
 
 switchBlock:
-| LBRACE RBRACE												 {}
-	| LBRACE switchBlockStatementGroups RBRACE				 {}
-	| LBRACE sls switchLabels RBRACE						 {}
+	| LBRACE RBRACE	{}
+	| LBRACE switchBlockStatementGroups RBRACE {}
+	| LBRACE switchLabels RBRACE {}
 	| LBRACE switchBlockStatementGroups switchLabels RBRACE {}
 
 switchBlockStatementGroups:
@@ -780,8 +780,8 @@ switchBlockStatementGroup:
 	| switchLabels blockStatements {}
 
 switchLabels:
-	| switchLabel				 {}
-	| switchLabels switchLabel	 {}
+	| switchLabel {}
+	| switchLabels switchLabel {}
 
 switchLabel:
 	| CASE constantExpression COLON {}
