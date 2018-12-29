@@ -467,94 +467,6 @@ markerAnnotation:
 singleElementAnnotation:
 	| AROBAS typeName LPAREN elementValue RPAREN {}
 
-
-
-
-(* 15.25 conditional operator ?: *)
-conditionalExpression:
-	| conditionalOrExpression {}
-	| conditionalOrExpression COND expression COLON conditionalExpression {}
-
-(* 15.26 Assignment Operators *)
-assignmentExpression:
-	| conditionalExpression {}
-	| assignment {}
-
-(* 15.28 Constant Expression *)
-constantExpression:
-  | expression {}
-
-assignment:
-	| leftHandSide assignmentOperator assignmentExpression {}
-
-leftHandSide:
-	| expressionName {}
-	| fieldAccess {}
-	| arrayAccess {}
-
-assignmentOperator:
-	| PLUSEQUAL {}
-	| MINUSEQUAL {}
-	| TIMESEQUAL {}
-	| DIVEQUAL {}
-	| ANDEQUAL {}
-	| OREQUAL {}
-	| XOREQUAL {}
-	| MODEQUAL {}
-	| LSHIFTEQUAL {}
-	| RSHIFTEQUAL {}
-	| USHIFTEQUAL {}
-
-(* 15.13 Array Access expressions *)
-arrayAccess:
-	| expressionName LBRACK expression BRACK {}
-	| primaryNoNewArray LBRACK expression RBRACK {}
-
-(* 15.14 Postfix expressions *)
-postfixExpression:
-	| primary {}
-	| expressionName {}
-	| postIncrementExpression {}
-	| postDecrementExpression {}
-
-(* 15.14.3 Postfix Decrement Operator -- *)
-postDecrementExpression:
-  | postfixExpression MINUS MINUS {}
-
-(* 15.14.2 Postfix Increment Operator ++ *)
-postIncrementExpression:
-	| postfixExpression PLUS PLUS {}
-
-<<<<<<< HEAD
-(* 15.9 Class Instance Creation Expressions
-And now a new object took possession of my soul.
-A Tale of the Ragged Mountains
-A class instance creation expression is used to create new objects that are
-instances of classes. *)
-classInstanceCreationExpression:
-  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN {}
-  | classBody_opt {}
-  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
-
-argumentList:
-  | expression {}
-  | argumentList COMMA expression RPAREN {}
-
-(* 15.11 Field Access Expressions
-    A field access expression may access a field of an object or array, a reference to
-    which is the value of either an expression or the special keyword super. (It is also
-    possible to refer to a field of the current instance or current class by using a simple
-    name; see §6.5.6. *)
-fieldAccess:
-  | primary POINT identifier  {}
-  | SUPER POINT identifier  {}
-  | className POINT SUPER POINT identifier {}
-=======
-(* 15.14.3 Postfix Decrement Operator -- *)
-postDecrementExpression:
-  | postfixExpression MINUS MINUS {}
->>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
-
 (* 3.8  identifiers*)
  identifier:
 	| IDENT {}
@@ -645,7 +557,6 @@ floatingPointType:
 	| DOUBLE {}
 
 (*4.3 Reference Types and Values*)
-
 referenceType:
 	| classOrInterfaceType {}
 	| typeVariable {}
@@ -694,8 +605,9 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
-(* 14.2 *)
 
+(* +++++++++++ 14 chapter ++++++++++++++++ * )
+(* 14.2 *)
 block:
 	| LBRACE  blockStatements RBRACE {}
 	| LBRACE RBRACE {}
@@ -710,7 +622,6 @@ blockStatement:
 	| statement {}
 
 (* 14.4 *)
-
 localVariableDeclarationStatement:
 	| localVariableDeclaration SEMICOLON {}
 
@@ -718,7 +629,6 @@ localVariableDeclaration:
 	| variableModifiers TYPE variableDeclarators {}
 
 (* 14.5 *)
-
 statement:
 	| statementWithoutTrailingSubstatement {}
 	| labeledStatement {}
@@ -749,12 +659,10 @@ statementNoShortIf:
 	| forStatementNoShortIf {}
 
 (* 14.6 *)
-
 emptyStatement:
 	| SEMICOLON {}
 
 (* 14.7 *)
-
 labeledStatement:
 	| identifier COLON statement {}
 
@@ -762,7 +670,6 @@ labeledStatementNoShortIf:
 	| identifier COLON statementNoShortIf {}
 
 (* 14.8 *)
-
 expressionStatement:
 	| statementExpression SEMICOLON {}
 
@@ -774,62 +681,6 @@ statementExpression:
 	| postDecrementExpression {}
 	| methodInvocation {}
 	| classInstanceCreationExpression {}
-
-(* 15.15 Unary Operators
-    The unary operators include +, -, ++, --, ~, !, and cast operators. Expressions
-    with unary operators group right-to-left, so that -~x means the same as -(~x). *)
-unaryExpression:
-  | preIncrementExpression {}
-  | preDecrementExpression {}
-  | PLUS unaryExpression {}
-  | MINUS unaryExpression {}
-  | unaryExpressionNotPlusMinus {}
-
-preIncrementExpression:
-  | PLUS PLUS unaryExpression {}
-
-preDecrementExpression:
-  | MINUS MINUS unaryExpression {}
-
-unaryExpressionNotPlusMinus:
-  | postfixExpression {}
-  | TILDE unaryExpression {}
-  | EXCL unaryExpression {}
-  | castExpression {}
-
-(* 15.10 Array Creation Expressions *)
-arrayCreationExpression:
-  | NEW primitiveType dimExprs dims_opt {}
-  | NEW classOrInterfaceType dimExprs dims_opt {}
-  | NEW primitiveType dims arrayInitializer {}
-  | NEW classOrInterfaceType dims arrayInitializer  {}
-
-dimExprs:
-  | dimExpr {}
-  | dimExprs dimExpr {}
-
-dimExpr:
-  | LBRACK expression RBRACK {}
-
-dims_opt:
-  | {}
-  | dims {}
-
-dims:
-  | LBRACK RBRACK {}
-  | dims LBRACK RBRACK {}
-
-(* 15.12 Method Invocation Expressions *)
-methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
-  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
-   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
-
-(* 15.16 Cast Expressions *)
-castExpression:
-  | LPAREN primitiveType dims_opt RPAREN unaryExpression {}
-  | LPAREN referenceType RPAREN unaryExpressionNotPlusMinus {}
 
 (* 14.9 *)
 ifThenStatement:
@@ -843,15 +694,14 @@ ifThenElseStatementNoShortIf:
 
 (* 14.10 *)
 assertStatement:
-	| ASSERT expression SEMICOLON {}
-	| ASSERT expression COLON expression SEMICOLON {}
+  | ASSERT expression SEMICOLON {}
+  | ASSERT expression COLON expression SEMICOLON {}
 
 (* 14.11 *)
 switchStatement:
 	| SWITCH LPAREN expression RPAREN switchBlock {}
 
 switchBlock:
-<<<<<<< HEAD
   | LBRACE RBRACE                                         {}
   | LBRACE switchBlockStatementGroups RBRACE              {}
   | LBRACE switchLabels RBRACE                            {}
@@ -976,20 +826,16 @@ enhancedForStatement:
 	| FOR LPAREN variableModifiers  TYPE identifier COLON  expression RPAREN  statement {}
 
 (* 14.15 *)
-
 breakStatement:
   | BREAK SEMICOLON {}
 	| BREAK   identifier SEMICOLON {}
 
 (* 14.16 *)
-
 continueStatement:
   | CONTINUE SEMICOLON {}
 	| CONTINUE identifier SEMICOLON {}
 
-
 (* 14.17 *)
-
 returnStatement:
   | RETURN SEMICOLON {}
 	| RETURN  expression SEMICOLON {}
@@ -1003,7 +849,6 @@ synchronizedStatement:
   | SYNCHRONIZED LPAREN  expression RPAREN  block {}
 
 (* 14.20 *)
-
 tryStatement:
   | TRY  block  catches {}
 	| TRY  block  finally {}
@@ -1018,6 +863,203 @@ catchClause:
 
 finally:
   | FINALLY  block {}
+
+(* 15.9 Class Instance Creation Expressions
+And now a new object took possession of my soul.
+A Tale of the Ragged Mountains
+A class instance creation expression is used to create new objects that are
+instances of classes. *)
+classInstanceCreationExpression:
+  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN {}
+  | classBody_opt {}
+  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
+
+argumentList_opt:
+  | {}
+  | argumentList {}
+
+argumentList:
+  | expression {}
+  | argumentList COMMA expression RPAREN {}
+
+(* 15.10 Array Creation Expressions *)
+arrayCreationExpression:
+  | NEW primitiveType dimExprs dims_opt {}
+  | NEW classOrInterfaceType dimExprs dims_opt {}
+  | NEW primitiveType dims arrayInitializer {}
+  | NEW classOrInterfaceType dims arrayInitializer  {}
+
+dimExprs:
+  | dimExpr {}
+  | dimExprs dimExpr {}
+
+dimExpr:
+  | LBRACK expression RBRACK {}
+
+dims_opt:
+  | {}
+  | dims {}
+
+dims:
+  | LBRACK RBRACK {}
+  | dims LBRACK RBRACK {}
+
+(* 15.11 Field Access Expressions *)
+fieldAccess:
+  | primary POINT identifier  {}
+  | SUPER POINT identifier  {}
+  | className POINT SUPER POINT identifier {}
+
+(* 15.12 Method Invocation Expressions *)
+methodInvocation:
+	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
+  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
+   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
+    LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+
+(* 15.13 Array Access expressions *)
+arrayAccess:
+	| expressionName LBRACK expression BRACK {}
+	| primaryNoNewArray LBRACK expression RBRACK {}
+
+(* 15.14 Postfix expressions *)
+postfixExpression:
+	| primary {}
+	| expressionName {}
+	| postIncrementExpression {}
+	| postDecrementExpression {}
+
+(* 15.14.2 Postfix Increment Operator ++ *)
+postIncrementExpression:
+	| postfixExpression INCR {}
+
+(* 15.14.3 Postfix Decrement Operator -- *)
+postDecrementExpression:
+  | postfixExpression DECR {}
+
+(* 15.15 Unary Operators *)
+unaryExpression:
+  | preIncrementExpression {}
+  | preDecrementExpression {}
+  | PLUS unaryExpression {}
+  | MINUS unaryExpression {}
+  | unaryExpressionNotPlusMinus {}
+
+preIncrementExpression:
+  | INCR unaryExpression {}
+
+preDecrementExpression:
+  | DECR unaryExpression {}
+
+unaryExpressionNotPlusMinus:
+  | postfixExpression {}
+  | TILDE unaryExpression {}
+  | EXCL unaryExpression {}
+  | castExpression {}
+
+(* 15.16 Cast Expressions *)
+castExpression:
+  | LPAREN primitiveType dims_opt RPAREN unaryExpression {}
+  | LPAREN referenceType RPAREN unaryExpressionNotPlusMinus {}
+
+(* 15.17 Multiplicative Operators *)
+multiplicativeExpression:
+  | unaryExpression {}
+  | multiplicativeExpression TIMES unaryExpression {}
+  | multiplicativeExpression DIV unaryExpression {}
+  | multiplicativeExpression MOD unaryExpression {}
+
+(* 15.18 Additive Operators *)
+additiveExpression:
+  | multiplicativeExpression {}
+  | additiveExpression PLUS multiplicativeExpression {}
+  | additiveExpression MINUS multiplicativeExpression {}
+
+(* 15.19 Shift Operators *)
+shiftExpression:
+  | additiveExpression
+  | shiftExpression LSHIFT additiveExpression {}
+  | shiftExpression RSHIFT additiveExpression {}
+  | shiftExpression USHIFT additiveExpression {}
+
+(* 15.20 Relational Operators *)
+relationalExpression:
+  | shiftExpression {}
+  | relationalExpression INF shiftExpression {}
+  | relationalExpression SUP shiftExpression {}
+  | relationalExpression INFOREQUAL shiftExpression {}
+  | relationalExpression SUPOREQUAL shiftExpression {}
+  | relationalExpression instanceof referenceType {}
+
+(* 15.21 Equality Operators *)
+equalityExpression:
+  | relationalExpression {}
+  | equalityExpression ISEQUAL relationalExpression {}
+  | equalityExpression ISNOTEQUAL relationalExpression {}
+
+(* 15.22 Bitwise and Logical Operators *)
+andExpression:
+  | equalityExpression {}
+  | andExpression AND equalityExpression {}
+
+exclusiveOrExpression:
+  | andExpression {}
+  | exclusiveOrExpression XOR andExpression {}
+
+inclusiveOrExpression:
+  | exclusiveOrExpression {}
+  | inclusiveOrExpression OR exclusiveOrExpression {}
+
+(* 15.23 Conditional-And Operator && *)
+conditionalAndExpression:
+  | inclusiveOrExpression {}
+  | conditionalAndExpression CONDAND inclusiveOrExpression {}
+
+(* 15.24 Conditional-Or Operator || *)
+conditionalOrExpression:
+  | conditionalAndExpression {}
+  | conditionalOrExpression CONDOR conditionalAndExpression {}
+
+(* 15.25 conditional operator ?: *)
+conditionalExpression:
+	| conditionalOrExpression {}
+	| conditionalOrExpression COND expression COLON conditionalExpression {}
+
+conditionalOrExpression:
+  | conditionalAndExpression {}
+  | conditionalOrExpression CONDOR conditionalAndExpression {}
+
+(* 15.26 Assignment Operators *)
+assignmentExpression:
+	| conditionalExpression {}
+	| assignment {}
+
+(* 15.28 Constant Expression *)
+constantExpression:
+  | expression {}
+
+assignment:
+	| leftHandSide assignmentOperator assignmentExpression {}
+
+leftHandSide:
+	| expressionName {}
+	| fieldAccess {}
+	| arrayAccess {}
+
+assignmentOperator:
+	| PLUSEQUAL {}
+	| MINUSEQUAL {}
+	| TIMESEQUAL {}
+	| DIVEQUAL {}
+	| ANDEQUAL {}
+	| OREQUAL {}
+	| XOREQUAL {}
+	| MODEQUAL {}
+	| LSHIFTEQUAL {}
+	| RSHIFTEQUAL {}
+	| USHIFTEQUAL {}
+
+
 
 (* 18.1 The Grammar of the Java Programming Language *)
 annotationTypeDeclaration:
