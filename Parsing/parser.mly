@@ -854,14 +854,8 @@ switchBlock:
 <<<<<<< HEAD
   | LBRACE RBRACE                                         {}
   | LBRACE switchBlockStatementGroups RBRACE              {}
-  | LBRACE sls switchLabels RBRACE                        {}
+  | LBRACE switchLabels RBRACE                            {}
   | LBRACE switchBlockStatementGroups switchLabels RBRACE {}
-=======
-	| LBRACE RBRACE	{}
-	| LBRACE switchBlockStatementGroups RBRACE {}
-	| LBRACE switchLabels RBRACE {}
-	| LBRACE switchBlockStatementGroups switchLabels RBRACE {}
->>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
 
 switchBlockStatementGroups:
 	| switchBlockStatementGroup  {}
@@ -871,11 +865,6 @@ switchBlockStatementGroup:
 	| switchLabels blockStatements {}
 
 switchLabels:
-<<<<<<< HEAD
-	| switchLabel  {}
-=======
-	| switchLabel {}
->>>>>>> 20a62c55cbb37e92593ef9685cc094a53e975054
 	| switchLabels switchLabel {}
 
 switchLabel:
@@ -884,7 +873,7 @@ switchLabel:
 	| DEFAULT COLON {}
 
 enumConstantName:
-	|  identifier {}
+	| identifier {}
 
 (* 14.12 *)
 whileStatement:
