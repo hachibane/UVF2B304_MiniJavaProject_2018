@@ -513,6 +513,10 @@ postDecrementExpression:
 postIncrementExpression:
 	| postfixExpression PLUS PLUS {}
 
+(* 15.14.3 Postfix Decrement Operator -- *)
+postDecrementExpression:
+  | PostfixExpression MINUS MINUS {}
+
 (* 3.8  identifiers*)
  identifier:
 	| IDENT {}
@@ -571,7 +575,7 @@ stringLiteral:
 	| IDENT {}
 
 nullLiteral:
-	NULL {}
+	| NULL {}
 
 (* 4. Types, Values, and Variables*)
 
