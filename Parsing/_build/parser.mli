@@ -19,11 +19,9 @@ type token =
   | THIS
   | SYNCHRONIZED
   | SWITCH
-  | SUPOREQUAL
   | SUPER
   | SUPEQUAL
   | SUP
-  | STRUCT
   | STRINGLIT of (string)
   | STRICTFP
   | STATIC
@@ -63,16 +61,13 @@ type token =
   | INTEGERLIT of (int)
   | INT
   | INSTANCEOF
-  | INFOREQUAL
   | INFEQUAL
   | INF
   | INCR
   | IMPORT
   | IMPLEMENTS
-  | IMMPLEMENTS
   | IF
   | IDENT of (string)
-  | GOTO
   | FOR
   | FLOATLIT of (float)
   | FLOAT
@@ -91,7 +86,6 @@ type token =
   | DEFAULT
   | DECR
   | CONTINUE
-  | CONST
   | CONDOR
   | CONDAND
   | COND
@@ -109,7 +103,6 @@ type token =
   | BOOLEAN
   | ASSERT
   | AROBAS
-  | ANNOT
   | ANDEQUAL
   | AND
   | ABSTRACT

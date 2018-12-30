@@ -6,41 +6,34 @@
 %token <int> INTEGERLIT
 %token <string> STRINGLIT
 %token <char> CHARLIT
-
 (* Infix Operators*)
 %token PLUS MINUS TIMES
 %token DIV AND OR XOR
 %token MOD INF SUP
-%token ISEQUAL ISNOTEQUAL INFOREQUAL
-%token SUPOREQUAL SUPEQUAL INFEQUAL
-%token CONDOR CONDAND COND ANNOT
+%token ISEQUAL ISNOTEQUAL
+%token SUPEQUAL INFEQUAL
+%token CONDOR CONDAND COND
 %token LSHIFT RSHIFT USHIFT
-
 (* Prefix Operators*)
 %token INCR DECR EXCL TILDE
-
 (* Assignment Operators*)
 %token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL
 %token DIVEQUAL ANDEQUAL OREQUAL XOREQUAL
 %token MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL
-
 (* Delimitors*)
 %token POINT SEMICOLON COMMA COLON LBRACE
 %token RBRACE LPAREN RPAREN LBRACK RBRACK
-
 (* Modifiers*)
 %token ABSTRACT PRIVATE PROTECTED PUBLIC
-%token STATIC STRICTFP SYNCHRONIZED IMMPLEMENTS
-%token VOLATILE TRANSIENT NATIVE FINAL STRUCT
-
+%token STATIC STRICTFP SYNCHRONIZED
+%token VOLATILE TRANSIENT NATIVE FINAL
 (* Basic Types*)
 %token BYTE SHORT CHAR INT
 %token LONG FLOAT DOUBLE BOOLEAN
-
 (* Other Keywords*)
-%token ASSERT BREAK CASE CATCH CLASS CONST
+%token ASSERT BREAK CASE CATCH CLASS
 %token CONTINUE DO DEFAULT ELSE ENUM
-%token FINALLY FOR IF GOTO IMPLEMENTS
+%token FINALLY FOR IF IMPLEMENTS
 %token INSTANCEOF INTERFACE NEW PACKAGE
 %token SUPER SWITCH THIS THROW RETURN EXTENDS
 %token AROBAS THROWS TRY VOID WHILE IMPORT
@@ -70,7 +63,7 @@ classDeclaration :
 	| enumDeclaration {}
 
 normalClassDeclaration :
-	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {}
+	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {print_string "ok"}
 
 typeParameters_opt:
 	| {}
@@ -342,7 +335,7 @@ enumConstants:
 	| enumConstants COMMA enumConstant {}
 
 enumConstant:
-	| annotations identifier arguments_opt option(classBody) {}
+	| annotations identifier arguments_opt classBody_opt {}
 
 arguments_opt :
 	| {}
@@ -575,11 +568,9 @@ booleanLiteral:
 stringLiteral:
   | STRINGLIT {}
 
-<<<<<<< HEAD
 characterLiteral:
   | CHARLIT {}
 
-<<<<<<< HEAD
 nullLiteral:
   | NULL {}
 
@@ -939,8 +930,8 @@ primaryNoNewArray:
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
-  | NEW option(typeArguments) classOrInterfaceType LPAREN option(argumentList) RPAREN option(classBody) {}
-  | primary POINT NEW option(typeArguments) identifier option(typeArguments) LPAREN argumentList_opt RPAREN option(classBody) {}
+  | NEW option(typeArguments) classOrInterfaceType LPAREN argumentList_opt RPAREN classBody_opt {}
+  | primary POINT NEW option(typeArguments) identifier option(typeArguments) LPAREN argumentList_opt RPAREN classBody_opt {}
 
 argumentList_opt:
   | {}
@@ -1055,8 +1046,8 @@ relationalExpression:
   | shiftExpression {}
   | relationalExpression INF shiftExpression {}
   | relationalExpression SUP shiftExpression {}
-  | relationalExpression INFOREQUAL shiftExpression {}
-  | relationalExpression SUPOREQUAL shiftExpression {}
+  | relationalExpression INFEQUAL shiftExpression {}
+  | relationalExpression SUPEQUAL shiftExpression {}
   | relationalExpression INSTANCEOF referenceType {}
 
 (* 15.21 Equality Operators *)

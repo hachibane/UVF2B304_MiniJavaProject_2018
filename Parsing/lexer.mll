@@ -14,7 +14,7 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"throw",		THROW;
 	"throws",		THROWS;
 	"extends",		EXTENDS;
-	"implements",	IMMPLEMENTS;
+	"implements",	IMPLEMENTS;
 	"break",		BREAK;
 	"catch",		CATCH;
 	"continue",		CONTINUE;
@@ -23,7 +23,6 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"while",		WHILE;
 	"assert",		ASSERT;
 	"do",			DO;
-	"goto",			GOTO;
 	"switch",		SWITCH;
 	"case",			CASE;
 	"if",			IF;
@@ -40,11 +39,9 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"package",		PACKAGE;
 	"enum",			ENUM;
 	"class",		CLASS;
-	"struct",		STRUCT;
 	"interface",	INTERFACE;
 	(* Modifiers *)
 	"default",		DEFAULT;
-	"const",		CONST;
 	"public",		PUBLIC;
 	"abstract",		ABSTRACT;
 	"static",		STATIC;
@@ -95,50 +92,50 @@ rule read = parse
 | newline										{ Lexing.new_line lexbuf; read lexbuf }
 | integerLiteral as i				{ INTEGERLIT (int_of_string i) }
 | floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
-| characterLiteral as c 		{ CHARLIT c }
+| characterLiteral as c	{
+	match c with
+	| '.'			->			POINT
+	| ';'			->			SEMICOLON
+	| ','			->			COMMA
+	| ':'			->			COLON
+	| '{'			->			LBRACE
+	| '}' 		->			RBRACE
+	| '('			->			LPAREN
+	| ')'			->			RPAREN
+	| '['			->			LBRACK
+	| ']'			->			RBRACK
+	| '='			->			EQUAL
+	| '?'			->			COND
+	| '!'			->			EXCL
+	| '~'			->			TILDE
+	| '|'			->			OR
+	| '^'			->			XOR
+	| '&'			->			AND
+	| '@'			->			AROBAS
+	| '<'			->			INF
+	| '>'			->			SUP
+	| '+'			->			PLUS
+	| '-'			->			MINUS
+	| '*'			->			TIMES
+	| '/'			->			DIV
+	| '%'			->			MOD
+	| _				->			CHARLIT c }
 | stringLiteral as s				{ STRINGLIT s}
 | ident as id								{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
-(*   separator *)
-| "."                { POINT }
-| ";"                { SEMICOLON }
-| ","                { COMMA }
-| ":"                { COLON }
-| "{"                { LBRACE }
-| "}"                { RBRACE }
-| "("                { LPAREN }
-| ")"                { RPAREN }
-| "["                { LBRACK }
-| "]"                { RBRACK }
-(* operators *)
-| "="                { EQUAL }
-| "++"               { INCR }
-| "--"               { DECR }
-| "?"                { COND }
-| "!"                { EXCL }
-| "~"                { TILDE }
-| "@"                { ANNOT }
 | "<<"               { LSHIFT }
 | ">>"               { RSHIFT }
+| "++"               { INCR }
+| "--"               { DECR }
 (* infix operator *)
 | "||"               { CONDOR }
 | "&&"               { CONDAND }
-| "|"                { OR }
-| "^"                { XOR }
-| "&"                { AND }
 | "=="               { ISEQUAL }
 | "!="               { ISNOTEQUAL }
-| "<"                { INF }
-| ">"                { SUP }
-| "<="               { INFOREQUAL }
-| ">="               { SUPOREQUAL }
+| "<="               { INFEQUAL }
+| ">="               { SUPEQUAL }
 | "<<"               { LSHIFT }
 | ">>"               { RSHIFT }
 | ">>>"              { USHIFT }
-| "+"                { PLUS }
-| "-"                { MINUS }
-| "*"                { TIMES }
-| "/"                { DIV }
-| "%"                { MOD }
 (* assignment Operator *)
 | "+="               { PLUSEQUAL }
 | "-="               { MINUSEQUAL }
@@ -157,12 +154,15 @@ rule read = parse
 {
 let print_token = function
 | EOF                -> print_string "eof"
-| IDENT id           -> print_string "ident ("; print_string id; print_string ")"
+| IDENT id           -> print_string "(ident : "; print_string id; print_string ")"
 | FLOATLIT f         -> print_string "real ("; print_float f; print_string ")"
 | INTEGERLIT i			 -> print_string "integer ("; print_int i; print_string ")"
 | BOOLEANLIT b       -> ( match b with
 											| true  -> print_string "boolean ( true  )"
 											| false -> print_string "boolean ( false )")
+| STRINGLIT s -> print_string("string ("^s^")")
+| COMMENT c -> ()
+| CHARLIT c -> print_string "char ("; print_char c; print_string ")"
 | NULL               -> print_string "null"
 | ABSTRACT           -> print_string "abstract"
 | ASSERT             -> print_string "assert"
@@ -173,7 +173,6 @@ let print_token = function
 | CATCH              -> print_string "catch"
 | CHAR               -> print_string "char"
 | CLASS              -> print_string "class"
-| CONST              -> print_string "const"
 | CONTINUE           -> print_string "continue"
 | DEFAULT            -> print_string "default"
 | DO                 -> print_string "do"
@@ -186,7 +185,6 @@ let print_token = function
 | FLOAT              -> print_string "float"
 | FOR                -> print_string "for"
 | IF                 -> print_string "if"
-| GOTO               -> print_string "goto"
 | IMPLEMENTS         -> print_string "implements"
 | IMPORT             -> print_string "import"
 | INSTANCEOF         -> print_string "instanceof"
@@ -232,7 +230,7 @@ let print_token = function
 | COND               -> print_string "cond"
 | EXCL               -> print_string "excl"
 | TILDE              -> print_string "tilde"
-| ANNOT              -> print_string "annot"
+| AROBAS              -> print_string "arobas"
 | ISEQUAL            -> print_string "isequal"
 | ISNOTEQUAL         -> print_string "isnotequal"
 | PLUSEQUAL          -> print_string "plusequal"
@@ -243,8 +241,8 @@ let print_token = function
 | OREQUAL            -> print_string "orequal"
 | XOREQUAL           -> print_string "xorequal"
 | MODEQUAL           -> print_string "modequal"
-| INFOREQUAL         -> print_string "inforequal"
-| SUPOREQUAL         -> print_string "suporequal"
+| INFEQUAL           -> print_string "infequal"
+| SUPEQUAL           -> print_string "supequal"
 | LSHIFT             -> print_string "lshift"
 | RSHIFT             -> print_string "rshift"
 | LSHIFTEQUAL        -> print_string "lshiftequal"

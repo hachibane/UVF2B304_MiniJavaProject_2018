@@ -4,10 +4,10 @@ open ErrorHandler
 
 
 let rec lexAllBuf lexbuf =
-let tok = Lexer.read lexbuf in
-match tok with
+let lex = Lexer.read lexbuf in
+match lex with
 | EOF -> ()
-| _ -> print_token tok; print_string " "; lexAllBuf lexbuf
+| _ -> print_token lex; print_string " "; lexAllBuf lexbuf
 
 let compile file =
 print_string ("File "^file^" is being treated!\n");
@@ -16,6 +16,7 @@ try
 	let lexbuf = Lexing.from_channel input_file in
 	try
 		lexAllBuf lexbuf;
+		Parser.prog Lexer.read lexbuf;
 		print_newline ();
 		close_in (input_file);
 	with
