@@ -6,7 +6,7 @@ open ErrorHandler
 open Parser
 let keyword_table = Hashtbl.create 15
 let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
-[   
+[
 	(* macro *)
 	"import",		IMPORT;
 	"throw",		THROW;
@@ -30,25 +30,24 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"new",			NEW;
 	(* eval *)
 	"instanceof",	INSTANCEOF;
-	(* special values *)
 	"null",			NULL;
-	"true",			TRUE;
-	"false",		FALSE;
+	"true",			BOOL true;
+	"false",		BOOL false;
 	"this",			THIS;
 	(* other names *)
 	"package",		PACKAGE;
 	"enum",			ENUM;
 	"class",		CLASS;
 	"struct",		STRUCT;
-	"interface",	INTERFACE;	
+	"interface",	INTERFACE;
 	(* Modifiers *)
 	"default",		DEFAULT;
 	"const",		CONST;
-	"public",		PUBLIC; 
+	"public",		PUBLIC;
 	"abstract",		ABSTRACT;
 	"static",		STATIC;
 	"protected",	PROTECTED;
-	"private",		PRIVATE; 
+	"private",		PRIVATE;
 	"volatile",		VOLATILE;
 	"strictfp",		STRICTFP;
 	"transient",	TRANSIENT;
@@ -57,7 +56,7 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	(* types *)
 	"byte",			BYTE;
 	"void",			VOID;
-	"long",			LONG;		
+	"long",			LONG;
 	"float",		FLOAT;
 	"int",			INT;
 	"boolean",		BOOLEAN;
@@ -76,28 +75,26 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 let lowercase = ['a'-'z']
 let uppercase = ['A'-'Z']
 let letter    = (lowercase | uppercase)
-let nzdigit   = ['1'-'9']
-let digit     = '0' | nzdigit
-let exp       = ['e' 'E'] ['-' '+']? digit+
-let frac      = '.' digit*
+let digit     = ['0'-'9']
+let exp       = ['e' 'E'] ['+' '-']? digit+
 let integer   = '-'? digit+
-let real      = digit* frac? exp?
+let real      = [ (digit*)? '.' (digit*)? exp? | digit* exp? ]
 let ident     = (letter | '_') ( letter | digit | '_')*
 let white     = [' ' '\t']+
 let newline   = '\r' | '\n' | "\r\n"
 
 (* Rules Definitions *)
 
-(* TO COMPLETE *) 
+(* TO COMPLETE *)
 (* principally completed using keywords page 21, operations page 36
    and pages 586 and 587 *)
 
 rule read = parse
-| white              { read lexbuf }
-| newline            { Lexing.new_line lexbuf; read lexbuf }
-| integer     	     { INTEGER (int_of_string (Lexing.lexeme lexbuf)) }
-| real   	         { REAL (float_of_string (Lexing.lexeme lexbuf)) }
-| ident as id        { try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+| white							{ read lexbuf }
+| newline						{ Lexing.new_line lexbuf; read lexbuf }
+| integer						{ INTEGER (int_of_string (Lexing.lexeme lexbuf)) }
+| real							{ REAL (float_of_string (Lexing.lexeme lexbuf)) }
+| ident as id				{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 (*   separator *)
 | "."                { POINT }
 | ";"                { SEMICOLON }
@@ -263,9 +260,3 @@ let print_token = function
 	| LBRACK             -> print_string "lbrack"
 	| RBRACK             -> print_string "rbrack"
 }
-
-
-
-
-
-

@@ -246,6 +246,10 @@ methodModifier:
 	| STRICTFP {}
 
 (* 8.4.6 Method Throws *)
+throws_opt:
+  | {}
+  | throws {}
+
 throws:
 	| THROWS exceptionTypeList {}
 
@@ -359,7 +363,11 @@ interfaceDeclaration:
 
 normalInterfaceDeclaration:
 	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
-    (* 9.1.1 Interface Modifiers *)
+
+(* 9.1.1 Interface Modifiers *)
+interfaceModifiers_opt:
+  | {}
+  | interfaceModifiers {}
 
 interfaceModifiers:
 	| interfaceModifier {}
@@ -539,11 +547,11 @@ variableInitializer:
   | expression {}
   | arrayInitializer {}
 
-(* 3.8  identifiers*)
+(* 3.8  identifiers *)
  identifier:
 	| identifier {}
 
-(* 3.9 Literals*)
+(* 3.9 Literals *)
 literal:
 	| integerLiteral {}
 	| floatingPointLiteral {}
@@ -552,63 +560,25 @@ literal:
 	| stringLiteral {}
 	| nullLiteral {}
 
+(* 3.10.1 Integer Literals *)
 integerLiteral:
-	| decimalIntegerLiteral {}
-	(*| hil=hexIntegerLiteral {}
-	| oil=octalIntegerLiteral {}*)
+	| INTEGER {}
 
-decimalIntegerLiteral:
-	 | decimalNumeral {}
-
-(*hexIntegerLiteral:
-	 hexn=hexNumeral {}
-
-octalIntegerLiteral:
-	 octn=octalNumeral {}*)
-
-decimalNumeral:
-	| ZERO {}
-	| NZDIGIT dgs=digits? {}
-
-digits:
-	| digit {}
-	| digits digit {}
-
-digit:
-	| ZERO {}
-	| NZDIGIT {}
-
+(* 3.10.2 floating-Point Literals *)
 floatingPointLiteral:
-	 | decimalFloatingPointLiteral {}
-
-(* to complete with Exponent part e E*)
-decimalFloatingPointLiteral:
-	| digits POINT digits COND {}
-	| POINT digits {}
+  | REAL {}
 
 booleanLiteral:
-	| TRUE {}
-	| FALSE {}
-
-characterLiteral:
-	| NOTDONE {}
-
-stringLiteral:
-	| identifier {}
-
-nullLiteral:
-	| NULL {}
+	| BOOL {}
 
 (* 4. Types, Values, and Variables*)
 
 (*4.1 The kind of  Types and Values*)
-
 ttype:
 	| primitiveType {}
 	| referenceType {}
 
 (*4.2 Primitive Types and Values*)
-
 primitiveType:
 	| numericType {}
 	| BOOLEAN {}
@@ -939,6 +909,27 @@ catchClause:
 
 finally:
   | FINALLY block {}
+
+(* 15.8 Primary Expressions *)
+primary:
+  | primaryNoNewArray {}
+  | arrayCreationExpression {}
+
+primaryNoNewArray:
+  | literal {}
+  | ttype POINT CLASS{}
+  | VOID POINT CLASS{}
+  | THIS {}
+  | className POINT THIS {}
+  | LPAREN expression RPAREN {}
+  | classInstanceCreationExpression {}
+  | fieldAccess {}
+  | methodInvocation {}
+  | arrayAccess {}
+
+(* 15.8.1 Lexical Literals *)
+  (* already defined in 3.9 Literals*)
+
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:

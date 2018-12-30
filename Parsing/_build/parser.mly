@@ -246,6 +246,10 @@ methodModifier:
 	| STRICTFP {}
 
 (* 8.4.6 Method Throws *)
+throws_opt:
+  | {}
+  | throws {}
+    
 throws:
 	| THROWS exceptionTypeList {}
 
@@ -359,7 +363,11 @@ interfaceDeclaration:
 
 normalInterfaceDeclaration:
 	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
-    (* 9.1.1 Interface Modifiers *)
+
+(* 9.1.1 Interface Modifiers *)
+interfaceModifiers_opt:
+  | {}
+  | interfaceModifiers {}
 
 interfaceModifiers:
 	| interfaceModifier {}
@@ -415,7 +423,7 @@ constantModifiers_opt :
 
 constantModifiers:
   | constantModifier {}
-  | constantModifier constantModifers {}
+  | constantModifier constantModifiers {}
 
 constantModifier:
   | annotation {}
@@ -939,6 +947,27 @@ catchClause:
 
 finally:
   | FINALLY block {}
+
+(* 15.8 Primary Expressions *)
+primary:
+  | primaryNoNewArray {}
+  | arrayCreationExpression {}
+
+primaryNoNewArray:
+  | literal {}
+  | ttype POINT CLASS{}
+  | VOID POINT CLASS{}
+  | THIS {}
+  | className POINT THIS {}
+  | LPAREN expression RPAREN {}
+  | classInstanceCreationExpression {}
+  | fieldAccess {}
+  | methodInvocation {}
+  | arrayAccess {}
+
+(* 15.8.1 Lexical Literals *)
+  (* already defined in 3.9 Literals*)
+
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
