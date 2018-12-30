@@ -1,11 +1,11 @@
 (* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
-%{
-  open Java
-%}
-(* boolean*)
-%token TRUE
-%token FALSE
+(* Literals *)
+%token <bool> BOOLEANLIT
+%token <float> FLOATLIT
+%token <int> INTEGERLIT
+%token <string> STRINGLIT
+%token <char> CHARLIT
 
 (* Infix Operators*)
 %token PLUS MINUS TIMES
@@ -30,8 +30,8 @@
 
 (* Modifiers*)
 %token ABSTRACT PRIVATE PROTECTED PUBLIC
-%token STATIC STRICTFP SYNCHRONIZED
-%token VOLATILE TRANSIENT NATIVE FINAL
+%token STATIC STRICTFP SYNCHRONIZED IMMPLEMENTS
+%token VOLATILE TRANSIENT NATIVE FINAL STRUCT
 
 (* Basic Types*)
 %token BYTE SHORT CHAR INT
@@ -47,17 +47,14 @@
 (* Special Tokens *)
 %token EOF
 %token <string> IDENT
-%token ZERO
 %token NULL
-%token NZDIGIT
 %token <string> COMMENT
 
 
 (* starting symbol *)
 
 %start prog
-%type < Unit > prog
-
+%type < unit> prog
 %%
 
 prog:
@@ -79,7 +76,7 @@ typeParameters_opt:
 	| typeParameters {}
 
 typeParameters:
-	| INF typeParameter LBRACE COMME typeParameter RBRACE SUP {}
+	| INF typeParameter LBRACE COMMA typeParameter RBRACE SUP {}
 
 typeParameter:
 	| identifier LBRACK EXTENDS bound RBRACK {}
@@ -213,7 +210,7 @@ formalParameterList:
 
 formalParameters:
 	| formalParameter  {}
-	| formalParameters COMME formalParameter {}
+	| formalParameters COMMA formalParameter {}
 
 formalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
@@ -230,6 +227,10 @@ lastFormalParameter:
 	| formalParameter {}
 
 (* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+  | {}
+  | methodModifiers {}
+
 methodModifiers:
 	| methodModifier {}
 	| methodModifiers methodModifier {}
@@ -340,7 +341,7 @@ enumConstants:
 	| enumConstants COMMA enumConstant {}
 
 enumConstant:
-	| annotations identifier arguments_opt classBody_opt {}
+	| annotations identifier arguments_opt option(classBody) {}
 
 arguments_opt :
 	| {}
@@ -391,8 +392,8 @@ extendsInterfaces:
 	| EXTENDS interfaceType {}
 	| extendsInterfaces COMMA interfaceType {}
 
-tnterfaceType:
-	| typeDeclSpecifier typeArguments_opt {}
+interfaceType:
+	| typeDeclSpecifier option(typeArguments) {}
 
 (* 9.1.4 Interface Body and Member Declarations *)
 interfaceBody:
@@ -449,7 +450,6 @@ abstractMethodModifier:
   | ABSTRACT    {}
 
 (* 9.5 Member Type Declarations *)
-
 (* 9.6 Annotation Types *)
 annotationTypeDeclaration:
   | interfaceModifiers_opt AROBAS INTERFACE identifier annotationTypeBody {}
@@ -549,7 +549,7 @@ variableInitializer:
 
 (* 3.8  identifiers *)
  identifier:
-	| identifier {}
+	| IDENT {}
 
 (* 3.9 Literals *)
 literal:
@@ -560,19 +560,25 @@ literal:
 	| stringLiteral {}
 	| nullLiteral {}
 
-(* 3.10.1 Integer Literals *)
 integerLiteral:
-	| INTEGER {}
+	| INTEGERLIT {}
 
-(* 3.10.2 floating-Point Literals *)
 floatingPointLiteral:
-  | REAL {}
+  | FLOATLIT {}
 
 booleanLiteral:
-	| BOOL {}
+	| BOOLEANLIT {}
 
-(* 4. Types, Values, and Variables*)
+stringLiteral:
+  | STRINGLIT {}
 
+characterLiteral:
+  | CHARLIT {}
+
+nullLiteral:
+  | NULL {}
+
+(* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
 	| primitiveType {}
@@ -598,7 +604,7 @@ floatingPointType:
 	| FLOAT {}
 	| DOUBLE {}
 
-(*4.3 Reference Types and Values*)
+(* 4.3 Reference Types and Values*)
 referenceType:
 	| classOrInterfaceType {}
 	| typeVariable {}
@@ -610,10 +616,6 @@ classOrInterfaceType:
 
 classType:
 	| typeDeclSpecifier typeArguments? {}
-
-
-interfaceType:
-	| typeDeclSpecifier typeArguments COND {}
 
 typeDeclSpecifier:
 	| typeName {}
@@ -646,7 +648,6 @@ wildcard:
 wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
-
 
 (* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
@@ -779,7 +780,6 @@ whileStatementNoShortIf:
 	| WHILE LPAREN expression RPAREN statementNoShortIf {}
 
 (* 14.13 *)
-
 doStatement:
 	| DO statement WHILE LPAREN expression RPAREN {}
 
@@ -857,7 +857,7 @@ forStatementNoShortIf8:
   | FOR LPAREN forInit SEMICOLON expression SEMICOLON forUpdate RPAREN statementNoShortIf {}
 
 forInit:
-  | statementexpressionList {}
+  | statementExpressionList {}
 	| localVariableDeclaration {}
 
 forUpdate:
@@ -874,7 +874,7 @@ enhancedForStatement:
 (* 14.15 *)
 breakStatement:
   | BREAK SEMICOLON {}
-	| BREAK   identifier SEMICOLON {}
+	| BREAK identifier SEMICOLON {}
 
 (* 14.16 *)
 continueStatement:
@@ -884,25 +884,25 @@ continueStatement:
 (* 14.17 *)
 returnStatement:
   | RETURN SEMICOLON {}
-	| RETURN  expression SEMICOLON {}
+	| RETURN expression SEMICOLON {}
 
 (* 14.18 *)
 throwStatement:
-  | THROW  expression SEMICOLON {}
+  | THROW expression SEMICOLON {}
 
 (* 14.19 *)
 synchronizedStatement:
-  | SYNCHRONIZED LPAREN  expression RPAREN  block {}
+  | SYNCHRONIZED LPAREN expression RPAREN block {}
 
 (* 14.20 *)
 tryStatement:
-  | TRY  block  catches {}
-	| TRY  block  finally {}
-	| TRY  block  catches  finally {}
+  | TRY block catches {}
+	| TRY block finally {}
+	| TRY block catches finally {}
 
 catches:
   | catchClause {}
-  | catches  catchClause {}
+  | catches catchClause {}
 
 catchClause:
   | CATCH LPAREN formalParameter RPAREN block {}
@@ -910,6 +910,7 @@ catchClause:
 finally:
   | FINALLY block {}
 
+(* ++++++++++++ 15 chapter +++++++++++++++++++++++++ *)
 (* 15.8 Primary Expressions *)
 primary:
   | primaryNoNewArray {}
@@ -930,12 +931,10 @@ primaryNoNewArray:
 (* 15.8.1 Lexical Literals *)
   (* already defined in 3.9 Literals*)
 
-
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
-  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN {}
-  | classBody_opt {}
-  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
+  | NEW option(typeArguments) classOrInterfaceType LPAREN option(argumentList) RPAREN option(classBody) {}
+  | primary POINT NEW option(typeArguments) identifier option(typeArguments) LPAREN argumentList_opt RPAREN option(classBody) {}
 
 argumentList_opt:
   | {}

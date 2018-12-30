@@ -4,6 +4,8 @@
 open Lexing
 open ErrorHandler
 open Parser
+
+
 let keyword_table = Hashtbl.create 15
 let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 [
@@ -28,11 +30,11 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"else ",		ELSE;
 	"super",		SUPER;
 	"new",			NEW;
-	(* eval *)
+	(*  *)
 	"instanceof",	INSTANCEOF;
 	"null",			NULL;
-	"true",			BOOL true;
-	"false",		BOOL false;
+	"true",			BOOLEANLIT true;
+	"false",		BOOLEANLIT false;
 	"this",			THIS;
 	(* other names *)
 	"package",		PACKAGE;
@@ -70,16 +72,18 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	 regular expressions. They will be used during the rules definition *)
 
 (* General regular expressions *)
-let lowercase = ['a'-'z']
-let uppercase = ['A'-'Z']
-let letter    = (lowercase | uppercase)
-let digit     = ['0'-'9']
-let exp       = ['e' 'E'] ['+' '-']? digit+
-let integer   = '-'? digit+
-let real      = (digit* '.' digit* | digit*) exp?
-let ident     = (letter | '_') ( letter | digit | '_')*
-let white     = [' ' '\t']+
-let newline   = '\r' | '\n' | "\r\n"
+let lowercase							= ['a'-'z']
+let uppercase							= ['A'-'Z']
+let letter						    = (lowercase | uppercase)
+let stringLiteral					= '"' [^'"']* '"'
+let characterLiteral			= [^''']
+let digit									= ['0'-'9']
+let exp										= ['e' 'E'] ['+' '-']? digit+
+let integerLiteral				= '-'? digit+
+let floatingPointLiteral	= (digit* '.' digit* | digit*) exp?
+let ident     						= (letter | '_') ( letter | digit | '_')*
+let white     						= [' ' '\t']+
+let newline   						= '\r' | '\n' | "\r\n"
 
 (* Rules Definitions *)
 
@@ -87,11 +91,13 @@ let newline   = '\r' | '\n' | "\r\n"
 (* principally completed using keywords page 21, operations page 36
    and pages 586 and 587 *)
 rule read = parse
-| white							{ read lexbuf }
-| newline						{ Lexing.new_line lexbuf; read lexbuf }
-| integer as i			{ INTEGER (int_of_string i) }
-| real as f					{ REAL (float_of_string f) }
-| ident as id				{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+| white											{ read lexbuf }
+| newline										{ Lexing.new_line lexbuf; read lexbuf }
+| integerLiteral as i				{ INTEGERLIT (int_of_string i) }
+| floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
+| characterLiteral as c 		{ CHARLIT c }
+| stringLiteral as s				{ STRINGLIT s}
+| ident as id								{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 (*   separator *)
 | "."                { POINT }
 | ";"                { SEMICOLON }
@@ -151,12 +157,13 @@ rule read = parse
 {
 let print_token = function
 | EOF                -> print_string "eof"
-| IDENT i            -> print_string "ident ("; print_string i; print_string ")"
-| REAL i             -> print_string "real ("; print_float i; print_string ")"
-| ZERO               -> print_string "zero"
+| IDENT id           -> print_string "ident ("; print_string id; print_string ")"
+| FLOATLIT f         -> print_string "real ("; print_float f; print_string ")"
+| INTEGERLIT i			 -> print_string "integer ("; print_int i; print_string ")"
+| BOOLEANLIT b       -> ( match b with
+											| true  -> print_string "boolean ( true  )"
+											| false -> print_string "boolean ( false )")
 | NULL               -> print_string "null"
-| TRUE               -> print_string "true"
-| FALSE              -> print_string "false"
 | ABSTRACT           -> print_string "abstract"
 | ASSERT             -> print_string "assert"
 | BOOLEAN            -> print_string "boolean"

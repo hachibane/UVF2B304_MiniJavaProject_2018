@@ -1,5 +1,4 @@
 (* errors handling *)
-
 open Lexing
 
 exception Eof
