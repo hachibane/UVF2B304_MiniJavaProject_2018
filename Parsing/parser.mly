@@ -357,8 +357,8 @@ enumBodyDeclarations_opt:
 
 enumBodyDeclarations:
 	| SEMICOLON classBodyDeclarations_opt {}
-	
-(* ++++++++++++++++++++++ 9 chapter +++++++++++++++++++++++ *) 
+
+(* ++++++++++++++++++++++ 9 chapter +++++++++++++++++++++++ *)
 (* 9.1 Interface Declarations *)
 interfaceDeclaration:
 	| normalInterfaceDeclaration {}
@@ -549,7 +549,7 @@ variableInitializer:
   | expression {}
   | arrayInitializer {}
 
-(* +++++++++++++ 3 chapter +++++++++++++++++++*) 
+(* +++++++++++++ 3 chapter +++++++++++++++++++*)
 (* 3.8  identifiers *)
  identifier:
 	| IDENT {}
@@ -584,12 +584,6 @@ nullLiteral:
   | NULL {}
 
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
-=======
-(* +++++++++++++ 4 chapter+++++++++++++++++++++++++*)
->>>>>>> b77838bdce91dd931060a24b0018c39efa7f8fb4
-=======
-(* +++++++++++++ 4 chapter+++++++++++++++++++++++++*)
->>>>>>> b77838bdce91dd931060a24b0018c39efa7f8fb4
 (*4.1 The kind of  Types and Values*)
 ttype:
 	| primitiveType {}
