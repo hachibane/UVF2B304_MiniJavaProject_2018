@@ -8,6 +8,8 @@ let tok = Lexer.read lexbuf in
 match tok with 
 | EOF -> ()
 | _ -> print_token tok; print_string " "; lexAllBuf lexbuf
+
+
 let compile file =
 print_string ("File "^file^" is being treated!\n");
 try
