@@ -63,6 +63,7 @@
 prog:
 	| classDeclaration EOF {}
 
+(* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
 className :
   | identifier {}
@@ -355,7 +356,8 @@ enumBodyDeclarations_opt:
 
 enumBodyDeclarations:
 	| SEMICOLON classBodyDeclarations_opt {}
-
+	
+(* ++++++++++++++++++++++ 9 chapter +++++++++++++++++++++++ *) 
 (* 9.1 Interface Declarations *)
 interfaceDeclaration:
 	| normalInterfaceDeclaration {}
@@ -547,6 +549,7 @@ variableInitializer:
   | expression {}
   | arrayInitializer {}
 
+(* +++++++++++++ 3 chapter +++++++++++++++++++*) 
 (* 3.8  identifiers *)
  identifier:
 	| identifier {}
@@ -571,8 +574,7 @@ floatingPointLiteral:
 booleanLiteral:
 	| BOOL {}
 
-(* 4. Types, Values, and Variables*)
-
+(* +++++++++++++ 4 chapter+++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
 	| primitiveType {}
@@ -927,6 +929,7 @@ primaryNoNewArray:
   | methodInvocation {}
   | arrayAccess {}
 
+(* ++++++++++++ 15 chapter ++++++++++++++++++++++++++++++++*)
 (* 15.8.1 Lexical Literals *)
   (* already defined in 3.9 Literals*)
 
