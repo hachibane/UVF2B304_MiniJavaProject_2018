@@ -184,12 +184,8 @@ variableDeclarator:
 	| variableDeclaratorId EQUAL variableInitializer {}
 
 variableDeclaratorId:
-	| IDENT {}
+	| identifier {}
 	| variableDeclaratorId LBRACK RBRACK {}
-
-variableInitializer:
-	| expression {}
-	| arrayInitializer {}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -204,7 +200,7 @@ resultType:
 
 methodDeclarator:
 	| methodDeclarator LBRACK RBRACK {}
-	| IDENT LPAREN formalParameterList_opt RPAREN {}
+	| identifier LPAREN formalParameterList_opt RPAREN {}
 
 formalParameterList_opt:
 	| {}
@@ -325,7 +321,7 @@ referenceTypeList:
 
 (* 8.9 Enums *)
 enumDeclaration:
-	| classModifiers_opt ENUM IDENT interfaces_opt enumBody {}
+	| classModifiers_opt ENUM identifier interfaces_opt enumBody {}
 
 enumBody:
 	| LBRACE enumConstants_opt COMMA enumBodyDeclarations_opt {}
@@ -340,7 +336,7 @@ enumConstants:
 	| enumConstants COMMA enumConstant {}
 
 enumConstant:
-	| annotations IDENT arguments_opt classBody_opt {}
+	| annotations identifier arguments_opt classBody_opt {}
 
 arguments_opt :
 	| {}
@@ -363,6 +359,20 @@ interfaceDeclaration:
 
 normalInterfaceDeclaration:
 	| interfaceModifiers_opt INTERFACE identifier typeParameters_opt extendsInterfaces_opt interfaceBody {}
+    (* 9.1.1 Interface Modifiers *)
+
+interfaceModifiers:
+	| interfaceModifier {}
+	| interfaceModifiers interfaceModifier {}
+
+interfaceModifier:
+	| annotation {}
+	| PUBLIC {}
+	| PROTECTED {}
+	| PRIVATE {}
+	| ABSTRACT {}
+	| STATIC {}
+	| STRICTFP {}
 
 (* 9.1.3 Superinterfaces and Subinterfaces *)
 extendsInterfaces_opt:
@@ -393,26 +403,29 @@ interfaceMemberDeclaration:
 	| abstractMethodDeclaration {}
 	| classDeclaration {}
 	| interfaceDeclaration {}
-	| COMMA {}
+	| SEMICOLON {}
 
-(* 9.1.1 Interface Modifiers *)
-interfaceModifiers:
-	| interfaceModifier {}
-	| interfaceModifiers interfaceModifier {}
+(* 9.3 Field (Constant) Declarations *)
+constantDeclaration:
+  | constantModifiers_opt ttype variableDeclarators SEMICOLON {}
 
-interfaceModifier:
-	| annotation {}
-	| PUBLIC {}
-	| PROTECTED {}
-	| PRIVATE {}
-	| ABSTRACT {}
-	| STATIC {}
-	| STRICTFP {}
+constantModifiers_opt :
+  | {}
+  | constantModifiers {}
+
+constantModifiers:
+  | constantModifier {}
+  | constantModifier constantModifers {}
+
+constantModifier:
+  | annotation {}
+  | PUBLIC {}
+  | STATIC {}
+  | FINAL {}
 
 (* 9.4 Abstract Method Declarations *)
 abstractMethodDeclaration:
-  | abstractMethodModifiers_opt typeParameters_opt resultType {}
-  | methodDeclarator throws_opt SEMICOLON {}
+  | abstractMethodModifiers_opt typeParameters_opt resultType methodDeclarator throws_opt SEMICOLON {}
 
 abstractMethodModifiers_opt:
   | {}
@@ -427,21 +440,38 @@ abstractMethodModifier:
   | PUBLIC      {}
   | ABSTRACT    {}
 
-(* 10.6 Array Initializers *)
-arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? LBRACE {}
-variableInitializers:
-  | variableInitializer {}
-  | variableInitializers COMMA variableInitializer {}
+(* 9.5 Member Type Declarations *)
 
-variableInitializer:
-  | expression {}
-  | arrayInitializer {}
+(* 9.6 Annotation Types *)
+annotationTypeDeclaration:
+  | interfaceModifiers_opt AROBAS INTERFACE identifier annotationTypeBody {}
 
+annotationTypeBody:
+  | LBRACE annotationTypeElementDeclarations_opt RBRACE {}
 
+annotationTypeElementDeclarations_opt:
+  | {}
+  | annotationTypeElementDeclarations {}
 
+annotationTypeElementDeclarations:
+  | annotationTypeElementDeclaration {}
+  | annotationTypeElementDeclarations annotationTypeElementDeclaration {}
 
+annotationTypeElementDeclaration:
+  | abstractMethodModifiers_opt ttype identifier LPAREN RPAREN defaultValue_opt SEMICOLON {}
+  | constantDeclaration {}
+  | classDeclaration {}
+  | interfaceDeclaration {}
+  | enumDeclaration {}
+  | annotationTypeDeclaration {}
+  | SEMICOLON {}
 
+defaultValue_opt:
+  | {}
+  | defaultValue {}
+
+defaultValue:
+  | DEFAULT elementValue {}
 
 (* 9.7 annotations *)
 annotations:
@@ -493,9 +523,25 @@ markerAnnotation:
 singleElementAnnotation:
 	| AROBAS typeName LPAREN elementValue RPAREN {}
 
+(* 10.6 Array Initializers *)
+arrayInitializer:
+  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+
+variableInitializers_opt:
+  | {}
+  | variableInitializers {}
+
+variableInitializers:
+  | variableInitializer {}
+  | variableInitializers COMMA variableInitializer {}
+
+variableInitializer:
+  | expression {}
+  | arrayInitializer {}
+
 (* 3.8  identifiers*)
  identifier:
-	| IDENT {}
+	| identifier {}
 
 (* 3.9 Literals*)
 literal:
@@ -548,7 +594,7 @@ characterLiteral:
 	| NOTDONE {}
 
 stringLiteral:
-	| IDENT {}
+	| identifier {}
 
 nullLiteral:
 	| NULL {}
@@ -941,7 +987,7 @@ methodInvocation:
 	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
   identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
    LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
@@ -1084,15 +1130,6 @@ assignmentOperator:
 	| LSHIFTEQUAL {}
 	| RSHIFTEQUAL {}
 	| USHIFTEQUAL {}
-
-
-
-(* 18.1 The Grammar of the Java Programming Language *)
-annotationTypeDeclaration:
-	| AROBAS INTERFACE identifier annotationTypeBody {}
-
-annotationTypeBody:
-	| LBRACE LBRACK annotationTypeElementDeclarations RBRACK RBRACE {}
 
 (* 6.5 Determining the Meaning of a Name *)
 packageName:
