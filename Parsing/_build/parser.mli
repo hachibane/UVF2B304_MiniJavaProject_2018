@@ -93,7 +93,6 @@ type token =
   | COMMA
   | COLON
   | CLASS
-  | CHARLIT of (char)
   | CHAR
   | CATCH
   | CASE

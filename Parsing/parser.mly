@@ -5,7 +5,6 @@
 %token <float> FLOATLIT
 %token <int> INTEGERLIT
 %token <string> STRINGLIT
-%token <char> CHARLIT
 (* Infix Operators*)
 %token PLUS MINUS TIMES
 %token DIV AND OR XOR
@@ -87,6 +86,7 @@ classModifiers :
 	| classModifiers classModifier {}
 
 classModifier :
+  | annotation {}
 	| PUBLIC {}
 	| ABSTRACT {}
 	| STATIC {}
@@ -388,7 +388,7 @@ extendsInterfaces:
 	| extendsInterfaces COMMA interfaceType {}
 
 interfaceType:
-	| typeDeclSpecifier option(typeArguments) {}
+	| typeDeclSpecifier typeArguments_opt {}
 
 (* 9.1.4 Interface Body and Member Declarations *)
 interfaceBody:
@@ -488,20 +488,17 @@ annotation:
 
 normalAnnotation:
 	| AROBAS typeName LPAREN elementValuePairs_opt RPAREN {}
-	| elementValuePairs COLON {}
-	| elementValuePair {}
-	| elementValuePairs COMMA elementValuePair {}
 
 elementValuePairs_opt:
   | {}
   | elementValuePairs {}
 
 elementValuePairs:
-  | elementValuePair {}
-  | elementValuePairs COMMA elementValuePair {}
+	| elementValuePair {}
+	| elementValuePairs COMMA elementValuePair {}
 
 elementValuePair:
-	|  identifier EQUAL elementValue {}
+	| identifier EQUAL elementValue {}
 
 elementValue:
 	| conditionalExpression {}
@@ -509,8 +506,7 @@ elementValue:
 	| elementValueArrayInitializer {}
 
 elementValueArrayInitializer:
-	| LBRACE elementValues_opt COMMA RBRACE {}
-	| LBRACE elementValues_opt RBRACE {}
+	| LBRACE elementValues_opt COMMA? RBRACE {}
 
 elementValues_opt:
 	| {}
@@ -552,7 +548,6 @@ literal:
 	| integerLiteral {}
 	| floatingPointLiteral {}
 	| booleanLiteral {}
-	| characterLiteral {}
 	| stringLiteral {}
 	| nullLiteral {}
 
@@ -567,9 +562,6 @@ booleanLiteral:
 
 stringLiteral:
   | STRINGLIT {}
-
-characterLiteral:
-  | CHARLIT {}
 
 nullLiteral:
   | NULL {}
@@ -611,7 +603,7 @@ classOrInterfaceType:
 	| interfaceType {}
 
 classType:
-	| typeDeclSpecifier typeArguments? {}
+	| typeDeclSpecifier typeArguments_opt {}
 
 typeDeclSpecifier:
 	| typeName {}
@@ -648,8 +640,7 @@ wildcardBounds:
 (* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
 block:
-	| LBRACE blockStatements RBRACE {}
-	| LBRACE RBRACE {}
+	| LBRACE blockStatements_opt RBRACE {}
 
 blockStatements_opt :
   | {}
@@ -865,7 +856,7 @@ statementExpressionList:
 
 enhancedForStatement:
   | FOR LPAREN ttype  identifier COLON expression RPAREN statement {}
-	| FOR LPAREN variableModifiers  ttype identifier COLON  expression RPAREN  statement {}
+	| FOR LPAREN variableModifiers ttype identifier COLON expression RPAREN statement {}
 
 (* 14.15 *)
 breakStatement:
@@ -930,8 +921,8 @@ primaryNoNewArray:
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
-  | NEW option(typeArguments) classOrInterfaceType LPAREN argumentList_opt RPAREN classBody_opt {}
-  | primary POINT NEW option(typeArguments) identifier option(typeArguments) LPAREN argumentList_opt RPAREN classBody_opt {}
+  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN classBody_opt {}
+  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
 
 argumentList_opt:
   | {}

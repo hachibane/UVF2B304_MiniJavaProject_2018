@@ -77,7 +77,7 @@ let characterLiteral			= [^''']
 let digit									= ['0'-'9']
 let exp										= ['e' 'E'] ['+' '-']? digit+
 let integerLiteral				= '-'? digit+
-let floatingPointLiteral	= (digit* '.' digit* | digit*) exp?
+let floatingPointLiteral	= ( digit* '.' digit+ exp? | exp )
 let ident     						= (letter | '_') ( letter | digit | '_')*
 let white     						= [' ' '\t']+
 let newline   						= '\r' | '\n' | "\r\n"
@@ -92,51 +92,29 @@ rule read = parse
 | newline										{ Lexing.new_line lexbuf; read lexbuf }
 | integerLiteral as i				{ INTEGERLIT (int_of_string i) }
 | floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
-| characterLiteral as c	{
-	match c with
-	| '.'			->			POINT
-	| ';'			->			SEMICOLON
-	| ','			->			COMMA
-	| ':'			->			COLON
-	| '{'			->			LBRACE
-	| '}' 		->			RBRACE
-	| '('			->			LPAREN
-	| ')'			->			RPAREN
-	| '['			->			LBRACK
-	| ']'			->			RBRACK
-	| '='			->			EQUAL
-	| '?'			->			COND
-	| '!'			->			EXCL
-	| '~'			->			TILDE
-	| '|'			->			OR
-	| '^'			->			XOR
-	| '&'			->			AND
-	| '@'			->			AROBAS
-	| '<'			->			INF
-	| '>'			->			SUP
-	| '+'			->			PLUS
-	| '-'			->			MINUS
-	| '*'			->			TIMES
-	| '/'			->			DIV
-	| '%'			->			MOD
-	| _				->			CHARLIT c }
 | stringLiteral as s				{ STRINGLIT s}
 | ident as id								{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
-| "<<"               { LSHIFT }
-| ">>"               { RSHIFT }
-| "++"               { INCR }
-| "--"               { DECR }
-(* infix operator *)
+| "+"                { PLUS }
+| "-"                { MINUS }
+| "*"                { TIMES }
+| "/"                { DIV }
+| "&"                { AND }
+| "|"                { OR }
+| "^"                { XOR }
+| "%"                { MOD }
+| "="                { EQUAL }
+| "<"                { INF }
+| ">"                { SUP }
 | "||"               { CONDOR }
 | "&&"               { CONDAND }
+| "++"               { INCR }
+| "--"               { DECR }
+| "?"                { COND }
+| "!"                { EXCL }
+| "~"                { TILDE }
+| "@"                { AROBAS }
 | "=="               { ISEQUAL }
 | "!="               { ISNOTEQUAL }
-| "<="               { INFEQUAL }
-| ">="               { SUPEQUAL }
-| "<<"               { LSHIFT }
-| ">>"               { RSHIFT }
-| ">>>"              { USHIFT }
-(* assignment Operator *)
 | "+="               { PLUSEQUAL }
 | "-="               { MINUSEQUAL }
 | "*="               { TIMESEQUAL }
@@ -145,9 +123,24 @@ rule read = parse
 | "|="               { OREQUAL }
 | "^="               { XOREQUAL }
 | "%="               { MODEQUAL }
+| "<="               { INFEQUAL }
+| ">="               { SUPEQUAL }
+| "<<"               { LSHIFT }
+| ">>"               { RSHIFT }
 | "<<="              { LSHIFTEQUAL }
 | ">>="              { RSHIFTEQUAL }
+| ">>>"              { USHIFT }
 | ">>>="             { USHIFTEQUAL }
+| "."                { POINT }
+| ";"                { SEMICOLON }
+| ","                { COMMA }
+| ":"                { COLON }
+| "{"                { LBRACE }
+| "}"                { RBRACE }
+| "("                { LPAREN }
+| ")"                { RPAREN }
+| "["                { LBRACK }
+| "]"                { RBRACK }
 | _ as c             { raise_error (Illegal_character(c)) lexbuf }
 | eof                { EOF }
 
@@ -158,11 +151,10 @@ let print_token = function
 | FLOATLIT f         -> print_string "real ("; print_float f; print_string ")"
 | INTEGERLIT i			 -> print_string "integer ("; print_int i; print_string ")"
 | BOOLEANLIT b       -> ( match b with
-											| true  -> print_string "boolean ( true  )"
-											| false -> print_string "boolean ( false )")
-| STRINGLIT s -> print_string("string ("^s^")")
-| COMMENT c -> ()
-| CHARLIT c -> print_string "char ("; print_char c; print_string ")"
+| true							 -> print_string "boolean ( true  )"
+| false							 -> print_string "boolean ( false )")
+| STRINGLIT s				 -> print_string("string ("^s^")")
+| COMMENT c					 -> ()
 | NULL               -> print_string "null"
 | ABSTRACT           -> print_string "abstract"
 | ASSERT             -> print_string "assert"
