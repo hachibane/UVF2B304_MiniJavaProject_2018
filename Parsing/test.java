@@ -1,1 +1,1 @@
-class nameMy {}
+public class nameMy {}

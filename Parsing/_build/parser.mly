@@ -51,7 +51,7 @@
 %%
 
 prog:
-	| classDeclaration EOF {}
+	| normalClassDeclaration EOF {}
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
@@ -63,7 +63,7 @@ classDeclaration :
 	| enumDeclaration {}
 
 normalClassDeclaration :
-	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {print_string "ok"}
+	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {}
 
 typeParameters_opt:
 	| {}
@@ -120,11 +120,12 @@ interfaceTypeList:
 classBody_opt:
 	| {}
 	| classBody {}
+
 classBody :
 	| LBRACE classBodyDeclarations_opt RBRACE {}
 
 classBodyDeclarations_opt:
-	| SEMICOLON {}
+	| {}
 	| classBodyDeclarations {}
 
 classBodyDeclarations:
