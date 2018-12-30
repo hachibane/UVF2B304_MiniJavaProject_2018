@@ -184,8 +184,12 @@ variableDeclarator:
 	| variableDeclaratorId EQUAL variableInitializer {}
 
 variableDeclaratorId:
-	| identifier {}
+	| IDENT {}
 	| variableDeclaratorId LBRACK RBRACK {}
+
+variableInitializer:
+	| expression {}
+	| arrayInitializer {}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -200,7 +204,7 @@ resultType:
 
 methodDeclarator:
 	| methodDeclarator LBRACK RBRACK {}
-	| identifier LPAREN formalParameterList_opt RPAREN {}
+	| IDENT LPAREN formalParameterList_opt RPAREN {}
 
 formalParameterList_opt:
 	| {}
@@ -321,7 +325,7 @@ referenceTypeList:
 
 (* 8.9 Enums *)
 enumDeclaration:
-	| classModifiers_opt ENUM identifier interfaces_opt enumBody {}
+	| classModifiers_opt ENUM IDENT interfaces_opt enumBody {}
 
 enumBody:
 	| LBRACE enumConstants_opt COMMA enumBodyDeclarations_opt {}
@@ -336,7 +340,7 @@ enumConstants:
 	| enumConstants COMMA enumConstant {}
 
 enumConstant:
-	| annotations identifier arguments_opt classBody_opt {}
+	| annotations IDENT arguments_opt classBody_opt {}
 
 arguments_opt :
 	| {}
@@ -426,7 +430,6 @@ abstractMethodModifier:
 (* 10.6 Array Initializers *)
 arrayInitializer:
   | LBRACE variableInitializers_opt COMMA? LBRACE {}
-
 variableInitializers:
   | variableInitializer {}
   | variableInitializers COMMA variableInitializer {}
@@ -434,6 +437,11 @@ variableInitializers:
 variableInitializer:
   | expression {}
   | arrayInitializer {}
+
+
+
+
+
 
 (* 9.7 annotations *)
 annotations:
@@ -487,7 +495,7 @@ singleElementAnnotation:
 
 (* 3.8  identifiers*)
  identifier:
-	| identifier {}
+	| IDENT {}
 
 (* 3.9 Literals*)
 literal:
@@ -540,7 +548,7 @@ characterLiteral:
 	| NOTDONE {}
 
 stringLiteral:
-	| identifier {}
+	| IDENT {}
 
 nullLiteral:
 	| NULL {}
