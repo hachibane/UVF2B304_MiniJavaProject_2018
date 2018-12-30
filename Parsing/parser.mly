@@ -575,6 +575,7 @@ booleanLiteral:
 stringLiteral:
   | STRINGLIT {}
 
+<<<<<<< HEAD
 characterLiteral:
   | CHARLIT {}
 
@@ -583,6 +584,9 @@ nullLiteral:
   | NULL {}
 
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
+=======
+(* +++++++++++++ 4 chapter+++++++++++++++++++++++++*)
+>>>>>>> b77838bdce91dd931060a24b0018c39efa7f8fb4
 =======
 (* +++++++++++++ 4 chapter+++++++++++++++++++++++++*)
 >>>>>>> b77838bdce91dd931060a24b0018c39efa7f8fb4
