@@ -16,10 +16,11 @@ try
 	let lexbuf = Lexing.from_channel input_file in
 	try
 		lexAllBuf lexbuf;
-		close_in (input_file);
-		open_in file;
-		Parser.prog Lexer.read lexbuf;
 		print_newline ();
+		let input_file = open_in file in
+		let lexbuf = Lexing.from_channel input_file in
+			Parser.prog Lexer.read lexbuf;
+			print_newline ();
 	with
 	| Errord (kind, debut, fin) ->
 		close_in (input_file);
@@ -30,8 +31,6 @@ try
 	| Parser.Error ->
 		print_string "parsing error :";
 		print_position (lexeme_start_p lexbuf) (lexeme_end_p lexbuf)
-
-
 
 with Sys_error s -> print_endline ("Can’t find file ’" ^ file ^ "’")
 let _ = Arg.parse [] compile ""

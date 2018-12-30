@@ -148,12 +148,12 @@ rule read = parse
 let print_token = function
 | EOF                -> print_string "eof"
 | IDENT id           -> print_string "(ident : "; print_string id; print_string ")"
-| FLOATLIT f         -> print_string "real ("; print_float f; print_string ")"
-| INTEGERLIT i			 -> print_string "integer ("; print_int i; print_string ")"
+| FLOATLIT f         -> print_string "(float : "; print_float f; print_string ")"
+| INTEGERLIT i			 -> print_string "(integer :"; print_int i; print_string ")"
 | BOOLEANLIT b       -> ( match b with
-| true							 -> print_string "boolean ( true  )"
-| false							 -> print_string "boolean ( false )")
-| STRINGLIT s				 -> print_string("string ("^s^")")
+| true							 -> print_string "(boolean : true)"
+| false							 -> print_string "(boolean : false)")
+| STRINGLIT s				 -> print_string("(string : "^s^")")
 | COMMENT c					 -> ()
 | NULL               -> print_string "null"
 | ABSTRACT           -> print_string "abstract"
