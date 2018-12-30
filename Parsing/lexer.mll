@@ -123,59 +123,6 @@ rule nexttoken = parse
 	| real   	     { REAL (float_of_string (Lexing.lexeme lexbuf)) }
 	| nzdigit as nz      { NZDIGIT(nz) }
 	| "0"                { ZERO }
-	| "null"             { NULL }
-	| "true"             { TRUE }
-	| "false"            { FALSE }
-	| "abstract"         { ABSTRACT }   
-	| "assert"           { ASSERT }
-	| "boolean"          { BOOLEAN }
-	| "break"            { BREAK }
-	| "byte"             { BYTE }
-	| "case"             { CASE }
-	| "catch"            { CATCH }
-	| "char"             { CHAR }
-	| "class"            { CLASS }
-	| "const"            { CONST }
-	| "continue"         { CONTINUE }
-	| "default"          { DEFAULT }
-	| "do"               { DO }
-	| "double"           { DOUBLE }
-	| "else"             { ELSE }
-	| "enum"             { ENUM }
-	| "extends"          { EXTENDS }
-	| "final"            { FINAL }
-	| "finally"          { FINALLY }
-	| "float"            { FLOAT }
-	| "for"              { FOR }
-	| "if"               { IF }
-	| "goto"             { GOTO }
-	| "implements"       { IMPLEMENTS }
-	| "import"           { IMPORT }
-	| "instanceof"       { INSTANCEOF }
-	| "int"              { INT }
-	| "interface"        { INTERFACE }
-	| "long"             { LONG }
-	| "native"           { NATIVE }
-	| "new"              { NEW }
-	| "package"          { PACKAGE }
-	| "private"          { PRIVATE }
-	| "protected"        { PROTECTED }
-	| "public"           { PUBLIC }
-	| "return"           { RETURN }
-	| "short"            { SHORT }
-	| "static"           { STATIC }
-	| "strictfp"         { STRICTFP }
-	| "super"            { SUPER }
-	| "switch"           { SWITCH }
-	| "synchronized"     { SYNCHRONIZED }
-	| "this"             { THIS }
-	| "throw"            { THROW }
-	| "throws"           { THROWS }
-	| "transient"        { TRANSIENT }
-	| "try"              { TRY }
-	| "void"             { VOID }
-	| "volatile"         { VOLATILE }
-	| "while"            { WHILE }
 	| "+"                { PLUS }
 	| "-"                { MINUS }
 	| "*"                { TIMES }
@@ -213,17 +160,17 @@ rule nexttoken = parse
 	| ">>="              { RSHIFTEQUAL }
 	| ">>>"              { USHIFT }
 	| ">>>="             { USHIFTEQUAL }
-  | "."                { POINT }
-  | ";"                { SEMICOLON }
-  | ","                { COMMA }
-  | ":"                { COLON }
-  | "{"                { LBRACE }
-  | "}"                { RBRACE }
-  | "("                { LPAREN }
-  | ")"                { RPAREN }
-  | "["                { LBRACK }
-  | "]"                { RBRACK }
-  | _ as c             { raise_error (Illegal_character(c)) lexbuf }
+	| "."                { POINT }
+	| ";"                { SEMICOLON }
+	| ","                { COMMA }
+	| ":"                { COLON }
+	| "{"                { LBRACE }
+	| "}"                { RBRACE }
+	| "("                { LPAREN }
+	| ")"                { RPAREN }
+	| "["                { LBRACK }
+	| "]"                { RBRACK }
+	| _ as c             { raise_error (Illegal_character(c)) lexbuf }
 
 
 
@@ -325,16 +272,16 @@ let print_token = function
 	| RSHIFTEQUAL        -> print_string "rshiftequal"
 	| USHIFT             -> print_string "ushift"
 	| USHIFTEQUAL        -> print_string "ushiftequal"
-  | POINT              -> print_string "point"
-  | SEMICOLON          -> print_string "semicolon"
-  | COMMA              -> print_string "comma"
-  | COLON              -> print_string "colon"
-  | LBRACE             -> print_string "lbrace"
-  | RBRACE             -> print_string "rbrace"
-  | LPAREN             -> print_string "lparen"
-  | RPAREN             -> print_string "rparen"
-  | LBRACK             -> print_string "lbrack"
-  | RBRACK             -> print_string "rbrack"
+	| POINT              -> print_string "point"
+	| SEMICOLON          -> print_string "semicolon"
+	| COMMA              -> print_string "comma"
+	| COLON              -> print_string "colon"
+	| LBRACE             -> print_string "lbrace"
+	| RBRACE             -> print_string "rbrace"
+	| LPAREN             -> print_string "lparen"
+	| RPAREN             -> print_string "rparen"
+	| LBRACK             -> print_string "lbrack"
+	| RBRACK             -> print_string "rbrack"
  
 
 (* Function which read a buffer and print the recognized token *)
