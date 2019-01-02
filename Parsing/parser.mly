@@ -136,7 +136,7 @@ primitiveType:
 numericType:
 	| it=integralType { it }
 	| fpt=floatingPointType { fpt } 
-
+	
 integralType:
 	| BYTE { " byte " }
 	| SHORT { " short " }
@@ -197,4 +197,33 @@ wildcard:
 wildcardBounds:
 	| EXTENDS rt=referenceType { " extends "^rt } 
 	| SUPER rt=referenceType { " super "^rt } 
+
+(* 6. Names *)
+(* 6.5 Determining the Meaning of a Name *)
+
+packageName:
+	| id = IDENT { id }
+	| pn=packageName POINT id=identifier { pn^" . "^id } 
+	
+typeName: 
+	| id = IDENT { id }
+	| potn=packageOrTypeName POINT id=IDENT { potn^" . "^id }
+	
+expressionName: 
+	| id = IDENT { id }
+	| an=ambiguosName POINT IDENT { an^" . "^id }
+	
+methodName: 
+	| id = IDENT { id }
+	| an=ambiguosName POINT IDENT { an^" . "^id }
+	
+packageOrTypeName:
+	| id = IDENT { id }
+	| potn=packageOrTypeName POINT id=IDENT { potn^" . "^id }
+	
+ambiguousName:
+	| id = IDENT { id }
+	| an=ambiguosName POINT IDENT { an^" . "^id }
+
+
 
