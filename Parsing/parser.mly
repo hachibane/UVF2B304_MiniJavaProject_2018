@@ -225,5 +225,42 @@ ambiguousName:
 	| id = IDENT { id }
 	| an=ambiguosName POINT IDENT { an^" . "^id }
 
+(* 7. Packages *) 
+(* 7.3 Compilation Units *)
 
+compilationUnit:
+	| pd= packageDeclaration id=importDeclarations td=typeDeclarations { pd^" IDENT "^td }
 
+importDeclaration:
+	| idec = importDeclaration { id }
+	| idecs= importDeclarations idec=importDeclaration { idecs^" "^idec }
+	
+typeDeclarations:
+	| td = typeDeclaration { td }
+	| tds = typeDeclaratios td = typeDeclaration { tds^" "^td }
+
+packageDeclaration:
+	| ANNOT pck=package pn=packageName { "@"^"pck"^"pn" }
+	
+importDeclaration:
+	| stid=singleTypeImportDeclaration { stid }
+	| tiodd=typeImportOnDemandDeclaration { tiodd }
+	| ssid=singleStaticImportDeclaration { ssid }
+	| siodd=staticImportOnDemandDeclaration { siodd }
+	
+singleTypeImportDeclaration:
+	| IMPORT tn=typeName SEMICOLON { " import "^tn^ " ; " }
+	
+typeImportOnDemandDeclaration:
+	| IMPORT potnn=packageOrTypeName POINT TIMES SEMICOLON { " import "^potnn^" . "^" * "^" ; " }
+
+singleStaticImportDeclaration:
+	| IMPORT STATIC tn=typeName POINT id=IDENT SEMICOLON { " import "^" static "^tn^" . "^id^" ; " }
+
+staticImportOnDemandDeclaration:
+	| IMPORT STATIC tn=typeName POINT TIMES SEMICOLON { " import "^" static "^tn^" . "^" * "^" ; " }
+
+typeDeclaration:
+	| cd=classDeclaration { cd }
+	| interd=interfaceDeclaration { interd }
+	| SEMICOLON { " ; " }
