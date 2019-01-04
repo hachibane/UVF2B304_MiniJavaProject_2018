@@ -1,6 +1,6 @@
 class Gauss {
-
-	int x;
+	
 	static public void mymethod() {
-	}
+        int x = 5;	
+}
 }

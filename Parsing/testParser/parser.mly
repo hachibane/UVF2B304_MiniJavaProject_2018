@@ -660,7 +660,7 @@ blockStatement:
 
 (* 14.4 *)
 localVariableDeclarationStatement:
-	| localVariableDeclaration SEMICOLON {}
+	| localVariableDeclaration SEMICOLON { $1 }
 
 localVariableDeclaration:
 	| variableModifiers ttype variableDeclarators {}

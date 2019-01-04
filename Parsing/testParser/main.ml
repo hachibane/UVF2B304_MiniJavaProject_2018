@@ -9,8 +9,8 @@ let lex = Lexer.read lexbuf in
 match lex with
 | EOF -> ()
 | _ -> print_token lex; print_string " "; lexAllBuf lexbuf
-*)
 
+*)
 let compile file =
 print_string ("File "^file^" is being treated!\n");
 try
@@ -18,7 +18,9 @@ try
 	let lexbuf = Lexing.from_channel input_file in
 	try
 		Parser.prog Lexer.read lexbuf;
+		(*lexAllBuf lexbuf;*)
 		print_newline ();
+		close_in (input_file);
 	with
 	| Errord (kind, debut, fin) ->
 		close_in (input_file);
