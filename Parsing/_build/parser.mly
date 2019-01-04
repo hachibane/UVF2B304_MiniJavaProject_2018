@@ -49,7 +49,7 @@
 %%
 
 prog:
-	| normalClassDeclaration EOF {}
+	| classDeclaration EOF {}
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
@@ -76,6 +76,27 @@ typeParameter:
 bound:
 	| ttype LBRACE AND ttype RBRACE {}
 
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+methodModifier:
+  | annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
+		
 (* 8.1.1 Class Modifiers *)
 classModifiers_opt:
 	| {}
@@ -121,7 +142,7 @@ classBody_opt:
 	| classBody {}
 
 classBody :
-	| LBRACE classBodyDeclarations_opt RBRACE {}
+	| LBRACE classBodyDeclarations_opt RBRACE { }
 
 classBodyDeclarations_opt:
 	| {}
@@ -178,6 +199,8 @@ variableDeclaratorId:
 	| identifier {}
 	| variableDeclaratorId LBRACK RBRACK {}
 
+
+
 (* 8.4 Method Declarations *)
 methodDeclaration:
 	| methodHeader methodBody {}
@@ -186,7 +209,7 @@ methodHeader:
 	| methodModifiers_opt typeParameters_opt resultType methodDeclarator throws_opt {}
 
 resultType:
-	| ttype {}
+  | ttype {}
 	| VOID {}
 
 methodDeclarator:
@@ -219,26 +242,6 @@ variableModifier:
 lastFormalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
 	| formalParameter {}
-
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-  | {}
-  | methodModifiers {}
-
-methodModifiers:
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
 
 (* 8.4.6 Method Throws *)
 throws_opt:

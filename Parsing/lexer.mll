@@ -93,7 +93,7 @@ rule read = parse
 | integerLiteral as i				{ INTEGERLIT (int_of_string i) }
 | floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
 | stringLiteral as s				{ STRINGLIT s}
-| ident as id								{ try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+| ident as id								{ print_string (id^" "); try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 | "+"                { PLUS }
 | "-"                { MINUS }
 | "*"                { TIMES }

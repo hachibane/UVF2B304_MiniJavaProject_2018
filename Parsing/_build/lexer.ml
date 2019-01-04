@@ -343,7 +343,7 @@ let
 # 344 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
 # 96 "lexer.mll"
-                     ( try Hashtbl.find keyword_table id with Not_found -> IDENT id )
+                     ( print_string (id^" "); try Hashtbl.find keyword_table id with Not_found -> IDENT id )
 # 348 "lexer.ml"
 
   | 6 ->
