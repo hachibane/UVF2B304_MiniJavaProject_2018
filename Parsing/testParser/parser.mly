@@ -1,40 +1,5 @@
+(* @authors : Robin You - Achibane Hamza - Hamza Sahri - Khaled Bousrih - Khalid Majdoub *)
 
-<<<<<<< HEAD
-%token TRUE
-%token FALSE
-
-
-%token PLUS MINUS TIMES
-%token DIV AND OR XOR
-%token MOD INF SUP
-%token ISEQUAL ISNOTEQUAL INFOREQUAL SUPOREQUAL SUPEQUAL INFEQUAL
-%token CONDOR CONDAND COND ANNOT
-%token LSHIFT RSHIFT USHIFT
-
-
-%token INCR DECR EXCL TILDE
-
-
-%token EQUAL PLUSEQUAL MINUSEQUAL TIMESEQUAL DIVEQUAL ANDEQUAL OREQUAL XOREQUAL MODEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL
-
-
-%token POINT SEMICOLON COMMA COLON LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
-
-
-%token ABSTRACT PRIVATE PROTECTED PUBLIC STATIC STRICTFP SYNCHRONIZED VOLATILE TRANSIENT NATIVE FINAL IMMPLEMENTS
-
-
-%token BYTE SHORT CHAR INT LONG FLOAT DOUBLE BOOLEAN
-
-
-%token ASSERT BREAK CASE CATCH CLASS CONST CONTINUE DO DEFAULT ELSE ENUM EXTENDS FINALLY FOR IF GOTO IMPLEMENTS IMPORT INSTANCEOF INTERFACE NEW PACKAGE RETURN SUPER SWITCH THIS THROW THROWS TRY VOID WHILE STRUCT
-
-
-%token EOF
-%token <string> IDENT
-%token ZERO
-%token <char> NZDIGIT
-=======
 (* Literals *)
 %token <bool> BOOLEANLIT
 %token <float> FLOATLIT
@@ -74,22 +39,9 @@
 (* Special Tokens *)
 %token EOF
 %token <string> IDENT
->>>>>>> sahri_test
 %token NULL
 %token <string> COMMENT
-%token <int> INTEGER
-%token <float> REAL
 
-
-<<<<<<< HEAD
-%start prog
-%type < unit> prog
-%%
-
-prog :
-| EOF {  }
-%%
-=======
 
 (* starting symbol *)
 %start prog
@@ -708,7 +660,7 @@ blockStatement:
 
 (* 14.4 *)
 localVariableDeclarationStatement:
-	| localVariableDeclaration SEMICOLON {}
+	| localVariableDeclaration SEMICOLON { $1 }
 
 localVariableDeclaration:
 	| variableModifiers ttype variableDeclarators {}
@@ -1184,4 +1136,3 @@ packageOrTypeName:
 ambiguousName:
 	| identifier {}
 	| ambiguousName POINT identifier {}
->>>>>>> sahri_test

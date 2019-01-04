@@ -1,8 +1,4 @@
 (* errors handling *)
-<<<<<<< HEAD
-
-=======
->>>>>>> sahri_test
 open Lexing
 
 exception Eof
@@ -47,8 +43,4 @@ let print_position debut fin =
 			print_int fin.pos_lnum;
 			print_string " character ";
 			print_int (fin.pos_cnum - fin.pos_bol)
-<<<<<<< HEAD
-end
-=======
 		end
->>>>>>> sahri_test
