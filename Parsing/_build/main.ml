@@ -15,10 +15,6 @@ try
 	let input_file = open_in file in
 	let lexbuf = Lexing.from_channel input_file in
 	try
-		lexAllBuf lexbuf;
-		print_newline ();
-		let input_file = open_in file in
-		let lexbuf = Lexing.from_channel input_file in
 			Parser.prog Lexer.read lexbuf;
 			print_newline ();
 	with
