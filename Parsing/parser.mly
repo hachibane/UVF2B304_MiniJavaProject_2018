@@ -52,17 +52,6 @@
 %token IDENTIFIER
 %token FORMALPARAMETER
 
-(* post *)
-%token ASSIGNMENT
-%token METHODINVOCATION
-%token EXPRESSION
-%token PREINCREMENTEXPRESSION 
-%token POSTINCREMENTEXPRESSION 
-%token PREDECREMENTEXPRESSION 
-%token POSTDECREMENTEXPRESSION 
-%token CLASSINSTANCECREATIONEXPRESSION
-%token CONSTANTEXPRESSION
-
 %%
 
 (* 10 *)
@@ -159,9 +148,9 @@ statementExpression:
 	| prie = PREINCREMENTEXPRESSION          { prie } 
 	| prde = PREDECREMENTEXPRESSION          { prde }
 	| poie = POSTINCREMENTEXPRESSION         { poie }
-	| pode = POSTDECREMENTEXPRESSION         { pode }
-	| mi   = METHODINVOCATION                { mi }
-	| cice = CLASSINSTANCECREATIONEXPRESSION { cce }
+	| pode = postDecrementExpression        { pode }
+	| mi   = methodInvocation                { mi }
+	| cice = classInstanceCreationExpression { cce }
 
 (* 14.9 *)
 
@@ -358,5 +347,195 @@ finally:
 		FINALLY b = block { "finally\n"^b }
 
 
+
+(* 15.9 Class Instance Creation Expressions *)
+classInstanceDecl:
+  | NEW typeArguments_opt classOrInterfaceType LPAREN argumentList_opt RPAREN classBody_opt {}
+  | primary POINT NEW typeArguments_opt identifier typeArguments_opt LPAREN argumentList_opt RPAREN classBody_opt {}
+
+argumentList_opt:
+  | {}
+  | argumentList {}
+
+argumentList:
+  | expression {}
+  | argumentList COMMA expression RPAREN {}
+
+(* 15.10 Array Creation Expressions *)
+arrayCreationExpression:
+  | NEW primitiveType dimExprs dims_opt {}
+  | NEW classOrInterfaceType dimExprs dims_opt {}
+  | NEW primitiveType dims arrayInitializer {}
+  | NEW classOrInterfaceType dims arrayInitializer  {}
+
+dimExprs:
+  | dimExpr {}
+  | dimExprs dimExpr {}
+
+dimExpr:
+  | LBRACK expression RBRACK {}
+
+dims_opt:
+  | {}
+  | dims {}
+
+dims:
+  | LBRACK RBRACK {}
+  | dims LBRACK RBRACK {}
+
+(* 15.11 Field Access Expressions *)
+fieldAccess:
+  | primary POINT identifier {}
+  | SUPER POINT identifier {}
+  | className POINT SUPER POINT identifier {}
+
+(* 15.12 Method Invocation Expressions *)
+methodInvocation:
+	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
+  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
+   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
+    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+
+(* 15.13 Array Access expressions *)
+arrayAccess:
+	| expressionName LBRACK expression RBRACK {}
+	| primaryNoNewArray LBRACK expression RBRACK {}
+
+(* 15.14 Postfix expressions *)
+postfixExpression:
+	| primary {}
+	| expressionName {}
+	| postIncrementExpression {}
+	| postDecrementExpression{}
+
+(* 15.14.2 Postfix Increment Operator ++ *)
+postIncrementExpression:
+	| postfixExpression INCR {}
+
+(* 15.14.3 Postfix Decrement Operator -- *)
+postDecrementExpression:
+  | postfixExpression DECR {}
+
+(* 15.15 Unary Operators *)
+unaryExpression:
+  | preIncrementExpression {}
+  | preDecrementExpression {}
+  | PLUS unaryExpression {}
+  | MINUS unaryExpression {}
+  | unaryExpressionNotPlusMinus {}
+
+preIncrementExpression:
+  | INCR unaryExpression {}
+
+preDecrementExpression:
+  | DECR unaryExpression {}
+
+unaryExpressionNotPlusMinus:
+  | postfixExpression {}
+  | TILDE unaryExpression {}
+  | EXCL unaryExpression {}
+  | castExpression {}
+
+(* 15.16 Cast Expressions *)
+castExpression:
+  | LPAREN primitiveType dims_opt RPAREN unaryExpression {}
+  | LPAREN referenceType RPAREN unaryExpressionNotPlusMinus {}
+
+(* 15.17 Multiplicative Operators *)
+multiplicativeExpression:
+  | unaryExpression {}
+  | multiplicativeExpression TIMES unaryExpression {}
+  | multiplicativeExpression DIV unaryExpression {}
+  | multiplicativeExpression MOD unaryExpression {}
+
+(* 15.18 Additive Operators *)
+additiveExpression:
+  | multiplicativeExpression {}
+  | additiveExpression PLUS multiplicativeExpression {}
+  | additiveExpression MINUS multiplicativeExpression {}
+
+(* 15.19 Shift Operators *)
+shiftExpression:
+  | additiveExpression
+  | shiftExpression LSHIFT additiveExpression {}
+  | shiftExpression RSHIFT additiveExpression {}
+  | shiftExpression USHIFT additiveExpression {}
+
+(* 15.20 Relational Operators *)
+relationalExpression:
+  | shiftExpression {}
+  | relationalExpression INF shiftExpression {}
+  | relationalExpression SUP shiftExpression {}
+  | relationalExpression INFEQUAL shiftExpression {}
+  | relationalExpression SUPEQUAL shiftExpression {}
+  | relationalExpression INSTANCEOF referenceType {}
+
+(* 15.21 Equality Operators *)
+equalityExpression:
+  | relationalExpression {}
+  | equalityExpression ISEQUAL relationalExpression {}
+  | equalityExpression ISNOTEQUAL relationalExpression {}
+
+(* 15.22 Bitwise and Logical Operators *)
+andExpression:
+  | equalityExpression {}
+  | andExpression AND equalityExpression {}
+
+exclusiveOrExpression:
+  | andExpression {}
+  | exclusiveOrExpression XOR andExpression {}
+
+inclusiveOrExpression:
+  | exclusiveOrExpression {}
+  | inclusiveOrExpression OR exclusiveOrExpression {}
+
+(* 15.23 Conditional-And Operator && *)
+conditionalAndExpression:
+  | inclusiveOrExpression {}
+  | conditionalAndExpression CONDAND inclusiveOrExpression {}
+
+(* 15.24 Conditional-Or Operator || *)
+conditionalOrExpression:
+  | conditionalAndExpression {}
+  | conditionalOrExpression CONDOR conditionalAndExpression {}
+
+(* 15.25 conditional operator ?: *)
+conditionalExpression:
+	| conditionalOrExpression {}
+	| conditionalOrExpression COND expression COLON conditionalExpression {}
+
+(* 15.26 Assignment Operators *)
+assignmentExpression:
+	| conditionalExpression {}
+	| assignment {}
+
+(* 15.27 Expression *)
+expression:
+  | assignmentExpression {}
+
+(* 15.28 Constant Expression *)
+constantExpression:
+  | expression {}
+
+assignment:
+	| leftHandSide assignmentOperator assignmentExpression {}
+
+leftHandSide:
+	| expressionName {}
+	| fieldAccess {}
+	| arrayAccess {}
+
+assignmentOperator:
+	| PLUSEQUAL {}
+	| MINUSEQUAL {}
+	| TIMESEQUAL {}
+	| DIVEQUAL {}
+	| ANDEQUAL {}
+	| OREQUAL {}
+	| XOREQUAL {}
+	| MODEQUAL {}
+	| LSHIFTEQUAL {}
+	| RSHIFTEQUAL {}
+	| USHIFTEQUAL {}
 
 %%
