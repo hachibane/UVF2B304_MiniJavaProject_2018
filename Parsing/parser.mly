@@ -65,6 +65,23 @@
 
 %%
 
+(* 10 *)
+
+arrayInitializer:
+  | LBRACE variableInitializers_opt COMMA? RBRACE {}
+
+variableInitializers_opt:
+  | {}
+  | variableInitializers {}
+
+variableInitializers:
+  | variableInitializer {}
+  | variableInitializers COMMA variableInitializer {}
+
+variableInitializer:
+  | expression {}
+| arrayInitializer {}
+
 (* 14.2 *)
 
 block:
