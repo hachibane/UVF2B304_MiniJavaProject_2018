@@ -152,6 +152,39 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
+(* 8.3 Field Declarations *)
+fieldDeclaration:
+	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
+
+fieldModifiers_opt:
+  | {}
+  | fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
+fieldModifier :
+	| PUBLIC     {}
+	| STATIC		 {}
+	| PROTECTED	 {}
+	| PRIVATE		 {}
+	| FINAL			 {}
+	| STRICTFP	 {}
+	| TRANSIENT	 {}
+	| VOLATILE   {}
+
+variableDeclarators:
+	| variableDeclarator {}
+	| variableDeclarators COMMA variableDeclarator {}
+
+variableDeclarator:
+	| variableDeclaratorId {}
+	| variableDeclaratorId EQUAL variableInitializer {}
+
+variableDeclaratorId:
+	| identifier {}
+	| variableDeclaratorId LBRACK RBRACK {}
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
@@ -234,50 +267,17 @@ classBodyDeclarations:
 
 classBodyDeclaration:
 	| classMemberDeclaration	{}
-	(*| instanceInitializer		{}*)
-	(*| staticInitializer			{}*)
-	(*| constructorDeclaration	{}*)
+	| instanceInitializer		{}
+	| staticInitializer			{}
+	| constructorDeclaration	{}
 
 classMemberDeclaration:
 	| fieldDeclaration {}
 	| methodDeclaration {}
-	(*| classDeclaration {}*)
-	(*| interfaceDeclaration {}*)
-	(*| SEMICOLON  {}*)
+	| classDeclaration {}
+	| interfaceDeclaration {}
+	| SEMICOLON  {}
 
-(* 8.3 Field Declarations *)
-fieldDeclaration:
-	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
-
-fieldModifiers_opt:
-  | {}
-  | fieldModifiers {}
-
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
-
-fieldModifier :
-	| PUBLIC     {}
-	| STATIC		 {}
-	| PROTECTED	 {}
-	| PRIVATE		 {}
-	| FINAL			 {}
-	| STRICTFP	 {}
-	| TRANSIENT	 {}
-	| VOLATILE   {}
-
-variableDeclarators:
-	| variableDeclarator {}
-	| variableDeclarators COMMA variableDeclarator {}
-
-variableDeclarator:
-	| variableDeclaratorId {}
-	| variableDeclaratorId EQUAL variableInitializer {}
-
-variableDeclaratorId:
-	| identifier {}
-	| variableDeclaratorId LBRACK RBRACK {}
 
 
 (* 8.4 Method Declarations *)
@@ -331,7 +331,7 @@ methodModifiers :
 	| methodModifiers methodModifier {}
 
 methodModifier:
-  | annotation {}
+  	| annotation {}
 	| PUBLIC {}
 	| PROTECTED  {}
 	| PRIVATE  {}
@@ -1111,6 +1111,7 @@ assignmentOperator:
 	| LSHIFTEQUAL {}
 	| RSHIFTEQUAL {}
 	| USHIFTEQUAL {}
+	| EQUAL {}
 
 
 (* 6.5 Determining the Meaning of a Name *)
