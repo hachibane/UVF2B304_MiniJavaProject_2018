@@ -115,7 +115,7 @@ referenceType:
 
 classOrInterfaceType:
 	| classType {}
-	(*| interfaceType {}*)
+	| interfaceType {}
 
 classType:
 	| typeDeclSpecifier typeArguments_opt {}
@@ -151,6 +151,28 @@ wildcard:
 wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
+
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+methodModifier:
+  	| annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
+
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
@@ -310,37 +332,22 @@ formalParameters:
 formalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
 
+variableModifiers_opt:
+	| {}
+	| variableModifiers {}
+
 variableModifiers:
 	| variableModifier {}
 	| variableModifiers variableModifier {}
 
 variableModifier:
+	| annotation {}
 	| FINAL {}
 
 lastFormalParameter:
-	| variableModifiers ttype variableDeclaratorId {}
+	| variableModifiers_opt ttype variableDeclaratorId {}
 	| formalParameter {}
 
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-	| {}
-	| methodModifiers {}
-
-methodModifiers :
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-  	| annotation {}
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
 
 (* 8.4.6 Method Throws *)
 throws_opt:
