@@ -9597,7 +9597,7 @@ and _menhir_run548 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
 and _menhir_reduce368 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s ->
     let _v : (unit option) = 
-# 114 "C:/OCaml64/home/ordi/.opam/ocaml-variants.4.07.1+mingw64c/lib/menhir/standard.mly"
+# 100 "/usr/share/menhir/standard.mly"
     ( None )
 # 9603 "parser.ml"
      in
@@ -9609,7 +9609,7 @@ and _menhir_run411 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let x = () in
     let _v : (unit option) = 
-# 116 "C:/OCaml64/home/ordi/.opam/ocaml-variants.4.07.1+mingw64c/lib/menhir/standard.mly"
+# 102 "/usr/share/menhir/standard.mly"
     ( Some x )
 # 9615 "parser.ml"
      in
@@ -14498,7 +14498,7 @@ and _menhir_goto_classModifiers : _menhir_env -> 'ttv_tail -> _menhir_state -> (
 
 and _menhir_fail : unit -> 'a =
   fun () ->
-    Printf.fprintf stderr "Internal failure -- please contact the parser generator's developers.\n%!";
+    Printf.fprintf Pervasives.stderr "Internal failure -- please contact the parser generator's developers.\n%!";
     assert false
 
 and _menhir_run871 : _menhir_env -> 'ttv_tail * _menhir_state * (unit) -> 'ttv_return =
@@ -20689,7 +20689,8 @@ and prog : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
         _menhir_env._menhir_error <- true;
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState0)
 
-# 269 "C:/OCaml64/home/ordi/.opam/ocaml-variants.4.07.1+mingw64c/lib/menhir/standard.mly"
+# 219 "/usr/share/menhir/standard.mly"
   
 
-# 20696 "parser.ml"
+
+# 20697 "parser.ml"

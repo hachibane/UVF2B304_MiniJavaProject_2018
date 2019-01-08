@@ -17,13 +17,8 @@ try
 	let input_file = open_in file in
 	let lexbuf = Lexing.from_channel input_file in
 	try
-<<<<<<< HEAD
-			Parser.prog Lexer.read lexbuf;
-			print_newline ();
-=======
-	Parser.prog Lexer.read lexbuf;
-	print_newline ();
->>>>>>> 506b23a2a57d2ae5a1c3b559c1117ccbd4eb1eef
+		Parser.prog Lexer.read lexbuf;
+		print_newline ();
 	with
 	| Errord (kind, debut, fin) ->
 		close_in (input_file);
