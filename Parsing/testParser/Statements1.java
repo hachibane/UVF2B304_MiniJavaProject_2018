@@ -33,5 +33,6 @@ public class AssertStatement {
 		i++;
 		++i;
 		i--;
+		--i;
 	}
 }

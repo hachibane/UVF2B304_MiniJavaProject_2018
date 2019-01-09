@@ -731,7 +731,7 @@ expressionStatement:
 statementExpression:
 	| assignment {}
 	| preIncrementExpression {}
-	| postDecrementExpression {}
+	| preDecrementExpression {}
 	| postIncrementExpression {}
 	| postDecrementExpression {}
 	| methodInvocation {}
