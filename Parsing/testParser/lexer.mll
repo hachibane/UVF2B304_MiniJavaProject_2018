@@ -14,7 +14,7 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"throw",		THROW;
 	"throws",		THROWS;
 	"extends",		EXTENDS;
-	"implements",	IMPLEMENTS;
+	"implements",		IMPLEMENTS;
 	"break",		BREAK;
 	"catch",		CATCH;
 	"continue",		CONTINUE;
@@ -30,7 +30,7 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"super",		SUPER;
 	"new",			NEW;
 	(*  *)
-	"instanceof",	INSTANCEOF;
+	"instanceof",		INSTANCEOF;
 	"null",			NULL;
 	"true",			BOOLEANLIT true;
 	"false",		BOOLEANLIT false;
@@ -39,7 +39,7 @@ let _ = List.iter (fun (kwd, tok) -> Hashtbl.add keyword_table kwd tok)
 	"package",		PACKAGE;
 	"enum",			ENUM;
 	"class",		CLASS;
-	"interface",	INTERFACE;
+	"interface",		INTERFACE;
 	(* Modifiers *)
 	"default",		DEFAULT;
 	"public",		PUBLIC;
@@ -93,7 +93,7 @@ rule read = parse
 | integerLiteral as i				{ INTEGERLIT (int_of_string i) }
 | floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
 | stringLiteral as s				{ STRINGLIT s}
-| ident as id								{ print_string (id^" "); try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+| ident as id								{  try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 | "+"                { PLUS }
 | "-"                { MINUS }
 | "*"                { TIMES }
