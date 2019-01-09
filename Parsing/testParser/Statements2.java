@@ -22,6 +22,6 @@ class Statement2 {
 		if (i==0)
 			;
                 else
-			j = 0;	
+			;	
 		}
 }
