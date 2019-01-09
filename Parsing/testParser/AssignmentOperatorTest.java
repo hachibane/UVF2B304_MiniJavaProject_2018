@@ -1,7 +1,7 @@
 class Assign {
 
 
-	public private void assign(int x) {
+	public void assign(int x) {
 		a = 12;
 		a *= 12;
 		a /= 12;

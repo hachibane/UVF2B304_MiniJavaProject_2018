@@ -152,6 +152,28 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
+(* 8.3 Field Declarations *)
+fieldDeclaration:
+	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
+
+fieldModifiers_opt:
+  	| {}
+  	| fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
+fieldModifier :
+	| PUBLIC     		{}
+	| STATIC		{}
+	| PROTECTED	 	{}
+	| PRIVATE		{}
+	| FINAL			{}
+	| STRICTFP	 	{}
+	| TRANSIENT	 	{}
+	| VOLATILE   		{}
+
 (* 8.4.3 Method Modifiers *)
 methodModifiers_opt:
 	| {}
@@ -174,28 +196,7 @@ methodModifier:
 	| STRICTFP {}
 
 
-(* 8.3 Field Declarations *)
-fieldDeclaration:
-	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
-
-fieldModifiers_opt:
-  | {}
-  | fieldModifiers {}
-
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
-
-fieldModifier :
-	| PUBLIC     {}
-	| STATIC		 {}
-	| PROTECTED	 {}
-	| PRIVATE		 {}
-	| FINAL			 {}
-	| STRICTFP	 {}
-	| TRANSIENT	 {}
-	| VOLATILE   {}
-
+(*variable declarator*)
 variableDeclarators:
 	| variableDeclarator {}
 	| variableDeclarators COMMA variableDeclarator {}
@@ -207,6 +208,7 @@ variableDeclarator:
 variableDeclaratorId:
 	| identifier {}
 	| variableDeclaratorId LBRACK RBRACK {}
+
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
