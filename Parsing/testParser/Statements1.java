@@ -1,4 +1,4 @@
-public class AssertStatement {
+public class Statement1 {
 	int i;
 	int a;
 	int b;
@@ -18,6 +18,7 @@ public class AssertStatement {
 		continue i;
 	}
 	void doStatement() {
+
 		do
 			i++;
 		while
