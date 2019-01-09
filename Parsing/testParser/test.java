@@ -17,4 +17,10 @@ public class AssertStatement {
 		continue;
 		continue i;
 	}
+	void doStatement() {
+		do
+			i++;
+		while
+			(i!=0)
+	}
 }
