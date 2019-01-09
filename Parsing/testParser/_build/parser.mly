@@ -52,6 +52,7 @@ prog:
 	| classDeclaration EOF {}
 
 
+
 (* +++++++++++++ 3 chapter +++++++++++++++++++*)
 (* 3.8  identifiers *)
  identifier:
@@ -152,6 +153,42 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
+(*variable modifiers*)
+variableModifiers_opt:
+	| {}
+	| variableModifiers {}
+
+variableModifiers:
+	| variableModifier {}
+	| variableModifiers variableModifier {}
+
+variableModifier:
+	| annotation {}
+	| FINAL {}
+
+(*variable declarators*)
+variableDeclarators:
+	| variableDeclarator {}
+	| variableDeclarators COMMA variableDeclarator {}
+
+variableDeclarator:
+	| variableDeclaratorId {}
+	| variableDeclaratorId EQUAL variableInitializer {}
+
+variableDeclaratorId:
+	| identifier {}
+	| variableDeclaratorId LBRACK RBRACK {}
+
+
+
+
+(* 14.4 *)
+localVariableDeclarationStatement:
+	| localVariableDeclaration SEMICOLON {}
+
+localVariableDeclaration:
+	| variableModifiers_opt ttype variableDeclarators {}
+
 (* 8.3 Field Declarations *)
 fieldDeclaration:
 	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
@@ -173,6 +210,11 @@ fieldModifier :
 	| STRICTFP	 	{}
 	| TRANSIENT	 	{}
 	| VOLATILE   		{}
+
+
+lastFormalParameter:
+	| variableModifiers_opt ttype variableDeclaratorId {}
+	| formalParameter {}
 
 (* 8.4.3 Method Modifiers *)
 methodModifiers_opt:
@@ -196,18 +238,6 @@ methodModifier:
 	| STRICTFP {}
 
 
-(*variable declarator*)
-variableDeclarators:
-	| variableDeclarator {}
-	| variableDeclarators COMMA variableDeclarator {}
-
-variableDeclarator:
-	| variableDeclaratorId {}
-	| variableDeclaratorId EQUAL variableInitializer {}
-
-variableDeclaratorId:
-	| identifier {}
-	| variableDeclaratorId LBRACK RBRACK {}
 
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
@@ -217,7 +247,7 @@ className :
 
 classDeclaration :
 	| normalClassDeclaration {}
-	(*| enumDeclaration {}*)
+	| enumDeclaration {}
 
 normalClassDeclaration :
 	| classModifiers_opt CLASS IDENT classBody {} (*incomplete*)
@@ -334,21 +364,6 @@ formalParameters:
 formalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
 
-variableModifiers_opt:
-	| {}
-	| variableModifiers {}
-
-variableModifiers:
-	| variableModifier {}
-	| variableModifiers variableModifier {}
-
-variableModifier:
-	| annotation {}
-	| FINAL {}
-
-lastFormalParameter:
-	| variableModifiers_opt ttype variableDeclaratorId {}
-	| formalParameter {}
 
 
 (* 8.4.6 Method Throws *)
@@ -666,12 +681,7 @@ blockStatement:
 	| classDeclaration {}
 	| statement {}
 
-(* 14.4 *)
-localVariableDeclarationStatement:
-	| localVariableDeclaration SEMICOLON {}
 
-localVariableDeclaration:
-	| variableModifiers ttype variableDeclarators {}
 
 (* 14.5 *)
 statement:
