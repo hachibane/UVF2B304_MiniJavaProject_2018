@@ -18,6 +18,7 @@ try
 	let lexbuf = Lexing.from_channel input_file in
 	try
 		Parser.prog Lexer.read lexbuf;
+		print_string "SUCCESS";
 		print_newline ();
 	with
 	| Errord (kind, debut, fin) ->

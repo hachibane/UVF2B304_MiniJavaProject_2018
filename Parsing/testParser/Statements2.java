@@ -18,10 +18,18 @@ class Statement2 {
 			;
 	}
 
-	void ifStatement(){
-		if (i==0)
-			;
-                else
-			j = 0;	
-		}
+	void labeledStatement() {
+		i: ;
+	}
+
+	void returnStatement() {
+		return ;
+		return i;
+		return i==0;
+	}
+
+	void throwStatement() {
+		throw e;
+	}
+
 }

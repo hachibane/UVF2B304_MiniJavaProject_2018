@@ -48,9 +48,6 @@
 %type <unit> prog
 %%
 
-prog:
-	| classDeclaration EOF {}
-
 
 
 (* +++++++++++++ 3 chapter +++++++++++++++++++*)
@@ -1165,7 +1162,7 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 
 prog:
-	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt {}
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt EOF {}
 
 packageDeclaration_opt:
 	| {}
