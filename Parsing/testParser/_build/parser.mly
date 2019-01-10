@@ -603,6 +603,9 @@ defaultValue:
   | DEFAULT elementValue {}
 
 (* 9.7 annotations *)
+annotations_opt:
+	| {}
+	| annotations {}
 annotations:
 	| annotation {}
 	| annotations annotation {}
@@ -731,7 +734,7 @@ expressionStatement:
 statementExpression:
 	| assignment {}
 	| preIncrementExpression {}
-	| postDecrementExpression {}
+	| preDecrementExpression {}
 	| postIncrementExpression {}
 	| postDecrementExpression {}
 	| methodInvocation {}
@@ -1158,5 +1161,55 @@ ambiguousName:
 	| identifier {}
 	| ambiguousName POINT identifier {}
 
+(* 7. Packages *) 
+(* 7.3 Compilation Units *)
 
+prog:
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt {}
+
+packageDeclaration_opt:
+	| {}
+	| packageDeclaration {}
+
+importDeclarations_opt:
+	| {}
+	| importDeclarations {}
+
+typeDeclarations_opt:
+	| {}
+	| typeDeclarations {}
+	
+importDeclarations:
+	| importDeclaration {  }
+	| importDeclarations importDeclaration {  }
+	
+typeDeclarations:
+	| typeDeclaration {  }
+	| typeDeclarations typeDeclaration {  }
+
+packageDeclaration:
+	| annotations_opt PACKAGE packageName {  }
+	
+importDeclaration:
+	| singleTypeImportDeclaration {  }
+	| typeImportOnDemandDeclaration {  }
+	| singleStaticImportDeclaration {  }
+	| staticImportOnDemandDeclaration {  }
+	
+singleTypeImportDeclaration:
+	| IMPORT typeName SEMICOLON { }
+	
+typeImportOnDemandDeclaration:
+	| IMPORT packageOrTypeName POINT TIMES SEMICOLON {  }
+
+singleStaticImportDeclaration:
+	| IMPORT STATIC typeName POINT id=IDENT SEMICOLON { }
+
+staticImportOnDemandDeclaration:
+	| IMPORT STATIC typeName POINT TIMES SEMICOLON { }
+
+typeDeclaration:
+	| classDeclaration {  }
+	| interfaceDeclaration {  }
+	| SEMICOLON { }
 %%

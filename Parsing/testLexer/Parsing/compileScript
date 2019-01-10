@@ -1,1 +1,1 @@
- ocamlbuild -use-menhir -quiet main.native
+ocamlbuild -use-menhir -quiet main.native

@@ -8,7 +8,7 @@ let rec lexAllBuf lexbuf =
 let lex = Lexer.read lexbuf in
 match lex with
 | EOF -> ()
-| _ -> print_token lex; print_string " "; lexAllBuf lexbuf
+| _ -> print_token lex; print_string " ";print_newline (); lexAllBuf lexbuf
 *)
 
 let compile file =
@@ -18,7 +18,10 @@ try
 	let lexbuf = Lexing.from_channel input_file in
 	try
 		Parser.prog Lexer.read lexbuf;
-		print_newline ();
+		(*lexAllBuf lexbuf;*)
+		print_string "SUCCESS";
+		print_newline();
+		
 	with
 	| Errord (kind, debut, fin) ->
 		close_in (input_file);
