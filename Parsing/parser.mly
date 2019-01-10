@@ -653,7 +653,7 @@ singleElementAnnotation:
 
 (* 10.6 Array Initializers *)
 arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+  | LBRACE variableInitializers_opt COMMA? RBRACE {}
 
 variableInitializers_opt:
   | {}
