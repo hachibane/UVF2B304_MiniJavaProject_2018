@@ -48,9 +48,6 @@
 %type <unit> prog
 %%
 
-prog:
-	| classDeclaration EOF {}
-
 
 
 (* +++++++++++++ 3 chapter +++++++++++++++++++*)
@@ -653,7 +650,7 @@ singleElementAnnotation:
 
 (* 10.6 Array Initializers *)
 arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+  | LBRACE variableInitializers_opt COMMA? RBRACE {}
 
 variableInitializers_opt:
   | {}
@@ -1165,7 +1162,7 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 
 prog:
-	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt {}
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt EOF {}
 
 packageDeclaration_opt:
 	| {}
