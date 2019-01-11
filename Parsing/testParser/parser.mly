@@ -5,7 +5,6 @@
 %token <float> FLOATLIT
 %token <int> INTEGERLIT
 %token <string> STRINGLIT
-
 (* Infix Operators*)
 %token PLUS MINUS TIMES
 %token DIV AND OR XOR
@@ -44,171 +43,13 @@
 %token <string> COMMENT
 
 
+(* starting symbol *)
 %start prog
-%type <unit> prog
+%type < unit> prog
 %%
 
 prog:
 	| classDeclaration EOF {}
-
-
-(* +++++++++++++ 3 chapter +++++++++++++++++++*)
-(* 3.8  identifiers *)
- identifier:
-	| IDENT {}
-
-(* 3.9 Literals *)
-literal:
-	| integerLiteral {}
-	| floatingPointLiteral {}
-	| booleanLiteral {}
-	| stringLiteral {}
-	| nullLiteral {}
-
-integerLiteral:
-	| INTEGERLIT {}
-
-floatingPointLiteral:
-  | FLOATLIT {}
-
-booleanLiteral:
-	| BOOLEANLIT {}
-
-stringLiteral:
-  | STRINGLIT {}
-
-nullLiteral:
-  | NULL {}
-
-
-(* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
-(*4.1 The kind of  Types and Values*)
-ttype:
-	| primitiveType {}
-	| referenceType {}
-
-(*4.2 Primitive Types and Values*)
-primitiveType:
-	| numericType {}
-	| BOOLEAN {}
-
-numericType:
-	| integralType {}
-	| floatingPointType {}
-
-integralType:
-	| BYTE {}
-	| SHORT {}
-	| INT {}
-	| LONG {}
-	| CHAR {}
-
-floatingPointType:
-	| FLOAT {}
-	| DOUBLE {}
-
-(* 4.3 Reference Types and Values*)
-referenceType:
-	| classOrInterfaceType {}
-	| typeVariable {}
-	| arrayType {}
-
-classOrInterfaceType:
-	| classType {}
-	| interfaceType {}
-
-classType:
-	| typeDeclSpecifier typeArguments_opt {}
-
-typeDeclSpecifier:
-	| typeName {}
-	| classOrInterfaceType POINT  identifier {}
-
-typeVariable:
-	|  identifier {}
-
-arrayType:
-	| ttype LBRACE RBRACE {}
-
-typeArguments_opt:
-	| {}
-	| typeArguments {}
-
-typeArguments:
-	| actualTypeArgumentList {}
-
-actualTypeArgumentList:
-	| actualTypeArgument
-	| actualTypeArgument COMMA actualTypeArgument {}
-
-actualTypeArgument:
-	| referenceType {}
-	| wildcard {}
-
-wildcard:
-	| wildcardBounds COND {}
-
-wildcardBounds:
-	| EXTENDS referenceType {}
-	| SUPER referenceType {}
-
-(* 8.3 Field Declarations *)
-fieldDeclaration:
-	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
-
-fieldModifiers_opt:
-  	| {}
-  	| fieldModifiers {}
-
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
-
-fieldModifier :
-	| PUBLIC     		{}
-	| STATIC		{}
-	| PROTECTED	 	{}
-	| PRIVATE		{}
-	| FINAL			{}
-	| STRICTFP	 	{}
-	| TRANSIENT	 	{}
-	| VOLATILE   		{}
-
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-	| {}
-	| methodModifiers {}
-
-methodModifiers :
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-  	| annotation {}
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
-
-
-(*variable declarator*)
-variableDeclarators:
-	| variableDeclarator {}
-	| variableDeclarators COMMA variableDeclarator {}
-
-variableDeclarator:
-	| variableDeclaratorId {}
-	| variableDeclaratorId EQUAL variableInitializer {}
-
-variableDeclaratorId:
-	| identifier {}
-	| variableDeclaratorId LBRACK RBRACK {}
-
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
 (* 8.1 Class Declaration *)
@@ -217,10 +58,10 @@ className :
 
 classDeclaration :
 	| normalClassDeclaration {}
-	(*| enumDeclaration {}*)
+	| enumDeclaration {}
 
 normalClassDeclaration :
-	| classModifiers_opt CLASS IDENT classBody {} (*incomplete*)
+	| classModifiers_opt CLASS IDENT typeParameters_opt super_opt interfaces_opt classBody {}
 
 typeParameters_opt:
 	| {}
@@ -235,6 +76,27 @@ typeParameter:
 bound:
 	| ttype LBRACE AND ttype RBRACE {}
 
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+methodModifier:
+  | annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
+		
 (* 8.1.1 Class Modifiers *)
 classModifiers_opt:
 	| {}
@@ -245,7 +107,7 @@ classModifiers :
 	| classModifiers classModifier {}
 
 classModifier :
-  	| annotation {}
+  | annotation {}
 	| PUBLIC {}
 	| ABSTRACT {}
 	| STATIC {}
@@ -253,6 +115,7 @@ classModifier :
 	| PRIVATE {}
 	| FINAL {}
 	| STRICTFP {}
+
 (* 8.1.4 Superclasses and Subclasses *)
 super_opt:
   | {}
@@ -302,6 +165,40 @@ classMemberDeclaration:
 	| interfaceDeclaration {}
 	| SEMICOLON  {}
 
+(* 8.3 Field Declarations *)
+fieldDeclaration:
+	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
+
+fieldModifiers_opt:
+  | {}
+  | fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
+fieldModifier :
+	| PUBLIC     {}
+	| STATIC		 {}
+	| PROTECTED	 {}
+	| PRIVATE		 {}
+	| FINAL			 {}
+	| STRICTFP	 {}
+	| TRANSIENT	 {}
+	| VOLATILE   {}
+
+variableDeclarators:
+	| variableDeclarator {}
+	| variableDeclarators COMMA variableDeclarator {}
+
+variableDeclarator:
+	| variableDeclaratorId {}
+	| variableDeclaratorId EQUAL variableInitializer {}
+
+variableDeclaratorId:
+	| identifier {}
+	| variableDeclaratorId LBRACK RBRACK {}
+
 
 
 (* 8.4 Method Declarations *)
@@ -312,10 +209,11 @@ methodHeader:
 	| methodModifiers_opt typeParameters_opt resultType methodDeclarator throws_opt {}
 
 resultType:
-  	| ttype {}
+  | ttype {}
 	| VOID {}
 
 methodDeclarator:
+	| methodDeclarator LBRACK RBRACK {}
 	| identifier LPAREN formalParameterList_opt RPAREN {}
 
 formalParameterList_opt:
@@ -334,22 +232,16 @@ formalParameters:
 formalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
 
-variableModifiers_opt:
-	| {}
-	| variableModifiers {}
-
 variableModifiers:
 	| variableModifier {}
 	| variableModifiers variableModifier {}
 
 variableModifier:
-	| annotation {}
 	| FINAL {}
 
 lastFormalParameter:
-	| variableModifiers_opt ttype variableDeclaratorId {}
+	| variableModifiers ttype variableDeclaratorId {}
 	| formalParameter {}
-
 
 (* 8.4.6 Method Throws *)
 throws_opt:
@@ -648,6 +540,106 @@ variableInitializers:
 variableInitializer:
   | expression {}
   | arrayInitializer {}
+
+(* +++++++++++++ 3 chapter +++++++++++++++++++*)
+(* 3.8  identifiers *)
+ identifier:
+	| IDENT {}
+
+(* 3.9 Literals *)
+literal:
+	| integerLiteral {}
+	| floatingPointLiteral {}
+	| booleanLiteral {}
+	| stringLiteral {}
+	| nullLiteral {}
+
+integerLiteral:
+	| INTEGERLIT {}
+
+floatingPointLiteral:
+  | FLOATLIT {}
+
+booleanLiteral:
+	| BOOLEANLIT {}
+
+stringLiteral:
+  | STRINGLIT {}
+
+nullLiteral:
+  | NULL {}
+
+(* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
+(*4.1 The kind of  Types and Values*)
+ttype:
+	| primitiveType {}
+	| referenceType {}
+
+(*4.2 Primitive Types and Values*)
+primitiveType:
+	| numericType {}
+	| BOOLEAN {}
+
+numericType:
+	| integralType {}
+	| floatingPointType {}
+
+integralType:
+	| BYTE {}
+	| SHORT {}
+	| INT {}
+	| LONG {}
+	| CHAR {}
+
+floatingPointType:
+	| FLOAT {}
+	| DOUBLE {}
+
+(* 4.3 Reference Types and Values*)
+referenceType:
+	| classOrInterfaceType {}
+	| typeVariable {}
+	| arrayType {}
+
+classOrInterfaceType:
+	| classType {}
+	| interfaceType {}
+
+classType:
+	| typeDeclSpecifier typeArguments_opt {}
+
+typeDeclSpecifier:
+	| typeName {}
+	| classOrInterfaceType POINT  identifier {}
+
+typeVariable:
+	|  identifier {}
+
+arrayType:
+	| ttype LBRACE RBRACE {}
+
+typeArguments_opt:
+	| {}
+	| typeArguments {}
+
+typeArguments:
+	| actualTypeArgumentList {}
+
+actualTypeArgumentList:
+	| actualTypeArgument
+	| actualTypeArgument COMMA actualTypeArgument {}
+
+actualTypeArgument:
+	| referenceType {}
+	| wildcard {}
+
+wildcard:
+	| wildcardBounds COND {}
+
+wildcardBounds:
+	| EXTENDS referenceType {}
+	| SUPER referenceType {}
+
 (* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
 block:
@@ -908,7 +900,6 @@ catchClause:
 finally:
   | FINALLY block {}
 
-
 (* ++++++++++++ 15 chapter +++++++++++++++++++++++++ *)
 (* 15.8 Primary Expressions *)
 primary:
@@ -1120,8 +1111,6 @@ assignmentOperator:
 	| LSHIFTEQUAL {}
 	| RSHIFTEQUAL {}
 	| USHIFTEQUAL {}
-	| EQUAL {}
-
 
 (* 6.5 Determining the Meaning of a Name *)
 packageName:
@@ -1147,6 +1136,3 @@ packageOrTypeName:
 ambiguousName:
 	| identifier {}
 	| ambiguousName POINT identifier {}
-
-
-%%
