@@ -232,6 +232,10 @@ formalParameters:
 formalParameter:
 	| variableModifiers ttype variableDeclaratorId {}
 
+variableModifiers_opt:
+	| {}
+	| variableModifiers
+
 variableModifiers:
 	| variableModifier {}
 	| variableModifiers variableModifier {}
@@ -240,7 +244,7 @@ variableModifier:
 	| FINAL {}
 
 lastFormalParameter:
-	| variableModifiers ttype variableDeclaratorId {}
+	| variableModifiers_opt ttype variableDeclaratorId {}
 	| formalParameter {}
 
 (* 8.4.6 Method Throws *)
@@ -663,7 +667,7 @@ localVariableDeclarationStatement:
 	| localVariableDeclaration SEMICOLON {}
 
 localVariableDeclaration:
-	| variableModifiers ttype variableDeclarators {}
+	| variableModifiers_opt ttype variableDeclarators {}
 
 (* 14.5 *)
 statement:
@@ -965,10 +969,11 @@ fieldAccess:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
-  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
-   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN 
+	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:

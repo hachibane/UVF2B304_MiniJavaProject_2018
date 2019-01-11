@@ -112,4 +112,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val prog: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (unit)
+val prog: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> ( unit)
