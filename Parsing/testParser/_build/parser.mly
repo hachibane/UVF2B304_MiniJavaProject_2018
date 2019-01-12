@@ -782,7 +782,7 @@ enumConstantName:
 
 (* 14.12 *)
 whileStatement:
-	| WHILE LPAREN expression RPAREN statement {}
+	| WHILE LPAREN identifier RPAREN statement {}
 
 whileStatementNoShortIf:
 	| WHILE LPAREN expression RPAREN statementNoShortIf {}
