@@ -397,7 +397,7 @@ staticInitializer:
 
 (* 8.8 Constructor Declarations *)
 constructorDeclaration:
-	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
+	| methodModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
 	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPAREN {}
@@ -415,6 +415,7 @@ constructorModifiers:
 	| constructorModifiers constructorModifier {}
 
 constructorModifier:
+	| annotation {}
 	| PUBLIC 	 {}
 	| PROTECTED {}
 	| PRIVATE	 {}

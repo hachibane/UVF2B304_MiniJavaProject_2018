@@ -1,5 +1,7 @@
 public abstract class MethodParameters {
-	class A {}
+	class A {
+		public A(){}
+	}
 
 	private int myMethod1(int a, int b){}
 

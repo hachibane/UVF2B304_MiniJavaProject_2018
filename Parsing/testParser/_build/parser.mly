@@ -82,6 +82,27 @@ nullLiteral:
   | NULL {}
 
 
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+methodModifier:
+  	| annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
+
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
@@ -216,27 +237,6 @@ lastFormalParameter:
 	| variableModifiers_opt ttype variableDeclaratorId {}
 	| formalParameter {}
 
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-	| {}
-	| methodModifiers {}
-
-methodModifiers :
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-  	| annotation {}
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
-
 
 
 
@@ -270,7 +270,7 @@ classModifiers_opt:
 	| {}
 	| classModifiers {}
 
-classModifiers :
+classModifiers:
 	| classModifier {}
 	| classModifiers classModifier {}
 
@@ -362,7 +362,7 @@ formalParameters:
 	| formalParameters COMMA formalParameter {}
 
 formalParameter:
-	| variableModifiers ttype variableDeclaratorId {}
+	| variableModifiers_opt ttype variableDeclaratorId {}
 
 
 
@@ -397,7 +397,7 @@ staticInitializer:
 
 (* 8.8 Constructor Declarations *)
 constructorDeclaration:
-	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
+	| methodModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
 	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPAREN {}
@@ -415,6 +415,7 @@ constructorModifiers:
 	| constructorModifiers constructorModifier {}
 
 constructorModifier:
+	| annotation {}
 	| PUBLIC 	 {}
 	| PROTECTED {}
 	| PRIVATE	 {}
