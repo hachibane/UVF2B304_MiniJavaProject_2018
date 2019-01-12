@@ -782,7 +782,7 @@ enumConstantName:
 
 (* 14.12 *)
 whileStatement:
-	| WHILE LPAREN identifier RPAREN statement {}
+	| WHILE LPAREN expression RPAREN statement {}
 
 whileStatementNoShortIf:
 	| WHILE LPAREN expression RPAREN statementNoShortIf {}
@@ -1100,7 +1100,7 @@ conditionalExpression:
 
 (* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {}
+	| conditionalExpression {} (*HERE*)
 	| assignment {}
 
 (* 15.27 Expression *)
@@ -1118,6 +1118,14 @@ leftHandSide:
 	| expressionName {}
 	| fieldAccess {}
 	| arrayAccess {}
+
+assignmentOperator_opt:
+	| {}
+	| assignmentOperator {}
+
+assignmentExpression_opt:
+	| {}
+	| assignmentExpression {}
 
 assignmentOperator:
 	| PLUSEQUAL {}
