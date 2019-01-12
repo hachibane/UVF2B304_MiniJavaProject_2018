@@ -82,6 +82,22 @@ nullLiteral:
   | NULL {}
 
 
+
+(* 8.8.3 Constructor Modifiers *)
+constructorModifiers_opt:
+	| {}
+	| constructorModifiers {}
+
+constructorModifiers :
+	| constructorModifier {}
+	| constructorModifiers constructorModifier {}
+
+constructorModifier:
+	| annotation {}
+	| PUBLIC 	 {}
+	| PROTECTED {}
+	| PRIVATE	 {}
+
 (* 8.4.3 Method Modifiers *)
 methodModifiers_opt:
 	| {}
@@ -102,7 +118,6 @@ methodModifier:
 	| SYNCHRONIZED {}
 	| NATIVE {}
 	| STRICTFP {}
-
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
@@ -397,28 +412,13 @@ staticInitializer:
 
 (* 8.8 Constructor Declarations *)
 constructorDeclaration:
-	| methodModifiers_opt constructorDeclarator throws_opt constructorBody {}
+	| constructorModifiers_opt constructorDeclarator throws_opt constructorBody {}
 
 constructorDeclarator:
 	| typeParameters_opt simpleTypeName LPAREN formalParameterList_opt RPAREN {}
 
 simpleTypeName:
   | identifier {}
-
-(* 8.8.3 Constructor Modifiers *)
-constructorModifiers_opt:
-  | {}
-  | constructorModifiers {}
-
-constructorModifiers:
-	| constructorModifier {}
-	| constructorModifiers constructorModifier {}
-
-constructorModifier:
-	| annotation {}
-	| PUBLIC 	 {}
-	| PROTECTED {}
-	| PRIVATE	 {}
 
 (* 8.8.7 Constructor Body *)
 constructorBody:
