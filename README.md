@@ -25,3 +25,19 @@ Then you must inform ocamlbuild to use the ocamlfind tool :
 'ocamlbuild -use-ocamlfind Main.byte -- tests/UnFichierDeTest.java'
 et vous devez ajouter au fichier _tags la bibliothèque en question par exemple :
 true: package(ANSITerminal)
+
+# HOW TO USE IT ?
+
+
+to test the parser, go to the Parsing/test
+delete the main.native file
+run the follwing command : ocamlbuild -use-menhir -quiet main.native
+then to try the parser on a .java file run : ./main.native file.java
+
+to generate the AST : menhir --dump parser.mly
+
+to simply test the lexer : 
+ocamllex lexer.mll
+utop
+use "lexer.ml"
+compile "file.java"
