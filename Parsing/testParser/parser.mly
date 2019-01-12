@@ -48,9 +48,6 @@
 %type <unit> prog
 %%
 
-prog:
-	| classDeclaration EOF {}
-
 
 
 (* +++++++++++++ 3 chapter +++++++++++++++++++*)
@@ -163,7 +160,7 @@ variableModifiers:
 	| variableModifiers variableModifier {}
 
 variableModifier:
-	| annotation {}
+	| annotations {}
 	| FINAL {}
 
 (*variable declarators*)
@@ -603,6 +600,9 @@ defaultValue:
   | DEFAULT elementValue {}
 
 (* 9.7 annotations *)
+annotations_opt:
+	| {}
+	| annotations {}
 annotations:
 	| annotation {}
 	| annotations annotation {}
@@ -650,7 +650,7 @@ singleElementAnnotation:
 
 (* 10.6 Array Initializers *)
 arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+  | LBRACE variableInitializers_opt COMMA? RBRACE {}
 
 variableInitializers_opt:
   | {}
@@ -1158,5 +1158,56 @@ ambiguousName:
 	| identifier {}
 	| ambiguousName POINT identifier {}
 
+(* 7. Packages *) 
+(* 7.3 Compilation Units *)
 
+prog:
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt EOF {}
+
+packageDeclaration_opt:
+	| {}
+	| packageDeclaration {}
+
+importDeclarations_opt:
+	| {}
+	| importDeclarations {}
+
+typeDeclarations_opt:
+	| {}
+	| typeDeclarations {}
+	
+importDeclarations:
+	| importDeclaration {  }
+	| importDeclarations importDeclaration {  }
+	
+typeDeclarations:
+	| typeDeclaration {  }
+	| typeDeclarations typeDeclaration {  }
+
+packageDeclaration:
+	| annotations_opt PACKAGE packageName {  }
+	
+importDeclaration:
+	| singleTypeImportDeclaration {  }
+	| typeImportOnDemandDeclaration {  }
+	| singleStaticImportDeclaration {  }
+	| staticImportOnDemandDeclaration {  }
+	
+singleTypeImportDeclaration:
+	| IMPORT typeName SEMICOLON { }
+	
+typeImportOnDemandDeclaration:
+	| IMPORT packageOrTypeName POINT TIMES SEMICOLON {  }
+
+singleStaticImportDeclaration:
+	| IMPORT STATIC typeName POINT id=IDENT SEMICOLON { }
+
+staticImportOnDemandDeclaration:
+	| IMPORT STATIC typeName POINT TIMES SEMICOLON { }
+
+typeDeclaration:
+	| classDeclaration {  }
+	| interfaceDeclaration {  }
+	| SEMICOLON { }
 %%
+
