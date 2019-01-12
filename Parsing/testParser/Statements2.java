@@ -35,5 +35,4 @@ class Statement2 {
 	void localVariableStatement() {
 		final int a;
 	}
-
 }
