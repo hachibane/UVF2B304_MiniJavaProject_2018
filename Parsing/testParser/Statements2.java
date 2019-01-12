@@ -32,4 +32,8 @@ class Statement2 {
 		throw e;
 	}
 
+	void localVariableStatement() {
+		final int a;
+	}
+
 }

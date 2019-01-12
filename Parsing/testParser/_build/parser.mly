@@ -160,7 +160,7 @@ variableModifiers:
 	| variableModifiers variableModifier {}
 
 variableModifier:
-	| annotation {}
+	| annotations {}
 	| FINAL {}
 
 (*variable declarators*)

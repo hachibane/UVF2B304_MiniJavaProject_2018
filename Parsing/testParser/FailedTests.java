@@ -25,8 +25,6 @@ class FailedTests {
 			
 	}
 
-	void localVariableStatement() {
-		int a;
-	}
+
 }
 }
