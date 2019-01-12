@@ -19,6 +19,8 @@ try
 	try
 		Parser.prog Lexer.read lexbuf;
 		(*lexAllBuf lexbuf;*)
+		print_string ("SUCCESS");
+		print_newline();
 		
 	with
 	| Errord (kind, debut, fin) ->
