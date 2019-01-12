@@ -1112,7 +1112,7 @@ constantExpression:
   | expression {}
 
 assignment:
-	| leftHandSide assignmentOperator assignmentExpression {}
+	| leftHandSide assignmentOperator_opt assignmentExpression_opt {}
 
 leftHandSide:
 	| expressionName {}
