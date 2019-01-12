@@ -1112,6 +1112,7 @@ constantExpression:
   | expression {}
 
 assignment:
+	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
@@ -1119,13 +1120,6 @@ leftHandSide:
 	| fieldAccess {}
 	| arrayAccess {}
 
-assignmentOperator_opt:
-	| {}
-	| assignmentOperator {}
-
-assignmentExpression_opt:
-	| {}
-	| assignmentExpression {}
 
 assignmentOperator:
 	| PLUSEQUAL {}

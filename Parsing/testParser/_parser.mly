@@ -47,26 +47,74 @@
 %type <unit> prog
 %%
 
-prog: 
-	| variableDeclaratorId EQUAL variableInitializer {}
+prog:
+	| LBRACE blockStatements_opt RBRACE {}
 
-variableDeclaratorId:
-	| IDENT {}
+blockStatements_opt :
+  	| {}
+  	| blockStatements {}
 
-variableInitializer:
-	| expression {}
+blockStatements:
+	| blockStatement {}
+	| blockStatements blockStatement {}
+
+blockStatement:
+	| statement {}
+
+statement:
+	| emptyStatement {}
+	| whileStatement {}
+
+emptyStatement :
+	| SEMICOLON {}
+
+
+whileStatement:
+	| WHILE LPAREN expression RPAREN statement {}
 
 (* 15.27 Expression *)
 expression:
   | assignmentExpression {}
 
-(* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {}
 	| assignment {}
 
 assignment:
+	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
+assignmentOperator_opt:
+	| {}
+	| assignmentOperator {}
+
+assignmentExpression_opt:
+	| {}
+	| assignmentExpression {}
+
+leftHandSide:
+	| expressionName {}
+
+expressionName:
+	| identifier {}
+
+identifier:
+	| IDENT {}
+
+assignmentOperator:
+	| PLUSEQUAL {}
+	| MINUSEQUAL {}
+	| TIMESEQUAL {}
+	| DIVEQUAL {}
+	| ANDEQUAL {}
+	| OREQUAL {}
+	| XOREQUAL {}
+	| MODEQUAL {}
+	| LSHIFTEQUAL {}
+	| RSHIFTEQUAL {}
+	| USHIFTEQUAL {}
+	| EQUAL {}
+
+
+
 
 
 %%

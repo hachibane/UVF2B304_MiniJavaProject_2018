@@ -35,9 +35,9 @@ class Statement2 {
 		final int a;
 	}
 
-	void synchronizedStatement() {
-		synchronized () {}
-	}
+	void whileStatement() {
+		while(true);
+}
 
 
 }
