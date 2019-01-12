@@ -126,7 +126,7 @@ typeVariable:
 	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE {}
+	| ttype LBRACK RBRACK {}
 
 typeArguments_opt:
 	| {}
@@ -1100,7 +1100,7 @@ conditionalExpression:
 
 (* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {}
+	| conditionalExpression {} (*HERE*)
 	| assignment {}
 
 (* 15.27 Expression *)
@@ -1112,12 +1112,14 @@ constantExpression:
   | expression {}
 
 assignment:
+	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
 	| expressionName {}
 	| fieldAccess {}
 	| arrayAccess {}
+
 
 assignmentOperator:
 	| PLUSEQUAL {}

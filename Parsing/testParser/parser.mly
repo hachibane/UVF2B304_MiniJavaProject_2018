@@ -126,7 +126,7 @@ typeVariable:
 	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE {}
+	| ttype LBRACK RBRACK {}
 
 typeArguments_opt:
 	| {}
