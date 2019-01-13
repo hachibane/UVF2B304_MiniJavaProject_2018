@@ -1,6 +1,9 @@
 class Comments {
 
 	void oneLineComment(){
-		// this is a comment
+		// this is a one line comment
+		/*
+			this is a multiline comment
+		*/
 }
 }

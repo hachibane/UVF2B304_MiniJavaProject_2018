@@ -82,6 +82,7 @@ let ident     						= (letter | '_') ( letter | digit | '_')*
 let white     						= [' ' '\t']+
 let newline   						= '\r' | '\n' | "\r\n"
 let onelinecomment = "//" ([^'\010' '\013'])* newline
+let multilinecomment = "/*" (([^'\010' '\013'])* newline)* ([^'\010' '\013'])* "*/"
 
 (* Rules Definitions *)
 
@@ -96,6 +97,7 @@ rule read = parse
 | stringLiteral as s				{ STRINGLIT s}
 | ident as id								{  try Hashtbl.find keyword_table id with Not_found -> IDENT id }
 | onelinecomment { Lexing.new_line lexbuf; read lexbuf }
+| multilinecomment { Lexing.new_line lexbuf; read lexbuf }
 | "+"                { PLUS }
 | "-"                { MINUS }
 | "*"                { TIMES }

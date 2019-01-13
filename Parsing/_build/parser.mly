@@ -78,6 +78,87 @@ stringLiteral:
 nullLiteral:
   | NULL {}
 
+(*variable modifiers*)
+variableModifiers_opt:
+	| {}
+	| variableModifiers {}
+
+variableModifiers:
+	| variableModifier {}
+	| variableModifiers variableModifier {}
+variableModifier:
+	| annotation {}
+	| FINAL {}
+
+
+(* 8.8.3 Constructor Modifiers *)
+constructorModifiers_opt:
+	| {}
+	| constructorModifiers {}
+
+constructorModifiers :
+	| constructorModifier {}
+	| constructorModifiers constructorModifier {}
+
+
+
+(* 8.3 Field Declarations *)
+fieldDeclaration:
+	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
+
+fieldModifiers_opt:
+  	| {}
+  	| fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+
+
+constructorModifier:
+	| annotation {}
+	| PUBLIC 	 {}
+	| PROTECTED {}
+	| PRIVATE	 {}
+
+
+	
+methodModifier:
+  	| annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
+
+
+
+fieldModifier :
+	| PUBLIC     		{}
+	| STATIC		{}
+	| PROTECTED	 	{}
+	| PRIVATE		{}
+	| FINAL			{}
+	| STRICTFP	 	{}
+	| TRANSIENT	 	{}
+	| VOLATILE   		{}
+
+
+
 
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
@@ -106,6 +187,10 @@ floatingPointType:
 	| DOUBLE {}
 
 (* 4.3 Reference Types and Values*)
+typeDeclSpecifier:
+	| typeName {}
+	| classOrInterfaceType POINT  identifier {}
+
 referenceType:
 	| classOrInterfaceType {}
 	| typeVariable {}
@@ -118,9 +203,7 @@ classOrInterfaceType:
 classType:
 	| typeDeclSpecifier typeArguments_opt {}
 
-typeDeclSpecifier:
-	| typeName {}
-	| classOrInterfaceType POINT  identifier {}
+
 
 typeVariable:
 	|  identifier {}
@@ -150,18 +233,7 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
-(*variable modifiers*)
-variableModifiers_opt:
-	| {}
-	| variableModifiers {}
 
-variableModifiers:
-	| variableModifier {}
-	| variableModifiers variableModifier {}
-
-variableModifier:
-	| annotations {}
-	| FINAL {}
 
 (*variable declarators*)
 variableDeclarators:
@@ -186,53 +258,13 @@ localVariableDeclarationStatement:
 localVariableDeclaration:
 	| variableModifiers_opt ttype variableDeclarators {}
 
-(* 8.3 Field Declarations *)
-fieldDeclaration:
-	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
 
-fieldModifiers_opt:
-  	| {}
-  	| fieldModifiers {}
 
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
-
-fieldModifier :
-	| PUBLIC     		{}
-	| STATIC		{}
-	| PROTECTED	 	{}
-	| PRIVATE		{}
-	| FINAL			{}
-	| STRICTFP	 	{}
-	| TRANSIENT	 	{}
-	| VOLATILE   		{}
 
 
 lastFormalParameter:
 	| variableModifiers_opt ttype variableDeclaratorId {}
 	| formalParameter {}
-
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-	| {}
-	| methodModifiers {}
-
-methodModifiers :
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-  	| annotation {}
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
 
 
 
@@ -242,12 +274,12 @@ methodModifier:
 className :
   | identifier {}
 
-classDeclaration :
+classDeclaration:
 	| normalClassDeclaration {}
 	| enumDeclaration {}
 
 normalClassDeclaration :
-	| classModifiers_opt CLASS IDENT classBody {} (*incomplete*)
+	| classModifiers_opt CLASS identifier super_opt interfaces_opt classBody {} 
 
 typeParameters_opt:
 	| {}
@@ -267,7 +299,7 @@ classModifiers_opt:
 	| {}
 	| classModifiers {}
 
-classModifiers :
+classModifiers:
 	| classModifier {}
 	| classModifiers classModifier {}
 
@@ -359,7 +391,7 @@ formalParameters:
 	| formalParameters COMMA formalParameter {}
 
 formalParameter:
-	| variableModifiers ttype variableDeclaratorId {}
+	| variableModifiers_opt ttype variableDeclaratorId {}
 
 
 
@@ -401,20 +433,6 @@ constructorDeclarator:
 
 simpleTypeName:
   | identifier {}
-
-(* 8.8.3 Constructor Modifiers *)
-constructorModifiers_opt:
-  | {}
-  | constructorModifiers {}
-
-constructorModifiers:
-	| constructorModifier {}
-	| constructorModifiers constructorModifier {}
-
-constructorModifier:
-	| PUBLIC 	 {}
-	| PROTECTED {}
-	| PRIVATE	 {}
 
 (* 8.8.7 Constructor Body *)
 constructorBody:
@@ -650,7 +668,7 @@ singleElementAnnotation:
 
 (* 10.6 Array Initializers *)
 arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? RBRACE {}
+  | LBRACE variableInitializers_opt COMMA? LBRACE {}
 
 variableInitializers_opt:
   | {}
@@ -984,11 +1002,10 @@ fieldAccess:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN 
-	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
-	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
-	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
-	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
+  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
+   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
+    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
@@ -1100,7 +1117,7 @@ conditionalExpression:
 
 (* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {} (*HERE*)
+	| conditionalExpression {}
 	| assignment {}
 
 (* 15.27 Expression *)
@@ -1112,14 +1129,12 @@ constantExpression:
   | expression {}
 
 assignment:
-	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
 	| expressionName {}
 	| fieldAccess {}
 	| arrayAccess {}
-
 
 assignmentOperator:
 	| PLUSEQUAL {}
@@ -1143,7 +1158,7 @@ packageName:
 
 typeName:
   | identifier {}
-  | packageOrTypeName POINT identifier {}
+  | typeName POINT identifier {}
 
 expressionName:
   | identifier {}
@@ -1203,7 +1218,7 @@ typeImportOnDemandDeclaration:
 	| IMPORT packageOrTypeName POINT TIMES SEMICOLON {  }
 
 singleStaticImportDeclaration:
-	| IMPORT STATIC typeName POINT id=IDENT SEMICOLON { }
+	| IMPORT STATIC typeName POINT IDENT SEMICOLON { }
 
 staticImportOnDemandDeclaration:
 	| IMPORT STATIC typeName POINT TIMES SEMICOLON { }
@@ -1213,3 +1228,5 @@ typeDeclaration:
 	| interfaceDeclaration {  }
 	| SEMICOLON { }
 %%
+
+
