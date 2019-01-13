@@ -48,9 +48,6 @@
 %type <unit> prog
 %%
 
-prog:
-	| classDeclaration EOF {}
-
 
 
 (* +++++++++++++ 3 chapter +++++++++++++++++++*)
@@ -82,42 +79,6 @@ nullLiteral:
   | NULL {}
 
 
-
-(* 8.8.3 Constructor Modifiers *)
-constructorModifiers_opt:
-	| {}
-	| constructorModifiers {}
-
-constructorModifiers :
-	| constructorModifier {}
-	| constructorModifiers constructorModifier {}
-
-constructorModifier:
-	| annotation {}
-	| PUBLIC 	 {}
-	| PROTECTED {}
-	| PRIVATE	 {}
-
-(* 8.4.3 Method Modifiers *)
-methodModifiers_opt:
-	| {}
-	| methodModifiers {}
-
-methodModifiers :
-	| methodModifier {}
-	| methodModifiers methodModifier {}
-
-methodModifier:
-  	| annotation {}
-	| PUBLIC {}
-	| PROTECTED  {}
-	| PRIVATE  {}
-	| ABSTRACT {}
-	| STATIC {}
-	| FINAL  {}
-	| SYNCHRONIZED {}
-	| NATIVE {}
-	| STRICTFP {}
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
@@ -165,7 +126,7 @@ typeVariable:
 	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE {}
+	| ttype LBRACK RBRACK {}
 
 typeArguments_opt:
 	| {}
@@ -189,6 +150,11 @@ wildcardBounds:
 	| EXTENDS referenceType {}
 	| SUPER referenceType {}
 
+lastFormalParameter:
+	| variableModifiers_opt ttype variableDeclaratorId {}
+	| formalParameter {}
+
+
 (*variable modifiers*)
 variableModifiers_opt:
 	| {}
@@ -199,31 +165,38 @@ variableModifiers:
 	| variableModifiers variableModifier {}
 
 variableModifier:
-	| annotation {}
+	| annotations {}
 	| FINAL {}
 
-(*variable declarators*)
-variableDeclarators:
-	| variableDeclarator {}
-	| variableDeclarators COMMA variableDeclarator {}
-
-variableDeclarator:
-	| variableDeclaratorId {}
-	| variableDeclaratorId EQUAL variableInitializer {}
-
-variableDeclaratorId:
-	| identifier {}
-	| variableDeclaratorId LBRACK RBRACK {}
 
 
+(* 8.8.3 Constructor Modifiers *)
+constructorModifiers_opt:
+  | {}
+  | constructorModifiers {}
+
+constructorModifiers:
+	| constructorModifier {}
+	| constructorModifiers constructorModifier {}
+
+constructorModifier:
+	| annotation {}
+	| PUBLIC 	 {}
+	| PROTECTED {}
+	| PRIVATE	 {}
 
 
-(* 14.4 *)
-localVariableDeclarationStatement:
-	| localVariableDeclaration SEMICOLON {}
-
-localVariableDeclaration:
-	| variableModifiers_opt ttype variableDeclarators {}
+methodModifier:
+  	| annotation {}
+	| PUBLIC {}
+	| PROTECTED  {}
+	| PRIVATE  {}
+	| ABSTRACT {}
+	| STATIC {}
+	| FINAL  {}
+	| SYNCHRONIZED {}
+	| NATIVE {}
+	| STRICTFP {}
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
@@ -248,11 +221,27 @@ fieldModifier :
 	| VOLATILE   		{}
 
 
-lastFormalParameter:
-	| variableModifiers_opt ttype variableDeclaratorId {}
-	| formalParameter {}
 
 
+(* 8.4.3 Method Modifiers *)
+methodModifiers_opt:
+	| {}
+	| methodModifiers {}
+
+methodModifiers :
+	| methodModifier {}
+	| methodModifiers methodModifier {}
+
+
+
+
+
+(* 14.4 *)
+localVariableDeclarationStatement:
+	| localVariableDeclaration SEMICOLON {}
+
+localVariableDeclaration:
+	| variableModifiers_opt ttype variableDeclarators {}
 
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
@@ -285,7 +274,7 @@ classModifiers_opt:
 	| {}
 	| classModifiers {}
 
-classModifiers:
+classModifiers :
 	| classModifier {}
 	| classModifiers classModifier {}
 
@@ -377,9 +366,20 @@ formalParameters:
 	| formalParameters COMMA formalParameter {}
 
 formalParameter:
-	| variableModifiers_opt ttype variableDeclaratorId {}
+	| variableModifiers ttype variableDeclaratorId {}
 
+(*variable declarators*)
+variableDeclarators:
+	| variableDeclarator {}
+	| variableDeclarators COMMA variableDeclarator {}
 
+variableDeclarator:
+	| variableDeclaratorId {}
+	| variableDeclaratorId EQUAL variableInitializer {}
+
+variableDeclaratorId:
+	| identifier {}
+	| variableDeclaratorId LBRACK RBRACK {}
 
 (* 8.4.6 Method Throws *)
 throws_opt:
@@ -419,6 +419,8 @@ constructorDeclarator:
 
 simpleTypeName:
   | identifier {}
+
+
 
 (* 8.8.7 Constructor Body *)
 constructorBody:
@@ -654,7 +656,7 @@ singleElementAnnotation:
 
 (* 10.6 Array Initializers *)
 arrayInitializer:
-  | LBRACE variableInitializers_opt COMMA? LBRACE {}
+  | LBRACE variableInitializers_opt COMMA? RBRACE {}
 
 variableInitializers_opt:
   | {}
@@ -988,10 +990,11 @@ fieldAccess:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
-  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
-   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN 
+	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
@@ -1103,7 +1106,7 @@ conditionalExpression:
 
 (* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {}
+	| conditionalExpression {} (*HERE*)
 	| assignment {}
 
 (* 15.27 Expression *)
@@ -1115,12 +1118,14 @@ constantExpression:
   | expression {}
 
 assignment:
+	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
 	| expressionName {}
 	| fieldAccess {}
 	| arrayAccess {}
+
 
 assignmentOperator:
 	| PLUSEQUAL {}
@@ -1166,7 +1171,7 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 
 prog:
-	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt {}
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt EOF {}
 
 packageDeclaration_opt:
 	| {}
@@ -1214,3 +1219,4 @@ typeDeclaration:
 	| interfaceDeclaration {  }
 	| SEMICOLON { }
 %%
+
