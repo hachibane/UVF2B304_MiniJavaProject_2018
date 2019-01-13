@@ -126,7 +126,7 @@ typeVariable:
 	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE {}
+	| ttype LBRACK RBRACK {}
 
 typeArguments_opt:
 	| {}
@@ -160,7 +160,7 @@ variableModifiers:
 	| variableModifiers variableModifier {}
 
 variableModifier:
-	| annotation {}
+	| annotations {}
 	| FINAL {}
 
 (*variable declarators*)
@@ -742,10 +742,10 @@ ifThenStatement:
 	| IF LPAREN expression RPAREN statement {}
 
 ifThenElseStatement:
-	| IF LPAREN expression RPAREN statementNoShortIf ELSE  {}
+	| IF LPAREN expression RPAREN statementNoShortIf ELSE statement {}
 
 ifThenElseStatementNoShortIf:
-	| IF LPAREN expression RPAREN statementNoShortIf ELSE  {}
+	| IF LPAREN expression RPAREN statementNoShortIf ELSE statementNoShortIf {}
 
 (* 14.10 *)
 assertStatement:
@@ -984,10 +984,11 @@ fieldAccess:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
-  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
-   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN 
+	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
@@ -1099,7 +1100,7 @@ conditionalExpression:
 
 (* 15.26 Assignment Operators *)
 assignmentExpression:
-	| conditionalExpression {}
+	| conditionalExpression {} (*HERE*)
 	| assignment {}
 
 (* 15.27 Expression *)
@@ -1111,12 +1112,14 @@ constantExpression:
   | expression {}
 
 assignment:
+	| leftHandSide {}
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:
 	| expressionName {}
 	| fieldAccess {}
 	| arrayAccess {}
+
 
 assignmentOperator:
 	| PLUSEQUAL {}
