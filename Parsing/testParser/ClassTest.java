@@ -14,7 +14,8 @@ public class ClassTest {
 			final int x;
 		}
 
-		private static int myMethod2(int a){}
+		private static int myMethod2(int a){
+		}
 
 	}
 
