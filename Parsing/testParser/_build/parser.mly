@@ -187,6 +187,10 @@ floatingPointType:
 	| DOUBLE {}
 
 (* 4.3 Reference Types and Values*)
+typeDeclSpecifier:
+	| typeName {}
+	| classOrInterfaceType POINT  identifier {}
+
 referenceType:
 	| classOrInterfaceType {}
 	| typeVariable {}
@@ -199,15 +203,13 @@ classOrInterfaceType:
 classType:
 	| typeDeclSpecifier typeArguments_opt {}
 
-typeDeclSpecifier:
-	| typeName {}
-	| classOrInterfaceType POINT  identifier {}
+
 
 typeVariable:
 	|  identifier {}
 
 arrayType:
-	| ttype LBRACE RBRACE {}
+	| ttype LBRACK RBRACK {}
 
 typeArguments_opt:
 	| {}
@@ -272,12 +274,12 @@ lastFormalParameter:
 className :
   | identifier {}
 
-classDeclaration :
+classDeclaration:
 	| normalClassDeclaration {}
 	| enumDeclaration {}
 
 normalClassDeclaration :
-	| classModifiers_opt CLASS IDENT classBody {} (*incomplete*)
+	| classModifiers_opt CLASS identifier super_opt interfaces_opt classBody {} 
 
 typeParameters_opt:
 	| {}
@@ -1156,7 +1158,7 @@ packageName:
 
 typeName:
   | identifier {}
-  | packageOrTypeName POINT identifier {}
+  | typeName POINT identifier {}
 
 expressionName:
   | identifier {}

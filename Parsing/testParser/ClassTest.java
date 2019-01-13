@@ -1,11 +1,11 @@
-public protected private abstract static final strictfp class Gauss {
+public class Gauss  {
 
 	int x;
 	int x,y;
 	private int myMethod () {}
 	int y = 5;
 	
-	private class ConstructorClassTest{
+	private class ConstructorClassTest extends SuperClass {
 
 		
 		
