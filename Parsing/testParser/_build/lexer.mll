@@ -82,7 +82,7 @@ let ident     						= (letter | '_') ( letter | digit | '_')*
 let white     						= [' ' '\t']+
 let newline   						= '\r' | '\n' | "\r\n"
 let onelinecomment = "//" ([^'\r' '\n'])* newline
-let multilinecomment = "/*" (([^'\r' '\n'])* newline)* ([^'\010' '\013'])* "*/"
+let multilinecomment = "/*" (([^'\r' '\n'])* newline)* ([^'\r' '\n'])* "*/"
 
 (* Rules Definitions *)
 

@@ -163,8 +163,9 @@ fieldModifier :
 (* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
 (*4.1 The kind of  Types and Values*)
 ttype:
-	| primitiveType {}
 	| referenceType {}
+	| primitiveType {}
+
 
 (*4.2 Primitive Types and Values*)
 primitiveType:
@@ -681,6 +682,7 @@ variableInitializers:
 variableInitializer:
   | expression {}
   | arrayInitializer {}
+
 (* +++++++++++ 14 chapter ++++++++++++++++ *)
 (* 14.2 *)
 block:
