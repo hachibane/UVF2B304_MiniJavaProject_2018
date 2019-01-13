@@ -29,10 +29,10 @@ true: package(ANSITerminal)
 # HOW TO USE IT ?
 
 
-to test the parser, go to the Parsing/test
-delete the main.native file
-run the follwing command : ocamlbuild -use-menhir -quiet main.native
-then to try the parser on a .java file run : ./main.native file.java
+to test the parser, run the following command ./Main.byte (.native) ./TESTS/TestFile.Java
+the tests files are in the TESTS folder
+
+
 
 to generate the AST : menhir --dump parser.mly
 
