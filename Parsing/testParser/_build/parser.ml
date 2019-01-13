@@ -18554,7 +18554,7 @@ and _menhir_goto_typeName : _menhir_env -> 'ttv_tail -> _menhir_state -> (unit) 
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _menhir_env = _menhir_discard _menhir_env in
                     let _menhir_stack = Obj.magic _menhir_stack in
-                    let ((((_menhir_stack, _menhir_s), _), _, (_3 : (unit))), _, (id : (
+                    let ((((_menhir_stack, _menhir_s), _), _, (_3 : (unit))), _, (_5 : (
 # 42 "parser.mly"
        (string)
 # 18561 "parser.ml"
@@ -18565,7 +18565,7 @@ and _menhir_goto_typeName : _menhir_env -> 'ttv_tail -> _menhir_state -> (unit) 
                     let _1 = () in
                     let _v : (unit) = 
 # 1221 "parser.mly"
-                                                   ( )
+                                                ( )
 # 18570 "parser.ml"
                      in
                     let _menhir_stack = Obj.magic _menhir_stack in

@@ -1218,7 +1218,7 @@ typeImportOnDemandDeclaration:
 	| IMPORT packageOrTypeName POINT TIMES SEMICOLON {  }
 
 singleStaticImportDeclaration:
-	| IMPORT STATIC typeName POINT id=IDENT SEMICOLON { }
+	| IMPORT STATIC typeName POINT IDENT SEMICOLON { }
 
 staticImportOnDemandDeclaration:
 	| IMPORT STATIC typeName POINT TIMES SEMICOLON { }
