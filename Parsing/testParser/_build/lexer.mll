@@ -81,6 +81,8 @@ let floatingPointLiteral	= ( digit* '.' digit+ exp? | exp )
 let ident     						= (letter | '_') ( letter | digit | '_')*
 let white     						= [' ' '\t']+
 let newline   						= '\r' | '\n' | "\r\n"
+let onelinecomment = "//" ([^'\r' '\n'])* newline
+let multilinecomment = "/*" (([^'\r' '\n'])* newline)* ([^'\r' '\n'])* "*/"
 
 (* Rules Definitions *)
 
@@ -94,6 +96,8 @@ rule read = parse
 | floatingPointLiteral as f	{ FLOATLIT (float_of_string f) }
 | stringLiteral as s				{ STRINGLIT s}
 | ident as id								{  try Hashtbl.find keyword_table id with Not_found -> IDENT id }
+| onelinecomment { Lexing.new_line lexbuf; read lexbuf }
+| multilinecomment { Lexing.new_line lexbuf; read lexbuf }
 | "+"                { PLUS }
 | "-"                { MINUS }
 | "*"                { TIMES }

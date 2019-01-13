@@ -31,7 +31,9 @@ try
 		close_in (input_file);
 	| Parser.Error ->
 		print_string "parsing error :";
-		print_position (lexeme_start_p lexbuf) (lexeme_end_p lexbuf)
-
+		print_position (lexeme_start_p lexbuf) (lexeme_end_p lexbuf);
+		print_newline ();
+		print_string (Lexing.lexeme lexbuf);
+		print_newline ();
 with Sys_error s -> print_endline ("Can’t find file ’" ^ file ^ "’")
 let _ = Arg.parse [] compile ""

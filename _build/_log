@@ -1,0 +1,63 @@
+### Starting build.
+# Target: Main/Main.ml.depends, tags: { extension:ml, file:Main/Main.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamldep.opt -modules Main/Main.ml > Main/Main.ml.depends # cached
+# Target: Parsing/errorHandler.ml.depends, tags: { extension:ml, file:Parsing/errorHandler.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamldep.opt -modules Parsing/errorHandler.ml > Parsing/errorHandler.ml.depends # cached
+# Target: Parsing/errorHandler.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:Parsing/errorHandler.cmo, file:Parsing/errorHandler.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlc.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/errorHandler.cmo Parsing/errorHandler.ml # cached
+# Target: Parsing/lexer.mll, tags: { extension:mll, file:Parsing/lexer.mll, lexer, ocaml, ocamllex, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamllex.opt -q Parsing/lexer.mll
+# Target: Parsing/lexer.ml.depends, tags: { extension:ml, file:Parsing/lexer.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamldep.opt -modules Parsing/lexer.ml > Parsing/lexer.ml.depends
+# Target: Parsing/parser.mly.depends, tags: { extension:mly, file:Parsing/parser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+menhir --raw-depend --ocamldep '/usr/bin/ocamldep.opt -modules' Parsing/parser.mly > Parsing/parser.mly.depends
++ menhir --raw-depend --ocamldep '/usr/bin/ocamldep.opt -modules' Parsing/parser.mly > Parsing/parser.mly.depends
+File "Parsing/parser.mly", line 44, characters 16-23:
+Warning: the token COMMENT is unused.
+# Target: Parsing/parser.mly, tags: { byte, compile, extension:ml, extension:mly, file:Parsing/parser.ml, file:Parsing/parser.mly, infer, menhir, ocaml, parser, quiet, traverse, use_menhir, warn_a }
+menhir --ocamlc '/usr/bin/ocamlc.opt -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils' --infer Parsing/parser.mly
++ menhir --ocamlc '/usr/bin/ocamlc.opt -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils' --infer Parsing/parser.mly
+File "Parsing/parser.mly", line 44, characters 16-23:
+Warning: the token COMMENT is unused.
+File "Parsing/parser.mly", line 790, characters 0-12:
+Warning: switchLabels generates the empty language.
+File "Parsing/parser.mly", line 783, characters 0-26:
+Warning: switchBlockStatementGroups generates the empty language.
+File "Parsing/parser.mly", line 787, characters 0-25:
+Warning: switchBlockStatementGroup generates the empty language.
+Warning: 39 states have shift/reduce conflicts.
+Warning: 43 states have reduce/reduce conflicts.
+Warning: 159 shift/reduce conflicts were arbitrarily resolved.
+Warning: 575 reduce/reduce conflicts were arbitrarily resolved.
+File "Parsing/parser.mly", line 1176, characters 3-13:
+Warning: production ambiguousName -> identifier is never reduced.
+File "Parsing/parser.mly", line 609, characters 4-19:
+Warning: production annotationTypeElementDeclaration -> enumDeclaration is never reduced.
+File "Parsing/parser.mly", line 610, characters 4-29:
+Warning: production annotationTypeElementDeclaration -> annotationTypeDeclaration is never reduced.
+File "Parsing/parser.mly", line 532, characters 3-38:
+Warning: production interfaceType -> typeDeclSpecifier typeArguments_opt is never reduced.
+File "Parsing/parser.mly", line 1172, characters 3-13:
+Warning: production packageOrTypeName -> identifier is never reduced.
+Warning: in total, 5 productions are never reduced.
+# Target: Parsing/parser.mli.depends, tags: { extension:mli, file:Parsing/parser.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamldep.opt -modules Parsing/parser.mli > Parsing/parser.mli.depends # cached
+# Target: Parsing/parser.cmi, tags: { byte, compile, extension:mli, file:Parsing/parser.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlc.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/parser.cmi Parsing/parser.mli # cached
+# Target: Parsing/lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:Parsing/lexer.cmo, file:Parsing/lexer.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlc.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/lexer.cmo Parsing/lexer.ml
+# Target: Main/Main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:Main/Main.cmo, file:Main/Main.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlc.opt -c -w a -I Main -I Compiling -I Typing -I Parsing -I Evaluator -I Utils -o Main/Main.cmo Main/Main.ml # cached
+# Target: Parsing/errorHandler.cmx, tags: { compile, extension:cmx, extension:ml, file:Parsing/errorHandler.cmx, file:Parsing/errorHandler.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlopt.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/errorHandler.cmx Parsing/errorHandler.ml # cached
+# Target: Parsing/parser.ml.depends, tags: { extension:ml, file:Parsing/parser.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamldep.opt -modules Parsing/parser.ml > Parsing/parser.ml.depends
+# Target: Parsing/parser.cmx, tags: { compile, extension:cmx, extension:ml, file:Parsing/parser.cmx, file:Parsing/parser.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlopt.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/parser.cmx Parsing/parser.ml
+# Target: Parsing/lexer.cmx, tags: { compile, extension:cmx, extension:ml, file:Parsing/lexer.cmx, file:Parsing/lexer.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlopt.opt -c -w a -I Parsing -I Compiling -I Main -I Typing -I Evaluator -I Utils -o Parsing/lexer.cmx Parsing/lexer.ml
+# Target: Main/Main.cmx, tags: { compile, extension:cmx, extension:ml, file:Main/Main.cmx, file:Main/Main.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlopt.opt -c -w a -I Main -I Compiling -I Typing -I Parsing -I Evaluator -I Utils -o Main/Main.cmx Main/Main.ml
+# Target: Main/Main.native, tags: { dont_link_with, extension:native, file:Main/Main.native, link, native, ocaml, program, quiet, traverse, use_menhir, warn_a }
+/usr/bin/ocamlopt.opt -I Parsing -I Main Parsing/errorHandler.cmx Parsing/parser.cmx Parsing/lexer.cmx Main/Main.cmx -o Main/Main.native
+# Compilation successful.
