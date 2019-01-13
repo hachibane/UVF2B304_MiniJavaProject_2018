@@ -78,6 +78,14 @@ stringLiteral:
 nullLiteral:
   | NULL {}
 
+fieldModifiers_opt:
+  	| {}
+  	| fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
 (* 8.8.3 Constructor Modifiers *)
 constructorModifiers_opt:
 	| {}
@@ -91,15 +99,10 @@ constructorModifiers :
 
 (* 8.3 Field Declarations *)
 fieldDeclaration:
+	(* | IDENT IDENT EQUAL NEW IDENT LPAREN RPAREN {} *)
+	(* | fieldModifiers_opt IDENT variableDeclarators SEMICOLON {} *)
 	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
 
-fieldModifiers_opt:
-  	| {}
-  	| fieldModifiers {}
-
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
 
 (* 8.4.3 Method Modifiers *)
 methodModifiers_opt:
@@ -233,6 +236,7 @@ variableDeclarators:
 variableDeclarator:
 	| variableDeclaratorId {}
 	| variableDeclaratorId EQUAL variableInitializer {}
+	(* | IDENT EQUAL NEW identifier LPAREN RPAREN {} *)
 
 variableDeclaratorId:
 	| identifier {}
@@ -1119,6 +1123,7 @@ constantExpression:
   | expression {}
 
 assignment:
+	(* | NEW IDENT LPAREN RPAREN {} *)
 	| leftHandSide assignmentOperator assignmentExpression {}
 
 leftHandSide:

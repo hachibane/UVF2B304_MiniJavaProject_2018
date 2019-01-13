@@ -1,14 +1,10 @@
 public class ClassTest {
 
-	int x;
+	int a;
 
 	public class ConstructorClassTest{
 
-		
-		
-		ConstructorClassTest() throws Exception {}
-		
-		public ConstructorClassTest(){}
+		public ConstructorClassTest(int a, int b){}
 
 		private void myMethod(int a){
 			final int x;
@@ -20,4 +16,5 @@ public class ClassTest {
 	}
 
 	void myMethod2(int a, int b){}
+
 }

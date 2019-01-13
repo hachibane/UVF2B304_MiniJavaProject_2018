@@ -78,6 +78,14 @@ stringLiteral:
 nullLiteral:
   | NULL {}
 
+fieldModifiers_opt:
+  	| {}
+  	| fieldModifiers {}
+
+fieldModifiers:
+	| fieldModifier {}
+	| fieldModifiers fieldModifier {}
+
 (* 8.8.3 Constructor Modifiers *)
 constructorModifiers_opt:
 	| {}
@@ -93,13 +101,6 @@ constructorModifiers :
 fieldDeclaration:
 	| fieldModifiers_opt ttype variableDeclarators SEMICOLON {}
 
-fieldModifiers_opt:
-  	| {}
-  	| fieldModifiers {}
-
-fieldModifiers:
-	| fieldModifier {}
-	| fieldModifiers fieldModifier {}
 
 (* 8.4.3 Method Modifiers *)
 methodModifiers_opt:
@@ -233,7 +234,7 @@ variableDeclarators:
 variableDeclarator:
 	| variableDeclaratorId {}
 	| variableDeclaratorId EQUAL variableInitializer {}
-
+	
 variableDeclaratorId:
 	| identifier {}
 	| variableDeclaratorId LBRACK RBRACK {}
