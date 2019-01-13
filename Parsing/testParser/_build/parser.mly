@@ -78,78 +78,6 @@ stringLiteral:
 nullLiteral:
   | NULL {}
 
-
-(* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
-(*4.1 The kind of  Types and Values*)
-ttype:
-	| primitiveType {}
-	| referenceType {}
-
-(*4.2 Primitive Types and Values*)
-primitiveType:
-	| numericType {}
-	| BOOLEAN {}
-
-numericType:
-	| integralType {}
-	| floatingPointType {}
-
-integralType:
-	| BYTE {}
-	| SHORT {}
-	| INT {}
-	| LONG {}
-	| CHAR {}
-
-floatingPointType:
-	| FLOAT {}
-	| DOUBLE {}
-
-(* 4.3 Reference Types and Values*)
-referenceType:
-	| classOrInterfaceType {}
-	| typeVariable {}
-	| arrayType {}
-
-classOrInterfaceType:
-	| classType {}
-	| interfaceType {}
-
-classType:
-	| typeDeclSpecifier typeArguments_opt {}
-
-typeDeclSpecifier:
-	| typeName {}
-	| classOrInterfaceType POINT  identifier {}
-
-typeVariable:
-	|  identifier {}
-
-arrayType:
-	| ttype LBRACK RBRACK {}
-
-typeArguments_opt:
-	| {}
-	| typeArguments {}
-
-typeArguments:
-	| actualTypeArgumentList {}
-
-actualTypeArgumentList:
-	| actualTypeArgument
-	| actualTypeArgument COMMA actualTypeArgument {}
-
-actualTypeArgument:
-	| referenceType {}
-	| wildcard {}
-
-wildcard:
-	| wildcardBounds COND {}
-
-wildcardBounds:
-	| EXTENDS referenceType {}
-	| SUPER referenceType {}
-
 lastFormalParameter:
 	| variableModifiers_opt ttype variableDeclaratorId {}
 	| formalParameter {}
@@ -242,6 +170,78 @@ localVariableDeclarationStatement:
 
 localVariableDeclaration:
 	| variableModifiers_opt ttype variableDeclarators {}
+(* +++++++++++++++ 4 chapter ++++++++++++++++++++++++*)
+(*4.1 The kind of  Types and Values*)
+ttype:
+	| primitiveType {}
+	| referenceType {}
+
+(*4.2 Primitive Types and Values*)
+primitiveType:
+	| numericType {}
+	| BOOLEAN {}
+
+numericType:
+	| integralType {}
+	| floatingPointType {}
+
+integralType:
+	| BYTE {}
+	| SHORT {}
+	| INT {}
+	| LONG {}
+	| CHAR {}
+
+floatingPointType:
+	| FLOAT {}
+	| DOUBLE {}
+
+(* 4.3 Reference Types and Values*)
+referenceType:
+	| classOrInterfaceType {}
+	| typeVariable {}
+	| arrayType {}
+
+classOrInterfaceType:
+	| classType {}
+	| interfaceType {}
+
+classType:
+	| typeDeclSpecifier typeArguments_opt {}
+
+typeDeclSpecifier:
+	| typeName {}
+	| classOrInterfaceType POINT  identifier {}
+
+typeVariable:
+	|  identifier {}
+
+arrayType:
+	| ttype LBRACK RBRACK {}
+
+typeArguments_opt:
+	| {}
+	| typeArguments {}
+
+typeArguments:
+	| actualTypeArgumentList {}
+
+actualTypeArgumentList:
+	| actualTypeArgument
+	| actualTypeArgument COMMA actualTypeArgument {}
+
+actualTypeArgument:
+	| referenceType {}
+	| wildcard {}
+
+wildcard:
+	| wildcardBounds COND {}
+
+wildcardBounds:
+	| EXTENDS referenceType {}
+	| SUPER referenceType {}
+
+
 
 
 (* +++++++++++++++ 8 chapter +++++++++++++++++++++++++*)
