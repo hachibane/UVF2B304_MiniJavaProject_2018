@@ -6,5 +6,7 @@ public class ClassTest {
 		public ConstructorClassTest(int a, int b){}
 
 		private void myMethod(int a, int b){}
+
+		private static int myMethod2(int a, int b){}
 	}
 }
