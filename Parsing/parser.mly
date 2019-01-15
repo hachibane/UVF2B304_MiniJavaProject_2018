@@ -1004,7 +1004,7 @@ fieldAccess:
 methodInvocation:
 	| methodName LPAREN argumentList_opt RPAREN 
 	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
-  	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+  	| SUPER POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
    	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
     	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
