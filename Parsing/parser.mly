@@ -1002,10 +1002,11 @@ fieldAccess:
 
 (* 15.12 Method Invocation Expressions *)
 methodInvocation:
-	| methodName LPAREN argumentList_opt RPAREN primary POINT nonWildTypeArguments_opt
-  identifier LPAREN argumentList_opt RPAREN super POINT nonWildTypeArguments_opt identifier
-   LPAREN argumentList_opt RPAREN className POINT super POINT nonWildTypeArguments_opt identifier
-    LPAREN argumentList_opt RPAREN typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
+	| methodName LPAREN argumentList_opt RPAREN 
+	| primary POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+  	| super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+   	| className POINT super POINT nonWildTypeArguments_opt identifier LPAREN argumentList_opt RPAREN 
+    	| typeName POINT nonWildTypeArguments identifier LPAREN argumentList_opt RPAREN {}
 
 (* 15.13 Array Access expressions *)
 arrayAccess:
