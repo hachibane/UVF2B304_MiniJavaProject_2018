@@ -1181,7 +1181,7 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 
 prog:
-	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt EOF {}
+	| packageDeclaration_opt importDeclarations_opt typeDeclarations_opt classDeclaration EOF {}
 
 packageDeclaration_opt:
 	| {}
