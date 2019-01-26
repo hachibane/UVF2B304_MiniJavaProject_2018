@@ -1,6 +1,6 @@
 The minijavac compiler.
 
-A compilation project for Third year students of Telecom Bretagne.
+A compilation project for Third year students of IMT Atlantique.
 
 'ocamlbuild Main.byte' (or native) to build the compiler. The main file
 is Main/Main.ml, it should not be modified. It opens the given file,
