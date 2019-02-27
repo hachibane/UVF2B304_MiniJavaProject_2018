@@ -15,23 +15,30 @@ let type_val val =
 (*match the type of the expression following the JavaDoc specification*)
 let rec type_expression expr =
   match expr.edesc with
-  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2
   | Pre(operation, expr)             -> type_expression expr
   | Post(expr, operation)            -> type_expression expr
+  | Cast(tpe,expr)                   -> type_expression expr
+  | Instanceof(expr, tpe)            -> type_expression expr
   | Val val                          -> expression.etype <- type_val val
+  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2
+  | Op(expr1, operation, expr2)      -> type_expression expr1; type_expression expr2
   | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3
+  | CondOp(expr1, expr2, expr3)      -> type_expression expr1; type_expression expr2; type_expression expr3
+  | Type tpe                         -> ()
+  | ClassOf tpe                      -> ()
+  | VoidClass                        -> ()
 
 (*typing for a statement*)
 let rec type_statement statement =
   match statement with
   | Expr expr                -> type_expression expr
+  | Throw expr               -> type_expression expr
+  | Return Some(expr)        -> type_expression expr
   | Block block              -> List.iter type_statement block
   | If(expr, st, None)       -> type_expression expr; type_statement st
-  | If(expr, st1, Some(st2)) -> type_expression expr; type_statement st1; type_statement st2
   | While(expr, st)          -> type_expression expr; type_statement st
-  | Throw expr               -> type_expression expr
+  | If(expr, st1, Some(st2)) -> type_expression expr; type_statement st1; type_statement st2
   | Return None              -> ()
-  | Return Some(expr)        -> type_expression expr
   | Nop                      -> ()
 
 let type_method method = List.iter type_statement m.mbody
