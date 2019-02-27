@@ -20,7 +20,7 @@ let rec type_expression expr =
   | Cast(tpe,expr)                   -> type_expression expr
   | Instanceof(expr, tpe)            -> type_expression expr
   | Val val                          -> expression.etype <- type_val val
-  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2
+  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2; CheckAST.check_aop_type e1.etype op e2.etype
   | Op(expr1, operation, expr2)      -> type_expression expr1; type_expression expr2
   | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3
   | CondOp(expr1, expr2, expr3)      -> type_expression expr1; type_expression expr2; type_expression expr3
@@ -41,13 +41,12 @@ let rec type_statement statement =
   | Return None              -> ()
   | Nop                      -> ()
 
-let type_method method = List.iter type_statement m.mbody
-
-let type_class c = List.iter type_method c.cmethods
+let type_method method = List.iter type_statement method.mbody
+let type_class c       = List.iter type_method    c.cmethods
 
 let type_type t =
   match t.info with
   | Class c -> type_class c
   | Inter   -> ()
 
-let type_program p = List.iter type_type p.type_list
+let type_program prog = List.iter type_type prog.type_list
