@@ -1,52 +1,46 @@
 open AST
 
+(*typing for a value*)
+(*check all the possible type for the value val and apply the associated Type.Primitive*)
 let type_val val =
   match val with
   | Boolean boolean -> Some(Type.Primitive(Type.Boolean))
   | Char carac      -> Some(Type.Primitive(Type.Char))
   | Int integer     -> Some(Type.Primitive(Type.Int))
+  | String s        -> Some(Type.Ref({tpath=[]; tid="String"}))
+  | Float f         -> Some(Type.Primitive(Type.Float))
+  | Null            -> None
 
-let rec type_expression expression =
-  match expression.edesc with
-  | AssignExp(expr1,operation,expr2) -> {edesc = AssignExp(type_expression expr1, operation, type_expression expr2); etype = None}
-  | Val val -> {edesc = Val(val); etype = type_val val}
+(*typing for an expression*)
+(*match the type of the expression following the JavaDoc specification*)
+let rec type_expression expr =
+  match expr.edesc with
+  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2
+  | Pre(operation, expr)             -> type_expression expr
+  | Post(expr, operation)            -> type_expression expr
+  | Val val                          -> expression.etype <- type_val val
+  | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3
 
-let type_statement s =
-  match s with
-  | Expr e -> Expr(type_expression e)
+(*typing for a statement*)
+let rec type_statement statement =
+  match statement with
+  | Expr expr                -> type_expression expr
+  | Block block              -> List.iter type_statement block
+  | If(expr, st, None)       -> type_expression expr; type_statement st
+  | If(expr, st1, Some(st2)) -> type_expression expr; type_statement st1; type_statement st2
+  | While(expr, st)          -> type_expression expr; type_statement st
+  | Throw expr               -> type_expression expr
+  | Return None              -> ()
+  | Return Some(expr)        -> type_expression expr
+  | Nop                      -> ()
 
-let type_method method = 
-{
-  mmodifiers = method.mmodifiers;
-  mname = method.mname;
-  mreturntype = method.mreturntype;
-  margstype = method.margstype;
-  mthrows = method.mthrows;
-  mbody = List.map type_statement method.mbody
-}
+let type_method method = List.iter type_statement m.mbody
 
-let type_class c = 
-{
-  cparent = c.cparent;
-  cattributes = c.cattributes;
-  cinits = c.cinits;
-  cconsts = c.cconsts;
-  cmethods = List.map type_method c.cmethods;
-  ctypes = c.ctypes;
-  cloc = c.cloc
-}
+let type_class c = List.iter type_method c.cmethods
 
-let type_type t = 
-{
-  modifiers = t.modifiers;
-  id = t.id;
-  info = match t.info with
-         | Class c -> Class(type_class c)
-         | Inter -> Inter
-}
+let type_type t =
+  match t.info with
+  | Class c -> type_class c
+  | Inter   -> ()
 
-let type_program prog = 
-{
-  package = prog.package;
-  type_list = List.map type_type prog.type_list
-}
+let type_program p = List.iter type_type p.type_list
