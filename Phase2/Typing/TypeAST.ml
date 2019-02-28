@@ -1,9 +1,7 @@
 open AST
 
-(*typing for a value*)
-(*check all the possible type for the value val and apply the associated Type.Primitive*)
-let type_val val =
-  match val with
+let type_val v = 
+  match v with
   | Boolean boolean -> Some(Type.Primitive(Type.Boolean))
   | Char carac      -> Some(Type.Primitive(Type.Char))
   | Int integer     -> Some(Type.Primitive(Type.Int))
@@ -17,13 +15,13 @@ let rec type_expression expr =
   match expr.edesc with
   | Pre(operation, expr)             -> type_expression expr
   | Post(expr, operation)            -> type_expression expr
-  | Cast(tpe,expr)                   -> type_expression expr
+  | Cast(tpe,expr)                   -> type_expression expr; expr.etype <- Some(tpe)
   | Instanceof(expr, tpe)            -> type_expression expr
-  | Val val                          -> expression.etype <- type_val val
-  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2; CheckAST.check_aop_type e1.etype op e2.etype
+  | Val v                            -> expr.etype <- type_val v
+  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2; CheckAST.verify_operation_type expr1.etype operation expr2.etype
   | Op(expr1, operation, expr2)      -> type_expression expr1; type_expression expr2
   | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3
-  | CondOp(expr1, expr2, expr3)      -> type_expression expr1; type_expression expr2; type_expression expr3
+  | CondOp(expr1, expr2, expr3)      -> type_expression expr1; type_expression expr2; type_expression expr3; CheckAST.verify_tern_type expr1.etype expr2.etype expr3.etype; expr.etype <- expr2.etype
   | Type tpe                         -> ()
   | ClassOf tpe                      -> ()
   | VoidClass                        -> ()
@@ -41,7 +39,7 @@ let rec type_statement statement =
   | Return None              -> ()
   | Nop                      -> ()
 
-let type_method method = List.iter type_statement method.mbody
+let type_method met    = List.iter type_statement met.mbody
 let type_class c       = List.iter type_method    c.cmethods
 
 let type_type t =
