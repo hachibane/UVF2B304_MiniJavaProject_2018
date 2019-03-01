@@ -13,17 +13,17 @@ let type_val v =
 (*match the type of the expression following the JavaDoc specification*)
 let rec type_expression expr =
   match expr.edesc with
-  | Pre(operation, expr)             -> type_expression expr
-  | Post(expr, operation)            -> type_expression expr
+  | Pre(operation, exp)              -> type_expression exp; expr.etype <- exp.etype
+  | Post(exp, operation)             -> type_expression exp; expr.etype <- exp.etype
   | Cast(tpe,expr)                   -> type_expression expr; expr.etype <- Some(tpe)
   | Instanceof(expr, tpe)            -> type_expression expr
   | Val v                            -> expr.etype <- type_val v
-  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2; CheckAST.verify_operation_type expr1.etype operation expr2.etype
-  | Op(expr1, operation, expr2)      -> type_expression expr1; type_expression expr2
-  | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3
+  | Type tpe                         -> expr.etype <- Some(tpe)
+  | ClassOf tpe                      -> expr.etype <- Some(tpe)
+  | AssignExp(expr1,operation,expr2) -> type_expression expr1; type_expression expr2; CheckAST.verify_assign_operation_type expr1.etype operation expr2.etype
+  | Op(expr1, operation, expr2)      -> type_expression expr1; type_expression expr2; CheckAST.verify_operation_type expr1.etype operation expr2.etype; expr.etype <- expr1.etype
+  | If(expr1, expr2, expr3)          -> type_expression expr1; type_expression expr2; type_expression expr3; CheckAST.verify_if_type expr1.etype
   | CondOp(expr1, expr2, expr3)      -> type_expression expr1; type_expression expr2; type_expression expr3; CheckAST.verify_tern_type expr1.etype expr2.etype expr3.etype; expr.etype <- expr2.etype
-  | Type tpe                         -> ()
-  | ClassOf tpe                      -> ()
   | VoidClass                        -> ()
 
 (*typing for a statement*)
@@ -33,9 +33,9 @@ let rec type_statement statement =
   | Throw expr               -> type_expression expr
   | Return Some(expr)        -> type_expression expr
   | Block block              -> List.iter type_statement block
-  | If(expr, st, None)       -> type_expression expr; type_statement st
   | While(expr, st)          -> type_expression expr; type_statement st
-  | If(expr, st1, Some(st2)) -> type_expression expr; type_statement st1; type_statement st2
+  | If(expr, st, None)       -> type_expression expr; type_statement st; CheckAST.verify_if_type expr.etype
+  | If(expr, st1, Some(st2)) -> type_expression expr; type_statement st1; type_statement st2; CheckAST.verify_if_type expr.etype
   | Return None              -> ()
   | Nop                      -> ()
 

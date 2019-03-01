@@ -7,9 +7,11 @@ let execute lexbuf verbose =
     TypeAST.type_program ast;
     if verbose then AST.print_program ast
   with
-    | CheckAST.Wrong_types_operation(x, operator, y) -> CheckAST.print_wrong_types_operation x operator y
-    | CheckAST.Wrong_type_bool(t)                    -> CheckAST.print_wrong_type_bool t
-    | CheckAST.Wrong_types_bool(t1, t2)              -> CheckAST.print_wrong_types_bool t1 t2
+    | CheckAST.Wrong_types_operation(x, operator, y)         -> CheckAST.print_wrong_types_operation x operator y
+		| CheckAST.Wrong_types_assign_operation(x, operator,  y) -> CheckAST.print_wrong_types_assign_operation x operator y    
+    | CheckAST.Wrong_type_bool(b)                            -> CheckAST.print_wrong_type_bool b
+    | CheckAST.Wrong_types_bool(b1, b2)                      -> CheckAST.print_wrong_types_bool b1 b2
+    | CheckAST.Wrong_type_if(elem)                           -> CheckAST.print_wrong_type_if elem
     | Error ->
       print_string "Syntax error: ";
       Location.print (Location.curr lexbuf)

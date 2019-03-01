@@ -29,5 +29,6 @@ val extract_type : string list -> ref_type
 val mk_type : string list -> string -> ref_type
   
 (* conversions between types and string *)
+val stringOfOpt : t option -> string
 val stringOf : t -> string
 val stringOf_ref : ref_type -> string
