@@ -4,9 +4,11 @@ open AST
 let string_of_prefix_type = function
   | Op_not -> "boolean"
   | Op_bnot -> "int"
-  | Op_neg | Op_incr | Op_decr | Op_plus -> "int ou float"
+  | Op_neg | Op_incr | Op_decr | Op_plus -> "int or float"
 
 (* Here are defined the exceptions *)
+(* Type.t options *)
+exception Wrong_types_declaration of Type.t option * Type.t option
 exception Wrong_type_bool of Type.t option
 exception Wrong_types_bool of Type.t option * Type.t option
 exception Wrong_type_if of Type.t option
@@ -14,8 +16,22 @@ exception Wrong_type_post of Type.t option
 exception Wrong_types_operation  of Type.t option * infix_op * Type.t option
 exception Wrong_types_assign_operation of Type.t option * assign_op * Type.t option
 exception Wrong_type_unitary_operation of prefix_op * Type.t option
+exception Wrong_type_list of Type.t option * Type.t option 
+
+(*strings*)
+
+exception Variable_name_exists of string
+exception Unknown_variable of string 
 
 (*Here are defined helping exception messages *)
+(* Type.t options *)
+let print_wrong_types expression elem1 elem2 = 
+	print_string("Expression : " ^ expression ^ "requires two arguments of the same type");
+	print_endline("wrong bool types : " ^ (Type.stringOfOpt elem1) ^ " different from : " ^ (Type.stringOfOpt elem2))
+
+let print_wrong_types_declaration elem1 elem2 =
+  print_wrong_types "declaration" elem1 elem2 
+
 let print_wrong_types_operation x operator y = 
 	print_string("Operator : " ^ (AST.string_of_infix_op operator));
 	print_endline("wrong types : " ^ (Type.stringOfOpt x) ^ " different from : " ^ (Type.stringOfOpt y))
@@ -31,7 +47,7 @@ let print_wrong_type_bool elem =
 	print_endline("Wrong type : " ^ (Type.stringOfOpt elem) ^ "should be a boolean")
 
 let print_wrong_types_bool elem1 elem2 = 
-	print_endline("wrong types : " ^ (Type.stringOfOpt elem1) ^ " different from : " ^ (Type.stringOfOpt elem2))
+	print_endline("wrong bool types : " ^ (Type.stringOfOpt elem1) ^ " different from : " ^ (Type.stringOfOpt elem2))
 
 let print_wrong_type_unitary_operation operator x =
 	print_string("Operator : " ^ (AST.string_of_prefix_op operator));
@@ -40,6 +56,18 @@ let print_wrong_type_unitary_operation operator x =
 
 let print_wrong_type_post elem =
 	print_endline(" ++ and -- do not expect a " ^ (Type.stringOfOpt elem) ^ "type object")
+
+(* strings *)
+let print_variable_name_exist elem =
+  print_endline ("Variable name \"" ^ elem ^ "\" already exists")
+
+let print_unkown_variable elem =
+  print_endline ("No variable \"" ^ elem ^ "\" previously defined in the current scope")
+
+(* arrays *)
+let print_wrong_type_list elem1 elem2 = 
+	print_endline("The array receives " ^ (Type.stringOfOpt elem1) ^ " and " ^ (Type.stringOfOpt elem2) ^ " which are different")
+
 
 (* Here are defined the verifications *)
 let verify_assign_operation_type x operator y =
@@ -69,3 +97,13 @@ let verify_pre_type operator elem =
 	| Op_bnot -> if elem <> Some(Type.Primitive(Type.Int)) then raise(Wrong_type_unitary_operation(operator, elem))
 	| Op_neg | Op_incr | Op_decr | Op_plus -> 
 		if (elem <> Some(Type.Primitive(Type.Int)) && elem <> Some(Type.Primitive(Type.Float))) then raise(Wrong_type_unitary_operation(operator, elem))
+
+(*array verifications *)
+let rec verify_array_types expr =
+	match expr with
+	| []        -> ()
+	| elem::l   -> (match l with
+									| [] -> ()
+									| elem2::l2 -> if elem.etype <> elem2.etype 
+																 then raise(Wrong_type_list(elem.etype, elem2.etype)));
+									verify_array_types l
