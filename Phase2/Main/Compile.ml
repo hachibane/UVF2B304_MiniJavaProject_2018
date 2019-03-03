@@ -11,7 +11,7 @@ let execute lexbuf verbose =
   	| CheckAST.Unknown_variable(elem)                        -> CheckAST.print_unknown_variable elem
   	| CheckAST.Attribute_exists(attr)                        -> CheckAST.print_attribute_exists attr
   	| CheckAST.Unknown_attribute(attr)                       -> CheckAST.print_unknown_attribute attr
-  	| CheckAST.Method_exists(met)                            -> CheckAST.print_method_exists met
+ 	  | CheckAST.Method_exists(name, typ, argstype)            -> CheckAST.print_method_exists name typ argstype
   	| CheckAST.Unknown_method(met)                           -> CheckAST.print_unknown_method met
   	| CheckAST.Class_exists(c)                               -> CheckAST.print_class_exists c
   	| CheckAST.Unknown_class(c)                              -> CheckAST.print_unknown_class (String.concat "." c)
@@ -22,6 +22,7 @@ let execute lexbuf verbose =
     | CheckAST.Wrong_type_bool(b)                            -> CheckAST.print_wrong_type_bool b
     | CheckAST.Wrong_types_bool(b1, b2)                      -> CheckAST.print_wrong_types_bool b1 b2
     | CheckAST.Wrong_type_if(elem)                           -> CheckAST.print_wrong_type_if elem
+    | CheckAST.Wrong_type_for(elem)                          -> CheckAST.print_wrong_type_for elem
     | CheckAST.Wrong_type_post(elem)                         -> CheckAST.print_wrong_type_post elem
     | CheckAST.Wrong_type_list(elem1, elem2)                 -> CheckAST.print_wrong_type_list elem1 elem2
     | CheckAST.Wrong_type_return(x, y)                       -> CheckAST.print_Wrong_type_return x y
