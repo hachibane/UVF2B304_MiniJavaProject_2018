@@ -15,8 +15,9 @@ type scope =
 
 type class_scope = 
 {
-  methods    : (string, function_information) Hashtbl.t ;
-  attributes : (string, Type.t) Hashtbl.t
+  methods      : (string, function_information) Hashtbl.t ;
+  constructors : (string, function_information) Hashtbl.t ;
+  attributes   : (string, Type.t) Hashtbl.t
 }
 
 type gscope = 
@@ -44,6 +45,14 @@ let compare_arguments_method elem args met =
       raise(CheckAST.Method_exists(elem, met.function_type, met.function_args))
     with
       | Different_arguments -> ()
+
+let compare_arguments_constructor elem args constructor =
+	if (List.length args) <> (List.length constructor.function_args) then ()
+	else try
+		List.iter2 compare_arguments args constructor.function_args;
+		raise(CheckAST.Constructor_exists(elem, constructor.function_type, constructor.function_args))
+		with
+			| Different_arguments -> ()
 
 let type_val v = 
   match v with

@@ -9,6 +9,20 @@ let rec type_expression globalScope scope expr =
                                         if (Hashtbl.mem globalScope.classes last) <> false
                                         then expr.etype <- Some(Type.Ref({ tpath = lst ; tid = last }))
                                         else raise(CheckAST.Unknown_class(l))
+
+  | New(None, l, args)               -> List.iter (type_expression globalScope scope) args;
+                                        let (last, lst) = ListII.extract_last l in
+                                        if (Hashtbl.mem globalScope.classes last) <> true
+                                        then raise(CheckAST.Unknown_class(l))
+                                        else 
+                                          (expr.etype <- let constructors = (Hashtbl.find globalScope.classes last).constructors in
+                                          try
+                                            List.iter (compare_arguments_constructor last args) (Hashtbl.find_all constructors last);
+                                            raise(CheckAST.Unknown_constructor(l, args))
+                                          with
+                                            | Not_typed_argument -> raise(CheckAST.Argument_expression_no_type(last))
+                                            | CheckAST.Constructor_exists(_, t, _) -> Some(t))
+
   | Call(None, str, l)               -> List.iter (type_expression globalScope scope) l;
                                         expr.etype <- let met = (Hashtbl.find globalScope.classes globalScope.current).methods in
                                         if (Hashtbl.mem met str) <> true
@@ -22,7 +36,9 @@ let rec type_expression globalScope scope expr =
                                            | CheckAST.Method_exists(_, elem, _) -> Some(elem))
                                        
   | NewArray(t, l, None)             -> expr.etype <- Some(Type.Array(t, List.length l))
+
   | NewArray(t, l, Some(exp))        -> expr.etype <- Some(Type.Array(t, List.length l))
+
   | ArrayInit(exp)                   -> List.iter (type_expression globalScope scope) exp;
                                         CheckAST.verify_array_types exp;
                                         expr.etype <- (match (List.hd exp).etype with
@@ -33,22 +49,31 @@ let rec type_expression globalScope scope expr =
                                          then raise(CheckAST.Unknown_variable(elem))
                                          else Some(Hashtbl.find (Hashtbl.find globalScope.classes globalScope.current).attributes elem))
                                          else Some(Hashtbl.find scope.vars elem)
+
   | Pre(operation, exp)              -> type_expression globalScope scope exp; 
                                         CheckAST.verify_pre_type operation exp.etype;
                                         expr.etype <- exp.etype
+
   | Post(exp, operation)             -> type_expression globalScope scope exp;
                                         CheckAST.verify_post_type exp.etype;
                                         expr.etype <- exp.etype
+
   | Cast(tpe,expr)                   -> type_expression globalScope scope expr; 
                                         expr.etype <- Some(tpe)
+
   | Instanceof(expr, tpe)            -> type_expression globalScope scope expr
+
   | Val v                            -> expr.etype <- type_val v
+
   | Type tpe                         -> expr.etype <- Some(tpe)
+
   | ClassOf tpe                      -> expr.etype <- Some(tpe)
+
   | AssignExp(expr1,operation,expr2) -> type_expression globalScope scope expr1;
                                         type_expression globalScope scope expr2; 
                                         CheckAST.verify_assign_operation_type expr1.etype operation expr2.etype;
                                         expr.etype <- expr1.etype
+
   | Op(expr1, operation, expr2)      -> type_expression globalScope scope expr1;
                                         type_expression globalScope scope expr2; 
                                         CheckAST.verify_operation_type expr1.etype operation expr2.etype;
@@ -58,11 +83,14 @@ let rec type_expression globalScope scope expr =
                                         | Op_or | Op_and | Op_xor
                                         | Op_shl | Op_shr | Op_shrr
                                         | Op_add | Op_sub | Op_mul | Op_div | Op_mod -> expr.etype <- expr1.etype)
+
   | VoidClass                        -> ()
+
   | If(expr1, expr2, expr3)          -> type_expression globalScope scope expr1;
                                         type_expression globalScope scope expr2; 
                                         type_expression globalScope scope expr3; 
                                         CheckAST.verify_if_type expr1.etype
+
   | CondOp(expr1, expr2, expr3)      -> type_expression globalScope scope expr1;
                                         type_expression globalScope scope expr2; 
                                         type_expression globalScope scope expr3;     
@@ -142,14 +170,22 @@ and type_catch_declaration globalScope scope catch =
                   List.iter (type_statement globalScope catchScope) l
 
 (*auxiliary functions for typing a prorgram*)
-let compare_arg a b = 
-  if a.ptype <> b.ptype then raise(Different_arguments)
+let compare_arguments arg1 arg2 = 
+  if arg1.ptype <> arg2.ptype then raise(Different_arguments)
 
-let compare_method_args elem args met = 
+let compare_constructor_arguments elem args constructor = 
+  if (List.length args) <> (List.length constructor.function_args) then ()
+  else try
+    List.iter2 compare_arguments args constructor.function_args;
+    raise(CheckAST.Method_exists(elem, constructor.function_type, args))
+  with
+    | Different_arguments -> ()
+
+let compare_method_arguments elem args met = 
   if (List.length args) <> (List.length met.function_args) then ()
   else
     try
-      List.iter2 compare_arg args met.function_args;
+      List.iter2 compare_arguments args met.function_args;
       raise(CheckAST.Method_exists(elem, met.function_type, args))
     with
       | Different_arguments -> ()
@@ -159,7 +195,7 @@ let add_method globalScope met =
   (if (Hashtbl.mem meths met.mname) <> true
   then Hashtbl.add meths met.mname {function_type = met.mreturntype; function_args = met.margstype}
   else
-    (List.iter (compare_method_args met.mname met.margstype) (Hashtbl.find_all meths met.mname);
+    (List.iter (compare_method_arguments met.mname met.margstype) (Hashtbl.find_all meths met.mname);
     Hashtbl.add meths met.mname {function_type = met.mreturntype; function_args = met.margstype}))
 
 let add_attribute globalScope attr = 
@@ -181,10 +217,29 @@ let type_method globalScope met  =
   List.iter (add_method_with_arguments scope) met.margstype;
   List.iter (type_statement globalScope scope) met.mbody
 
-let type_class globalScope c = 
-  List.iter (add_method globalScope) c.cmethods;
-  List.iter (add_attribute globalScope) c.cattributes;
-  List.iter (type_method globalScope) c.cmethods 
+let add_constructor_arguments scope args = 
+  if (Hashtbl.mem scope.vars args.pident) <> true
+  then Hashtbl.add scope.vars args.pident args.ptype
+  else raise(CheckAST.Variable_exists(args.pident))
+
+let type_constructor globalScope constructor = 
+  let constScope = { return_type = Type.Ref({ tpath = []; tid = constructor.cname }); vars = Hashtbl.create 20 } in
+  List.iter (add_constructor_arguments constScope) constructor.cargstype;
+  List.iter (type_statement globalScope constScope) constructor.cbody
+
+let type_class globalScope constructor = 
+  List.iter (type_method globalScope) constructor.cmethods; 
+  List.iter (type_constructor globalScope) constructor.cconsts
+
+let add_constructor globalScope constructor = 
+  let constructors = (Hashtbl.find globalScope.classes globalScope.current).constructors in
+  (if (Hashtbl.mem constructors constructor.cname) <> true
+  then Hashtbl.add constructors constructor.cname { function_type = Type.Ref({ tpath = []; tid = constructor.cname }); function_args = constructor.cargstype }
+  else
+    (List.iter (compare_constructor_arguments constructor.cname constructor.cargstype) (Hashtbl.find_all constructors constructor.cname);
+    Hashtbl.add constructors constructor.cname { function_type = Type.Ref({ tpath = []; tid = constructor.cname }); function_args = constructor.cargstype }))
+
+
 
 let type_type globalScope tp =
   match tp.info with
@@ -197,8 +252,9 @@ let add_type globalScope tp =
   | Class c -> 
     if (Hashtbl.mem globalScope.classes tp.id) <> true
     then (globalScope.current <- tp.id; 
-      Hashtbl.add globalScope.classes globalScope.current {attributes = (Hashtbl.create 20); 
-      methods = (Hashtbl.create 20)})
+      Hashtbl.add globalScope.classes globalScope.current {attributes   = (Hashtbl.create 20); 
+                                                           methods      = (Hashtbl.create 20);
+                                                           constructors = (Hashtbl.create 20)})
     else 
       raise(CheckAST.Class_exists(tp.id)); 
       add_class globalScope c

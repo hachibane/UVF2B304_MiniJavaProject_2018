@@ -29,6 +29,8 @@ exception Method_exists of string * Type.t * argument list
 exception Unknown_method of string
 exception Class_exists of string
 exception Unknown_class of string list
+exception Constructor_exists of string * Type.t * argument list 
+exception Unknown_constructor of string list * AST.expression list
 
 (*returns*)
 exception Wrong_type_return of Type.t * Type.t
@@ -99,6 +101,12 @@ let print_class_exists c =
 
 let print_unknown_class c =
 	print_endline ("No class \"" ^ c ^ "\" previously defined in the current scope")
+
+let print_constructor_exists constructor expr = 
+	print_endline ("Constructor : \"" ^ constructor ^ "\" with expression : " ^ expr ^ " already exists ! ")
+
+let print_unknown_constructor constructor expr = 
+	print_endline ("No constructor \"" ^ constructor ^ "\"with expression " ^ expr)
 
 (* arrays *)
 let print_wrong_type_list elem1 elem2 = 
