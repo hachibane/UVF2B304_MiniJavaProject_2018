@@ -12,6 +12,7 @@ exception Wrong_types_declaration of Type.t option * Type.t option
 exception Wrong_type_bool of Type.t option
 exception Wrong_types_bool of Type.t option * Type.t option
 exception Wrong_type_if of Type.t option
+exception Wrong_type_for of Type.t option
 exception Wrong_type_post of Type.t option
 exception Wrong_types_operation  of Type.t option * infix_op * Type.t option
 exception Wrong_types_assign_operation of Type.t option * assign_op * Type.t option
@@ -24,7 +25,7 @@ exception Variable_exists of string
 exception Unknown_variable of string 
 exception Attribute_exists of string 
 exception Unknown_attribute of string 
-exception Method_exists of string
+exception Method_exists of string * Type.t * argument list 
 exception Unknown_method of string
 exception Class_exists of string
 exception Unknown_class of string list
@@ -32,6 +33,7 @@ exception Unknown_class of string list
 (*returns*)
 exception Wrong_type_return of Type.t * Type.t
 exception Return_expression_no_type
+exception Argument_expression_no_type of string 
 
 (*Here are defined helping exception messages *)
 (* Type.t options *)
@@ -52,6 +54,9 @@ let print_wrong_types_assign_operation x operator y =
 
 let print_wrong_type_if elem = 
 	print_endline((Type.stringOfOpt elem) ^ " is not a boolean needed by the if condition")
+
+let print_wrong_type_for elem =
+	print_endline("Wrong type : " ^ (Type.stringOfOpt elem) ^ "for a for condition")
 
 let print_wrong_type_bool elem = 
 	print_endline("Wrong type : " ^ (Type.stringOfOpt elem) ^ " should be a boolean")
@@ -74,8 +79,11 @@ let print_variable_exists elem =
 let print_unknown_variable elem =
   print_endline ("No variable \"" ^ elem ^ "\" previously defined in the current scope")
 
-let print_method_exists met =
-	print_endline ("Method name \"" ^ met ^ "\" already exists")
+let print_method_exists name typ args =
+  print_endline ("The method " ^ Type.stringOf typ ^ " " ^ name ^ "(" ^ (String.concat "," (List.map AST.stringOf_arg args)) ^ ") already exist")
+
+let print_not_typed_argument arg =
+  print_endline ("The method " ^ arg ^ " has a not typed parameter")
 
 let print_unknown_method met =
 	print_endline ("No method \"" ^ met ^ "\" previously defined in the current scope")
@@ -102,37 +110,51 @@ let print_Wrong_type_return x y =
 
 (* Here are defined the verifications *)
 let verify_assign_operation_type x operator y =
-  if x <> y then raise(Wrong_types_assign_operation(x, operator, y))
+  if x <> y 
+  then raise(Wrong_types_assign_operation(x, operator, y))
 
 let verify_operation_type x operator y =
-  if x <> y then raise(Wrong_types_operation(x, operator, y))
+  if x <> y 
+  then raise(Wrong_types_operation(x, operator, y))
 
 let verify_return_type x y =
   match x, y with
   | _, None -> raise(Return_expression_no_type)
-  | x, Some(z) -> if x <> z then raise(Wrong_type_return(x, z))
+  | x, Some(z) -> if x <> z 
+  								then raise(Wrong_type_return(x, z))
 
 let verify_tern_type elem x y =
-  if elem <> Some(Type.Primitive(Type.Boolean)) then raise(Wrong_type_bool(elem));
+  if elem <> Some(Type.Primitive(Type.Boolean)) 
+  then raise(Wrong_type_bool(elem));
   match x, y with
   | Some(Type.Primitive(_)), None -> raise(Wrong_types_bool(x, y))
   | None, Some(Type.Primitive(_)) -> raise(Wrong_types_bool(x, y))
   | Some(_), None -> ()
   | None, Some(_) -> ()
-	| Some(typ1), Some(typ2) -> if typ1 <> typ2 then raise(Wrong_types_bool(x, y))
+	| Some(typ1), Some(typ2) -> if typ1 <> typ2 
+															then raise(Wrong_types_bool(x, y))
 
 let verify_if_type elem =
-	if elem <> Some(Type.Primitive(Type.Boolean)) then raise(Wrong_type_if(elem))
+	if elem <> Some(Type.Primitive(Type.Boolean)) 
+	then raise(Wrong_type_if(elem))
+
+let verify_for_expr expr =
+	if expr <> Some(Type.Primitive(Type.Boolean))
+	then raise(Wrong_type_for(expr))
 
 let verify_post_type elem =
-	if (elem <> Some(Type.Primitive(Type.Int)) && elem <> Some(Type.Primitive(Type.Float))) then raise(Wrong_type_post(elem))
+	if (elem <> Some(Type.Primitive(Type.Int)) && elem <> Some(Type.Primitive(Type.Float))) 
+	then raise(Wrong_type_post(elem))
 
 let verify_pre_type operator elem =
 	match operator with
-	| Op_not  -> if elem <> Some(Type.Primitive(Type.Boolean)) then raise(Wrong_type_unitary_operation(operator, elem))
-	| Op_bnot -> if elem <> Some(Type.Primitive(Type.Int)) then raise(Wrong_type_unitary_operation(operator, elem))
+	| Op_not  -> if elem <> Some(Type.Primitive(Type.Boolean)) 
+							 then raise(Wrong_type_unitary_operation(operator, elem))
+	| Op_bnot -> if elem <> Some(Type.Primitive(Type.Int)) 
+							 then raise(Wrong_type_unitary_operation(operator, elem))
 	| Op_neg | Op_incr | Op_decr | Op_plus -> 
-		if (elem <> Some(Type.Primitive(Type.Int)) && elem <> Some(Type.Primitive(Type.Float))) then raise(Wrong_type_unitary_operation(operator, elem))
+		if (elem <> Some(Type.Primitive(Type.Int)) && elem <> Some(Type.Primitive(Type.Float)))
+		then raise(Wrong_type_unitary_operation(operator, elem))
 
 (*array verifications *)
 let rec verify_array_types expr =
