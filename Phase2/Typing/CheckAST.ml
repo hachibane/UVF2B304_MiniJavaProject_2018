@@ -14,6 +14,7 @@ exception Wrong_types_bool of Type.t option * Type.t option
 exception Wrong_type_if of Type.t option
 exception Wrong_type_for of Type.t option
 exception Wrong_type_post of Type.t option
+exception Wrong_types_op of Type.t option * infix_op
 exception Wrong_types_operation  of Type.t option * infix_op * Type.t option
 exception Wrong_types_assign_operation of Type.t option * assign_op * Type.t option
 exception Wrong_type_unitary_operation of prefix_op * Type.t option
@@ -24,14 +25,14 @@ exception Wrong_type_list of Type.t option * Type.t option
 exception Variable_exists of string
 exception Unknown_variable of string 
 exception Attribute_exists of string 
-exception Unknown_attribute of string 
+exception Unknown_attribute of string * string
 exception Method_exists of string * Type.t * argument list 
-exception Unknown_method of string
+exception Unknown_method of string * AST.expression list * string option
 exception Class_exists of string
 exception Unknown_class of string list
 exception Constructor_exists of string * Type.t * argument list 
 exception Unknown_constructor of string list * AST.expression list
-
+exception Wrong_type_ref of Type.ref_type * Type.ref_type
 (*returns*)
 exception Wrong_type_return of Type.t * Type.t
 exception Return_expression_no_type
@@ -87,14 +88,14 @@ let print_method_exists name typ args =
 let print_not_typed_argument arg =
   print_endline ("The method " ^ arg ^ " has a not typed parameter")
 
-let print_unknown_method met =
+let print_unknown_method met arg expr =
 	print_endline ("No method \"" ^ met ^ "\" previously defined in the current scope")
 
 let print_attribute_exists attr =
 	print_endline ("Attribute name \"" ^ attr ^ "\" already exists")
 
-let print_unknown_attribute attr =
-	print_endline ("No attribute \"" ^ attr ^ "\" previously defined in the current scope")
+let print_unknown_attribute attribute_name class_name =
+	print_endline ("No attribute \"" ^ attribute_name ^ "\" previously defined in " ^ class_name)
 
 let print_class_exists c =
 	print_endline ("Class name \"" ^ c ^ "\" already exists")
@@ -105,9 +106,9 @@ let print_unknown_class c =
 let print_constructor_exists constructor expr = 
 	print_endline ("Constructor : \"" ^ constructor ^ "\" with expression : " ^ expr ^ " already exists ! ")
 
-let print_unknown_constructor constructor expr = 
-	print_endline ("No constructor \"" ^ constructor ^ "\"with expression " ^ expr)
-
+let print_unknown_constructor name args =
+  print_string ("No constructor \"" ^ name ^ "\" with the arguments (");
+  print_endline ((String.concat ", " (List.map AST.stringOfExpType args) ^ ")"))
 (* arrays *)
 let print_wrong_type_list elem1 elem2 = 
 	print_endline("The array receives " ^ (Type.stringOfOpt elem1) ^ " and " ^ (Type.stringOfOpt elem2) ^ " which are different")
@@ -116,14 +117,24 @@ let print_wrong_type_list elem1 elem2 =
 let print_Wrong_type_return x y =
   print_endline ("The expected return type is " ^ (Type.stringOf x) ^ " but instead got " ^ (Type.stringOf y))
 
+let print_Wrong_type_ref x y =
+  print_endline ((Type.stringOf_ref x) ^ " and " ^ (Type.stringOf_ref y) ^ "should be the same but are different")
+
 (* Here are defined the verifications *)
 let verify_assign_operation_type x operator y =
   if x <> y 
-  then raise(Wrong_types_assign_operation(x, operator, y))
+  then
+  	match x with 
+  		| Some(Type.Ref(_)) -> if y <> None then raise(Wrong_types_assign_operation(x, operator, y))
+  		| _                 -> raise(Wrong_types_assign_operation(x, operator, y))
 
 let verify_operation_type x operator y =
   if x <> y 
-  then raise(Wrong_types_operation(x, operator, y))
+  then raise(Wrong_types_operation(x, operator, y));
+  match operator with
+		| Op_cor | Op_cand -> if (x <> Some(Type.Primitive(Type.Boolean)) || y <> Some(Type.Primitive(Type.Boolean)))
+    												then raise(Wrong_types_op(x, operator))
+
 
 let verify_return_type x y =
   match x, y with
