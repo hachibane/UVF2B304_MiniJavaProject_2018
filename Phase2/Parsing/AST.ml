@@ -179,7 +179,7 @@ type t = {
     type_list : asttype list;
   }
 
-
+let stringOfExpType e = Type.stringOfOpt e.etype
 
 
 let string_of_value = function

@@ -5,6 +5,10 @@ let execute lexbuf verbose =
     let ast = compilationUnit Lexer.token lexbuf in
     print_endline "It is working ! Youhou";
     TypeAST.type_program ast;
+    (*
+    let data = Compilation.compile ast in
+			Compilation.print_Compilation_Data(data);
+    *)
     if verbose then AST.print_program ast
   with
   	| CheckAST.Variable_exists(elem)                         -> CheckAST.print_variable_exists elem
