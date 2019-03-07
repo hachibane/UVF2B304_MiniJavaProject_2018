@@ -10,18 +10,6 @@ type v_Type =
   | VAttr   of string * string
   | VNull 
 
-
-let val_to_String v = 
-  match v with
-  | VInt(elem)           -> "int: " ^ string_of_int elem
-  | VBool(elem)          -> "bool: " ^ string_of_bool elem
-  | VName(name)          -> "name: " ^ name
-  | VString(elem)        -> "string: " ^ elem
-  | VRef(elem)           -> "object reference, adresse:" ^ string_of_int elem
-  | VNull                -> "null"
-  | VAttr(elem1, elem2)  -> "Attribute " ^ elem2 ^ "of object " ^ elem1
-  
-
 type object_Descriptor =
 {
     object_type : string;
@@ -58,6 +46,16 @@ type globalData =
   classDescriptorTable : (string, globalclass_Descriptor) Hashtbl.t
 }
 
+let val_to_String v = 
+  match v with
+  | VInt(elem)           -> "int: " ^ string_of_int elem
+  | VBool(elem)          -> "bool: " ^ string_of_bool elem
+  | VName(name)          -> "name: " ^ name
+  | VString(elem)        -> "string: " ^ elem
+  | VRef(elem)           -> "object reference, adresse:" ^ string_of_int elem
+  | VNull                -> "null"
+  | VAttr(elem1, elem2)  -> "Attribute " ^ elem2 ^ "of object " ^ elem1
+
 let print_OD od = match od with
   | IntegerDescriptor(elem) -> Printf.printf "Integer OD: %i" elem; 
                                print_endline("")
@@ -93,7 +91,26 @@ let print_MT mt =
   print_endline("Methods of all classes");
   Hashtbl.iter (fun key value -> print_endline(key)) mt
 
+let print_PA pa = 
+  match pa with
+  | ClassDescriptor(cd) -> List.iter (print_attribute (" parentattribute ")) cd.class_attributes
+  | ObjectClass(cd)     -> List.iter (print_attribute (" parentattribute ")) cd.class_attributes
+
+
+let rec get_list_of_arg args str = match args with
+  | [] -> str
+  | (head::tail) -> match head.ptype with
+                    | Primitive(Int)     -> get_list_of_arg tail (str ^ "int")
+                    | Primitive(Boolean) -> get_list_of_arg tail (str ^ "boolean")
+                    | Ref(ref_type)      -> get_list_of_arg tail (str ^ ref_type.tid)
+
+let rec get_LAFT exps str = match exps with
+  | [] -> str 
+  | (head::tail) -> match head.etype with
+                    | Some(Primitive(Int))     -> get_LAFT tail (str ^ "int")
+                    | Some(Primitive(Boolean)) -> get_LAFT tail (str ^ "boolean")
+                    | Some(Ref(ref_type))      -> get_LAFT tail (str ^ ref_type.tid)
 
 let print_CompData comp_data = match comp_data with
   | {methodTable = mt; classDescriptorTable = cdt} -> print_MT(mt); 
-                              print_CDT(cdt)
+                                                      print_CDT(cdt)
