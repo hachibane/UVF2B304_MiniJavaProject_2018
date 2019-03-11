@@ -1,0 +1,75 @@
+
+** Conflict (shift/reduce) in state 520.
+** Token involved: ELSE
+** This state is reached from compilationUnit after reading:
+
+option(packageDeclaration) list(importDeclaration) list(classModifier) CLASS IDENTIFIER option(preceded(EXTENDS,classOrInterfaceType)) option(preceded(IMPLEMENTS,separated_list(COMMA,classOrInterfaceType))) LBRACE boption(STATIC) LBRACE IF LPAREN expression RPAREN IF LPAREN expression RPAREN blockStatement 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+compilationUnit 
+program EOF 
+option(packageDeclaration) list(importDeclaration) list(classOrInterfaceDeclaration) 
+                                                   classOrInterfaceDeclaration list(classOrInterfaceDeclaration) 
+                                                   list(classModifier) classDeclaration 
+                                                                       CLASS IDENTIFIER option(preceded(EXTENDS,classOrInterfaceType)) option(preceded(IMPLEMENTS,separated_list(COMMA,classOrInterfaceType))) body(list(classContent)) 
+                                                                                                                                                                                                               LBRACE list(classContent) RBRACE 
+                                                                                                                                                                                                                      classContent list(classContent) 
+                                                                                                                                                                                                                      boption(STATIC) block 
+                                                                                                                                                                                                                                      body(list(blockStatement)) 
+                                                                                                                                                                                                                                      LBRACE list(blockStatement) RBRACE 
+                                                                                                                                                                                                                                             blockStatement list(blockStatement) 
+                                                                                                                                                                                                                                             (?)
+
+** In state 520, looking ahead at ELSE, reducing production
+** blockStatement -> IF LPAREN expression RPAREN blockStatement 
+** is permitted because of the following sub-derivation:
+
+IF LPAREN expression RPAREN blockStatement ELSE blockStatement // lookahead token appears
+                            IF LPAREN expression RPAREN blockStatement . 
+
+** In state 520, looking ahead at ELSE, shifting is permitted
+** because of the following sub-derivation:
+
+IF LPAREN expression RPAREN blockStatement 
+                            IF LPAREN expression RPAREN blockStatement . ELSE blockStatement 
+
+** Conflict (shift/reduce) in state 335.
+** Tokens involved: OP_SUB OP_INC OP_DEC LPAREN IDENTIFIER
+** The following explanations concentrate on token OP_SUB.
+** This state is reached from compilationUnit after reading:
+
+option(packageDeclaration) list(importDeclaration) list(classModifier) CLASS IDENTIFIER option(preceded(EXTENDS,classOrInterfaceType)) option(preceded(IMPLEMENTS,separated_list(COMMA,classOrInterfaceType))) LBRACE boption(STATIC) LBRACE LPAREN expression RPAREN 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+compilationUnit 
+program EOF 
+option(packageDeclaration) list(importDeclaration) list(classOrInterfaceDeclaration) 
+                                                   classOrInterfaceDeclaration list(classOrInterfaceDeclaration) 
+                                                   list(classModifier) classDeclaration 
+                                                                       CLASS IDENTIFIER option(preceded(EXTENDS,classOrInterfaceType)) option(preceded(IMPLEMENTS,separated_list(COMMA,classOrInterfaceType))) body(list(classContent)) 
+                                                                                                                                                                                                               LBRACE list(classContent) RBRACE 
+                                                                                                                                                                                                                      classContent list(classContent) 
+                                                                                                                                                                                                                      boption(STATIC) block 
+                                                                                                                                                                                                                                      body(list(blockStatement)) 
+                                                                                                                                                                                                                                      LBRACE list(blockStatement) RBRACE 
+                                                                                                                                                                                                                                             blockStatement list(blockStatement) 
+                                                                                                                                                                                                                                             expression0 SEMI 
+                                                                                                                                                                                                                                             expression 
+                                                                                                                                                                                                                                             (?)
+
+** In state 335, looking ahead at OP_SUB, reducing production
+** expression -> LPAREN expression RPAREN 
+** is permitted because of the following sub-derivation:
+
+expression OP_SUB expression // lookahead token appears
+LPAREN expression RPAREN . 
+
+** In state 335, looking ahead at OP_SUB, shifting is permitted
+** because of the following sub-derivation:
+
+LPAREN expression RPAREN expression 
+                         . OP_SUB expression 

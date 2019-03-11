@@ -1,0 +1,346 @@
+### Starting build.
+# Target: Main/Main.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Main/Main.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Main/Main.ml > Main/Main.ml.depends # cached
+# Target: Main/Compile.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Main/Compile.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Main/Compile.ml > Main/Compile.ml.depends # cached
+# Target: Parsing/AST.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Parsing/AST.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/AST.ml > Parsing/AST.ml.depends # cached
+# Target: Utils/ListII.mli.depends, tags: { package(ANSITerminal), explain, extension:mli, file:Utils/ListII.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Utils/ListII.mli > Utils/ListII.mli.depends # cached
+# Target: Utils/ListII.cmi, tags: { package(ANSITerminal), byte, compile, explain, extension:mli, file:Utils/ListII.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o Utils/ListII.cmi Utils/ListII.mli # cached
+# Target: Utils/Location.mli.depends, tags: { package(ANSITerminal), explain, extension:mli, file:Utils/Location.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Utils/Location.mli > Utils/Location.mli.depends # cached
+# Target: Utils/Location.cmi, tags: { package(ANSITerminal), byte, compile, explain, extension:mli, file:Utils/Location.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o Utils/Location.cmi Utils/Location.mli # cached
+# Target: Typing/Type.mli.depends, tags: { package(ANSITerminal), explain, extension:mli, file:Typing/Type.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Typing/Type.mli > Typing/Type.mli.depends # cached
+# Target: Typing/Type.cmi, tags: { package(ANSITerminal), byte, compile, explain, extension:mli, file:Typing/Type.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/Type.cmi Typing/Type.mli # cached
+# Target: Parsing/AST.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Parsing/AST.cmo, file:Parsing/AST.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/AST.cmo Parsing/AST.ml # cached
+# Target: Compiling/CTYPE.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Compiling/CTYPE.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Compiling/CTYPE.ml > Compiling/CTYPE.ml.depends # cached
+# Target: Compiling/CTYPE.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Compiling/CTYPE.cmo, file:Compiling/CTYPE.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/CTYPE.cmo Compiling/CTYPE.ml # cached
+# Target: Typing/CheckAST.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Typing/CheckAST.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Typing/CheckAST.ml > Typing/CheckAST.ml.depends # cached
+# Target: Typing/CheckAST.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Typing/CheckAST.cmo, file:Typing/CheckAST.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/CheckAST.cmo Typing/CheckAST.ml # cached
+# Target: Compiling/Compiling.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Compiling/Compiling.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Compiling/Compiling.ml > Compiling/Compiling.ml.depends # cached
+# Target: Compiling/CAUX.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Compiling/CAUX.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Compiling/CAUX.ml > Compiling/CAUX.ml.depends # cached
+# Target: Compiling/CAUX.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Compiling/CAUX.cmo, file:Compiling/CAUX.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/CAUX.cmo Compiling/CAUX.ml # cached
+# Target: Compiling/Compiling.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Compiling/Compiling.cmo, file:Compiling/Compiling.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/Compiling.cmo Compiling/Compiling.ml # cached
+# Target: Parsing/Error.mli.depends, tags: { package(ANSITerminal), explain, extension:mli, file:Parsing/Error.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/Error.mli > Parsing/Error.mli.depends # cached
+# Target: Parsing/Error.cmi, tags: { package(ANSITerminal), byte, compile, explain, extension:mli, file:Parsing/Error.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Error.cmi Parsing/Error.mli # cached
+# Target: Executing/Execution.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Executing/Execution.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Executing/Execution.ml > Executing/Execution.ml.depends # cached
+# Target: Executing/EAUX.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Executing/EAUX.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Executing/EAUX.ml > Executing/EAUX.ml.depends # cached
+# Target: Executing/ETYPE.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Executing/ETYPE.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Executing/ETYPE.ml > Executing/ETYPE.ml.depends # cached
+# Target: Executing/ETYPE.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Executing/ETYPE.cmo, file:Executing/ETYPE.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/ETYPE.cmo Executing/ETYPE.ml # cached
+# Target: Executing/EAUX.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Executing/EAUX.cmo, file:Executing/EAUX.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/EAUX.cmo Executing/EAUX.ml # cached
+# Target: Executing/Execution.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Executing/Execution.cmo, file:Executing/Execution.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/Execution.cmo Executing/Execution.ml # cached
+# Target: Parsing/Lexer.mll, tags: { package(ANSITerminal), explain, extension:mll, file:Parsing/Lexer.mll, lexer, ocaml, ocamllex, quiet, traverse, use_menhir, warn_a }
+ocamllex.opt -q Parsing/Lexer.mll # cached
+# Target: Parsing/Lexer.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Parsing/Lexer.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/Lexer.ml > Parsing/Lexer.ml.depends # cached
+# Target: echo 'open Parser
+
+let kw_list = [
+"abstract", ABSTRACT ;
+"assert", ASSERT ;
+"boolean", BOOLEAN ;
+"break", BREAK ;
+"byte", BYTE ;
+"case", CASE ;
+"catch", CATCH ;
+"char", CHAR ;
+"class", CLASS ;
+"default", DEFAULT ;
+"do", DO ;
+"double", DOUBLE ;
+"else", ELSE ;
+"extends", EXTENDS ;
+"false", FALSE ;
+"final", FINAL ;
+"finally", FINALLY ;
+"float", FLOAT ;
+"for", FOR ;
+"if", IF ;
+"implements", IMPLEMENTS ;
+"import", IMPORT ;
+"instanceof", INSTANCEOF ;
+"int", INT ;
+"interface", INTERFACE ;
+"long", LONG ;
+"native", NATIVE ;
+"new", NEW ;
+"null", NULL ;
+"package", PACKAGE ;
+"private", PRIVATE ;
+"protected", PROTECTED ;
+"public", PUBLIC ;
+"return", RETURN ;
+"short", SHORT ;
+"static", STATIC ;
+"strictfp", STRICTFP ;
+"super", SUPER ;
+"switch", SWITCH ;
+"synchronized", SYNCHRONIZED ;
+"this", THIS ;
+"throw", THROW ;
+"throws", THROWS ;
+"transient", TRANSIENT ;
+"true", TRUE ;
+"try", TRY ;
+"void", VOID ;
+"volatile", VOLATILE ;
+"while", WHILE ;
+]
+' > KeywordLexer.ml, tags: {  }
+echo 'open Parser
+
+let kw_list = [
+"abstract", ABSTRACT ;
+"assert", ASSERT ;
+"boolean", BOOLEAN ;
+"break", BREAK ;
+"byte", BYTE ;
+"case", CASE ;
+"catch", CATCH ;
+"char", CHAR ;
+"class", CLASS ;
+"default", DEFAULT ;
+"do", DO ;
+"double", DOUBLE ;
+"else", ELSE ;
+"extends", EXTENDS ;
+"false", FALSE ;
+"final", FINAL ;
+"finally", FINALLY ;
+"float", FLOAT ;
+"for", FOR ;
+"if", IF ;
+"implements", IMPLEMENTS ;
+"import", IMPORT ;
+"instanceof", INSTANCEOF ;
+"int", INT ;
+"interface", INTERFACE ;
+"long", LONG ;
+"native", NATIVE ;
+"new", NEW ;
+"null", NULL ;
+"package", PACKAGE ;
+"private", PRIVATE ;
+"protected", PROTECTED ;
+"public", PUBLIC ;
+"return", RETURN ;
+"short", SHORT ;
+"static", STATIC ;
+"strictfp", STRICTFP ;
+"super", SUPER ;
+"switch", SWITCH ;
+"synchronized", SYNCHRONIZED ;
+"this", THIS ;
+"throw", THROW ;
+"throws", THROWS ;
+"transient", TRANSIENT ;
+"true", TRUE ;
+"try", TRY ;
+"void", VOID ;
+"volatile", VOLATILE ;
+"while", WHILE ;
+]
+' > KeywordLexer.ml # cached
+# Target: echo '%token ABSTRACT
+%token ASSERT
+%token BOOLEAN
+%token BREAK
+%token BYTE
+%token CASE
+%token CATCH
+%token CHAR
+%token CLASS
+%token DEFAULT
+%token DO
+%token DOUBLE
+%token ELSE
+%token EXTENDS
+%token FALSE
+%token FINAL
+%token FINALLY
+%token FLOAT
+%token FOR
+%token IF
+%token IMPLEMENTS
+%token IMPORT
+%token INSTANCEOF
+%token INT
+%token INTERFACE
+%token LONG
+%token NATIVE
+%token NEW
+%token NULL
+%token PACKAGE
+%token PRIVATE
+%token PROTECTED
+%token PUBLIC
+%token RETURN
+%token SHORT
+%token STATIC
+%token STRICTFP
+%token SUPER
+%token SWITCH
+%token SYNCHRONIZED
+%token THIS
+%token THROW
+%token THROWS
+%token TRANSIENT
+%token TRUE
+%token TRY
+%token VOID
+%token VOLATILE
+%token WHILE
+
+%%
+' > WordParser.mly, tags: {  }
+echo '%token ABSTRACT
+%token ASSERT
+%token BOOLEAN
+%token BREAK
+%token BYTE
+%token CASE
+%token CATCH
+%token CHAR
+%token CLASS
+%token DEFAULT
+%token DO
+%token DOUBLE
+%token ELSE
+%token EXTENDS
+%token FALSE
+%token FINAL
+%token FINALLY
+%token FLOAT
+%token FOR
+%token IF
+%token IMPLEMENTS
+%token IMPORT
+%token INSTANCEOF
+%token INT
+%token INTERFACE
+%token LONG
+%token NATIVE
+%token NEW
+%token NULL
+%token PACKAGE
+%token PRIVATE
+%token PROTECTED
+%token PUBLIC
+%token RETURN
+%token SHORT
+%token STATIC
+%token STRICTFP
+%token SUPER
+%token SWITCH
+%token SYNCHRONIZED
+%token THIS
+%token THROW
+%token THROWS
+%token TRANSIENT
+%token TRUE
+%token TRY
+%token VOID
+%token VOLATILE
+%token WHILE
+
+%%
+' > WordParser.mly # cached
+# Target: KeywordLexer.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:KeywordLexer.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules KeywordLexer.ml > KeywordLexer.ml.depends # cached
+# Target: Parsing/Parser.mlypack.depends, tags: { package(ANSITerminal), explain, extension:mly, extension:mlypack, file:Parsing/InnerParser.mly, file:Parsing/OuterParser.mly, file:Parsing/Parser.mlypack, file:WordParser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+menhir --raw-depend --ocamldep 'ocamlfind ocamldep -modules' --base Parsing/Parser WordParser.mly Parsing/InnerParser.mly Parsing/OuterParser.mly > Parsing/Parser.mlypack.depends # cached
+# Target: Parsing/Parser, tags: { package(ANSITerminal), byte, compile, explain, extension:mly, extension:mlypack, file:Parsing/InnerParser.mly, file:Parsing/OuterParser.mly, file:Parsing/Parser.mlypack, file:WordParser.mly, infer, menhir, ocaml, parser, quiet, traverse, use_menhir, warn_a }
+menhir --ocamlc 'ocamlfind ocamlc -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing' --explain --infer --base Parsing/Parser WordParser.mly Parsing/InnerParser.mly Parsing/OuterParser.mly # cached
+# Target: Parsing/Parser.mli.depends, tags: { package(ANSITerminal), explain, extension:mli, file:Parsing/Parser.mli, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/Parser.mli > Parsing/Parser.mli.depends # cached
+# Target: Parsing/Parser.cmi, tags: { package(ANSITerminal), byte, compile, explain, extension:mli, file:Parsing/Parser.mli, interf, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Parser.cmi Parsing/Parser.mli # cached
+# Target: KeywordLexer.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:KeywordLexer.cmo, file:KeywordLexer.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o KeywordLexer.cmo KeywordLexer.ml # cached
+# Target: Parsing/Lexer.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Parsing/Lexer.cmo, file:Parsing/Lexer.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Lexer.cmo Parsing/Lexer.ml # cached
+# Target: Typing/TypeAST.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Typing/TypeAST.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Typing/TypeAST.ml > Typing/TypeAST.ml.depends # cached
+# Target: Typing/AUX.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Typing/AUX.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Typing/AUX.ml > Typing/AUX.ml.depends # cached
+# Target: Typing/AUX.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Typing/AUX.cmo, file:Typing/AUX.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/AUX.cmo Typing/AUX.ml # cached
+# Target: Typing/TypeAST.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Typing/TypeAST.cmo, file:Typing/TypeAST.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/TypeAST.cmo Typing/TypeAST.ml # cached
+# Target: Main/Compile.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Main/Compile.cmo, file:Main/Compile.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Main -I Utils -I Typing -I Compiling -I Executing -I Parsing -o Main/Compile.cmo Main/Compile.ml # cached
+# Target: Main/Main.cmo, tags: { package(ANSITerminal), byte, compile, explain, extension:cmo, extension:ml, file:Main/Main.cmo, file:Main/Main.ml, implem, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlc -c -w a -package ANSITerminal -I Main -I Utils -I Typing -I Compiling -I Executing -I Parsing -o Main/Main.cmo Main/Main.ml # cached
+# Target: Utils/ListII.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Utils/ListII.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Utils/ListII.ml > Utils/ListII.ml.depends # cached
+# Target: Utils/ListII.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Utils/ListII.cmx, file:Utils/ListII.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o Utils/ListII.cmx Utils/ListII.ml # cached
+# Target: Utils/Location.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Utils/Location.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Utils/Location.ml > Utils/Location.ml.depends # cached
+# Target: Utils/Location.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Utils/Location.cmx, file:Utils/Location.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o Utils/Location.cmx Utils/Location.ml # cached
+# Target: Typing/Type.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Typing/Type.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Typing/Type.ml > Typing/Type.ml.depends # cached
+# Target: Typing/Type.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Typing/Type.cmx, file:Typing/Type.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/Type.cmx Typing/Type.ml # cached
+# Target: Parsing/AST.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Parsing/AST.cmx, file:Parsing/AST.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/AST.cmx Parsing/AST.ml # cached
+# Target: Compiling/CTYPE.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Compiling/CTYPE.cmx, file:Compiling/CTYPE.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/CTYPE.cmx Compiling/CTYPE.ml # cached
+# Target: Typing/CheckAST.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Typing/CheckAST.cmx, file:Typing/CheckAST.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/CheckAST.cmx Typing/CheckAST.ml # cached
+# Target: Compiling/CAUX.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Compiling/CAUX.cmx, file:Compiling/CAUX.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/CAUX.cmx Compiling/CAUX.ml # cached
+# Target: Compiling/Compiling.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Compiling/Compiling.cmx, file:Compiling/Compiling.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Compiling -I Utils -I Typing -I Main -I Executing -I Parsing -o Compiling/Compiling.cmx Compiling/Compiling.ml # cached
+# Target: Parsing/Error.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Parsing/Error.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/Error.ml > Parsing/Error.ml.depends # cached
+# Target: Parsing/Error.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Parsing/Error.cmx, file:Parsing/Error.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Error.cmx Parsing/Error.ml # cached
+# Target: Executing/ETYPE.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Executing/ETYPE.cmx, file:Executing/ETYPE.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/ETYPE.cmx Executing/ETYPE.ml # cached
+# Target: Executing/EAUX.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Executing/EAUX.cmx, file:Executing/EAUX.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/EAUX.cmx Executing/EAUX.ml # cached
+# Target: Executing/Execution.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Executing/Execution.cmx, file:Executing/Execution.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Executing -I Utils -I Typing -I Main -I Compiling -I Parsing -o Executing/Execution.cmx Executing/Execution.ml # cached
+# Target: Parsing/Parser.ml.depends, tags: { package(ANSITerminal), explain, extension:ml, file:Parsing/Parser.ml, ocaml, ocamldep, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamldep -package ANSITerminal -modules Parsing/Parser.ml > Parsing/Parser.ml.depends # cached
+# Target: Parsing/Parser.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Parsing/Parser.cmx, file:Parsing/Parser.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Parser.cmx Parsing/Parser.ml # cached
+# Target: KeywordLexer.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:KeywordLexer.cmx, file:KeywordLexer.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Utils -I Typing -I Main -I Compiling -I Executing -I Parsing -o KeywordLexer.cmx KeywordLexer.ml # cached
+# Target: Parsing/Lexer.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Parsing/Lexer.cmx, file:Parsing/Lexer.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Parsing -I Utils -I Typing -I Main -I Compiling -I Executing -o Parsing/Lexer.cmx Parsing/Lexer.ml # cached
+# Target: Typing/AUX.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Typing/AUX.cmx, file:Typing/AUX.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/AUX.cmx Typing/AUX.ml # cached
+# Target: Typing/TypeAST.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Typing/TypeAST.cmx, file:Typing/TypeAST.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Typing -I Utils -I Main -I Compiling -I Executing -I Parsing -o Typing/TypeAST.cmx Typing/TypeAST.ml # cached
+# Target: Main/Compile.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Main/Compile.cmx, file:Main/Compile.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Main -I Utils -I Typing -I Compiling -I Executing -I Parsing -o Main/Compile.cmx Main/Compile.ml # cached
+# Target: Main/Main.cmx, tags: { package(ANSITerminal), compile, explain, extension:cmx, extension:ml, file:Main/Main.cmx, file:Main/Main.ml, implem, native, ocaml, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -c -w a -package ANSITerminal -I Main -I Utils -I Typing -I Compiling -I Executing -I Parsing -o Main/Main.cmx Main/Main.ml # cached
+# Target: Main/Main.native, tags: { package(ANSITerminal), dont_link_with, explain, extension:native, file:Main/Main.native, link, native, ocaml, program, quiet, traverse, use_menhir, warn_a }
+ocamlfind ocamlopt -linkpkg -package ANSITerminal -I Utils -I Typing -I Parsing -I Compiling -I Executing -I Main Utils/ListII.cmx Typing/Type.cmx Utils/Location.cmx Parsing/AST.cmx Compiling/CTYPE.cmx Compiling/CAUX.cmx Compiling/Compiling.cmx Executing/ETYPE.cmx Executing/EAUX.cmx Executing/Execution.cmx Parsing/Parser.cmx KeywordLexer.cmx Parsing/Error.cmx Parsing/Lexer.cmx Typing/CheckAST.cmx Typing/AUX.cmx Typing/TypeAST.cmx Main/Compile.cmx Main/Main.cmx -o Main/Main.native # cached
+# Compilation successful.
